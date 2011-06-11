@@ -20,24 +20,23 @@ Organisation
 
 Minx is pretty much composed of four parts things...
 
-*   core 		- the panel and panel manager and a widget wrap panel. 	
-*   more 		- more usefull things like buttone, title bars and popups - and common arrangements of them
-*   widgets     - widgets have some graphical behaviour and some data wrapped with a panel
-*   layouts		- arangements of multiple things made from 'more' things - a layout is not a panel itself
+*  core 		- the panel and panel manager and a widget wrap panel. 	
+*  more 		- more usefull things like buttons, title bars and popups - and common arrangements of them
+*  widgets     - widgets have some graphical behaviour and some data wrapped with a panel
+*  layouts		- arangements of multiple things made from 'more' things - a layout is not a panel itself
 
 
-Panel
------
-The basic unit is a panel - it knows about its parent and any child panels - it makes appropriate nodes in the dom at the right size and postition.
+Core
+----
+*  PanelManager - a 'singleton' to factory create any registered panels.
+*  Panel      	- The basics
+*  PinnedPanel  - The basics plus a bit of awareness of how to pin itself to parents and siblings.
+*  Popup        - a pinned panel with some popup style - with some default centering behaviour - but can be pinned.
+*  WidgetPanel  - A pinned panel that has a view and a model - generally expected to be pinned inside one of the above panels - but the client or overrides draw its content.
 
-A panel is created by the 
 
-* example 1 - basic panels
-Here is the [Panel example](http://mtk-play.appspot.com/stuff/html5.html).
+### PanelManager ### 
 
-
-PanelManager
-------------
 Which adds and removes panels and keeps a flat master list of all panels and assigns an ever increasing unique id to all panels - it does not do much else.
 
 The master list of all panels is a simple id(string) -> object(Panel) map so it is v quick to grab a handle on a panel and get its DOM node.
@@ -60,61 +59,110 @@ Or create a registered panel type:
 
 			var button = Minx.pm.add(null, 'button');
 
-PinnedPanel
------------
+
+### Panel ###
+
+The basic unit is a panel - it knows about its parent and any child panels - it makes appropriate nodes in the dom at the right size and postition.
+
+A panel is created by the 
+
+* sample - basic panels
+Here is the [Panel example](http://mtk-play.appspot.com/stuff/html5.html).
+
+
+### PinnedPanel ### 
 
 Panels dont know how they should behave wrt other panels including thier parents - but pinned panels do.
 
 Pinned Panels can be pinned to thier parents or to siblings (other panels with the same parent) so are much more usefull in auto resizing applications - such as orientation aware applications.
 
-* example 1 - parent pinning
+* sample - parent pinning
 some pinned panels
 Here is the [Parent pinned example](http://mtk-play.appspot.com/stuff/html6.html).
 
-* example 2 - parent and sibling pinning
+* sample - parent and sibling pinning
 The first bits of this example shows a simple panel with a manually added title-bar, then removes that panel and adds a title-panel (see below)
 Here is the [Sibling pinned example](http://mtk-play.appspot.com/stuff/html7.html).
 
 
-Tool-Bar
----------
+### Popup ###
+noting much - just a pinned panel with some centralising behaviour and a shaddow.
+
+
+### WidgetPanel ###
+
+This thing will do most of the fun stuff - it is the most likely thing to be wrapped with some mvc aware type thing it is a view which knows about a model.
+It is essentially abstract - folk need to override this beastie and add model awareness and no how to munge the model into apropriate dom
+
+
+More
+----
+
+Some specific panels that do typical things...
+
+*  Button       - styled like a button has an onClick.
+*  ToolBar    	- dockable thin panel with toolbar styling - with an addButton utility function - could house mini widgets.
+*  TitlePanel   - a pinned panel with a top docked ToolBar.
+*  InputPopupup - a popup, so centred by default with a bottom toolbar and a content pane to take widgets.
+
+
+### Button ###
+
+button stuff.
+
+
+### ToolBar ### 
+
+
 Is a pinned Panel that can be docked to the top or bottom of a page so is pinned to the top, or bottom and left, and right edges of its parent, sets itself to a fixed height, and adds a class so that it can be styled as a title bar
 
-* example 2
-The first bits of this example shows a simple panel with a manually added title-bar
-Here is the [Title-Panel example](http://mtk-play.appspot.com/stuff/html8.html).
+* Sample - The first bits of this example shows a simple panel with a manually added title-bar
+
+Here is the [Title-Panel sample](http://mtk-play.appspot.com/stuff/html8.html).
 
 
-Title-Panel 
------------
+### Title-Panel ###
 
 A simple panel containing a top docked tool-bar and a pinned-panel for content, which is pinned to its parent panel left, right, and to the bottom of the title-bar
 
 
 The first example shows a simple panel with a manually added title-bar, then removes that panel and adds a title-panel
+
 Here is the [Title-Panel example](http://mtk-play.appspot.com/stuff/html8.html).
 
-Orientation change and Pop Up
------------------------------
 
-Dyanmic repositioning pinning unpinning and popups based on viewport geometry
-Here is the [Dynamic panel example](http://mtk-play.appspot.com/stuff/html9.html).
+### InputPopup ###
 
+A popup panel that looks like it can take input - it has a bottom pinned tool-bar.
 
-Input pop
----------
-
-A popup panel that looks like it can take input - it has a bottom pinned lool-bar
 Here is the [Input popup panel example](http://mtk-play.appspot.com/stuff/html9-a.html).
 
 
-Added concept of Minx.Layout
-----------------------------
+
+Layouts
+-------
 
 A layout is an object that composes panels in a way that coordinates well
 
 * Minx.Layout.SplitLayout - a typical ipad type splitview
 Here is the [SplitLayout example](http://mtk-play.appspot.com/stuff/html10.html).
+
+
+Widgets
+-------
+
+V important
+
+
+Orientation change and Pop Up
+-----------------------------
+Call Minx.pm.init(true) to create a default main panel tht is orientation aware all main layout panels will be added to the main orientation aware panel.
+
+Dyanmic repositioning pinning unpinning and popups based on viewport geometry
+Here is the [Dynamic panel example](http://mtk-play.appspot.com/stuff/html9.html).
+
+
+
 
 
 
