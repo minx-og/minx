@@ -1,6 +1,9 @@
 Minx
 ====
 
+Intro
+-----
+
 Mixing up javascript generated panels
 
 A simple html 5 panel management library
@@ -35,7 +38,7 @@ Core
 *  WidgetPanel  - A pinned panel that has a view and a model - generally expected to be pinned inside one of the above panels - but the client or overrides draw its content.
 
 
-### PanelManager ### 
+### PanelManager ###
 
 Which adds and removes panels and keeps a flat master list of all panels and assigns an ever increasing unique id to all panels - it does not do much else.
 
@@ -70,7 +73,7 @@ A panel is created by the
 Here is the [Panel example](http://mtk-play.appspot.com/stuff/html5.html).
 
 
-### PinnedPanel ### 
+### PinnedPanel ###
 
 Panels dont know how they should behave wrt other panels including thier parents - but pinned panels do.
 
@@ -111,8 +114,7 @@ Some specific panels that do typical things...
 button stuff.
 
 
-### ToolBar ### 
-
+### ToolBar ###
 
 Is a pinned Panel that can be docked to the top or bottom of a page so is pinned to the top, or bottom and left, and right edges of its parent, sets itself to a fixed height, and adds a class so that it can be styled as a title bar
 
