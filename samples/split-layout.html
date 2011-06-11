@@ -1,0 +1,164 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <!-- meta data, as in data about data where data is this file -->
+        <meta charset="utf-8">
+        <meta name="description" content="Willis a simple mobile optimised widget library">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="author" content="MoneyToolkit">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+        <!-- title -->
+        <title>Minx split-layout and scroll list widget</title> 
+        <!-- styles -->
+        <!-- core structural css -->
+        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.1">
+
+        <!-- theme css -->
+        <link rel="stylesheet" href="../source/themes/css/iphone.css?v=1.1">
+
+        <!-- core lib code -->
+        <script src="../source/extern/my.class.js"></script>
+        
+        <!-- my code -->
+        <!-- core panels -->
+        <script src="../source/core/src/panelmanager.js"></script>
+        <script src="../source/core/src/panel.js"></script>
+        <script src="../source/core/src/pinnedpanel.js"></script>
+        <script src="../source/core/src/popup.js"></script>
+        <script src="../source/core/src/widgetpanel.js"></script>
+        
+        <!-- more panels -->
+        <script src="../source/more/src/button.js"></script>
+        <link rel="stylesheet" href="../source/more/style/css/button.css?v=1.1">
+
+        <script src="../source/more/src/toolbar.js"></script>
+        
+        <script src="../source/more/src/titlepanel.js"></script>        
+
+        <script src="../source/more/src/inputpop.js"></script>
+        
+        <!-- custom widgets -->
+        <script src="../source/widgets/src/listscrollpanel.js"></script>
+        <link rel="stylesheet" href="../source/widgets/style/css/scroll.css?v=1.1">
+
+        <!-- layouts -->
+        <script src="../source/layouts/src/splitlayout.js"></script>
+
+
+        <!-- our main entry -->
+        <script type="text/javascript" charset="utf-8">
+
+            /* When this function is called, PhoneGap has been initialized and is ready to roll */
+            function onDeviceReady() {
+                console.log('onDeviceReady');
+
+                var touch = true;
+
+                // true to create the first main panel and set it to auto size
+
+                var main = Minx.pm.init(true);       
+                
+                console.log(Minx.pm.agent());      
+
+                console.log(Minx.pm.agent().ipad);      
+
+                var layout = new Minx.Layout.SplitLayout(main);
+                
+                
+                // add my specific button
+                var rbutton = layout.getMainPanel().getTitle().addButton('r', 20, 'Pop');
+
+                rbutton.onClick(function(panel,e){
+                    popup();
+                });
+
+                
+                var nav = layout.getNavPanel().getContentPanel();
+
+
+
+                // make a new pinned holder - for our scroller
+                var navList = Minx.pm.add(nav, 'list-scroll-panel');
+
+                // i know my list will be used in a popup so give it a botom offset of 5
+                navList.setParentPin('b', 5);
+
+
+                navList.onEvents(function(panel, par){
+                   alert(par.id); 
+                });
+
+                navList.setModel([
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
+                  {name: "Ida", age: 26},
+                  {name: "Rob", age: 55}
+                ]);
+                
+                // combine the view and model
+                navList.munge();
+
+                // nowshow the main window
+                main.show();
+
+
+                function popup(){
+                    // test the nav width percentage change
+                    layout.setNavLandWidth(400);
+
+                    var pop = Minx.pm.add('main', 'input-pop-up');
+                    pop.setSize(400, 300);
+                   
+                    var cancelBtn = pop.getFootBar().addButton('l', 10, 'Cancel');
+                    
+                    cancelBtn.onClick(function(panel,e){
+                        pop.hide();
+                    });
+                    
+                    var okBtn = pop.getFootBar().addButton('r', 10, 'Logon');
+                    
+                    okBtn.onClick(function(panel,e){
+                        layout.setNavPortWidth(500);
+                        alert('OK');
+                    });                    
+
+                    pop.show();
+                    
+                }
+                // remove all but one panel after 2 seconds     
+                
+
+            }
+
+        </script>
+
+    </head>
+    <body onload="onDeviceReady()">
+        
+    </body>
+</html>

@@ -1,0 +1,56 @@
+/* buttons */
+.button {
+    -moz-border-radius: 7px; 
+    border-radius: 7px;    
+    box-sizing: border-box;
+    text-align: center;
+    margin-left: auto; 
+    margin-right: auto;
+}
+
+.button > span.label {
+    width: 100%;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;    
+}
+
+
+.button.back {
+        overflow: visible;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        -webkit-border-top-left-radius: 0px;
+        -webkit-border-bottom-left-radius: 0px;        
+}
+
+
+.button.back > span.pointer {
+
+        box-sizing: border-box;
+        -webkit-box-shadow: rgba(255, 255, 255, 0.0976562) -1px 1px 0;
+    
+            -webkit-border-top-left-radius: 8px;
+            -webkit-border-bottom-right-radius: 8px;
+            -webkit-border-bottom-left-radius: 7px;            
+            
+            -webkit-transform: rotate(45deg); 
+
+            -webkit-mask-image: 
+                -webkit-gradient(linear, left bottom, right top, 
+                    from(#000000), 
+                    color-stop(0.5,#000000), 
+                    color-stop(0.5, transparent), 
+                    to(transparent));
+
+            -webkit-background-clip: content;
+}
+
+.button-up > span.pointer {
+    background-image: -webkit-gradient(linear, left top, right bottom, from(#5A81AF), color-stop(0.05, #304864), to(#192533)); 
+}
+
+.button-down > span.pointer {
+        background-image: -webkit-gradient(linear, left top, right bottom, from(#080C11), color-stop(0.1, #111922), color-stop(0.65, #192533), to(#1A2635)); 
+}

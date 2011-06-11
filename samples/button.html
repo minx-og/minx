@@ -1,0 +1,91 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <!-- meta data, as in data about data where data is this file -->
+        <meta charset="utf-8">
+        <meta name="description" content="Willis a simple mobile optimised widget library">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="author" content="MoneyToolkit">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+        <!-- title -->
+        <title>Minx button test</title> 
+
+        <!-- styles -->
+        <!-- core structural css -->
+        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.1">
+
+        <!-- theme css -->
+        <link rel="stylesheet" href="../source/themes/css/iphone.css?v=1.1">
+
+        <!-- client stylesheet -->
+        
+
+        <!-- core lib code -->
+        <script src="../source/extern/my.class.js"></script>
+        
+        <!-- my code -->
+        <!-- core panels -->
+        <script src="../source/core/src/panelmanager.js"></script>
+        <script src="../source/core/src/panel.js"></script>
+        <script src="../source/core/src/pinnedpanel.js"></script>
+        
+        <!-- more panels -->
+        <script src="../source/more/src/button.js"></script>
+        <link rel="stylesheet" href="../source/more/style/css/button.css?v=1.1">
+        
+        <!-- usefull panels -->
+        
+        <!-- popups -->
+        
+        <!-- layouts -->
+        
+        
+
+        <!-- our main entry -->
+        <script type="text/javascript" charset="utf-8">
+
+            /* When this function is called, PhoneGap has been initialized and is ready to roll */
+            function onDeviceReady() {
+                console.log('onDeviceReady');
+
+                
+                // true to create the first main panel and set it to auto size
+
+                Minx.pm.init();
+
+                var button = Minx.pm.add(null, 'button');
+
+                button.setPos(200,300);
+                button.setText("Booton");
+
+                button.onClick(function(e) {
+                   alert('What do you want!'); 
+                });
+
+                button.show();
+
+                setTimeout(function() {
+                    button.setAnimated(true);
+                    button.setPos(500, 100);
+                    button.show();
+
+                    setTimeout(function() {
+                        button.setAnimated(false);
+                        button.setPos(500, 500);
+                        button.show();
+                    }, 1000);
+                }, 1000);
+
+            }
+
+        </script>
+
+    </head>
+    <body onload="onDeviceReady()" style="background-color: #ddd">
+        <h3 style="font-family: arial, sans-serif; color: #bbb; text-shadow: 0px 1px 0px #fff;"> 
+            button.html - core css, iphone theme, transitions.
+        </h3>
+    </body>
+</html>

@@ -1,0 +1,147 @@
+/* iphone style */
+
+body {
+    overflow: hidden;
+    font-family: "Helvetica Neue", HelveticaNeue, "Helvetica-Neue", Helvetica, "BBAlpha Sans", sans-serif;
+}
+
+.panel {
+    background-color: #eee;
+}
+
+.panel.main-panel {
+    background-color: blue;
+}
+
+
+/* bars */
+.top-bar {
+    border-bottom: 1px solid;
+    border-color: black;
+}
+
+
+.title-panel {
+    background-color: blue;
+}
+
+.dark-bar {
+
+    background-image: 
+                -webkit-gradient(linear, left top, left bottom, 
+                    from(#a2abba), 
+                    color-stop(0.25, #97a0b3),
+                    color-stop(0.5, #808ca3), 
+                    color-stop(0.5, #75839c), 
+                    color-stop(0.75, #6c7b95),
+                    to(#63738f)); 
+  
+}
+
+.light-bar {
+    
+    background-image: 
+                -webkit-gradient(linear, left top, left bottom, 
+                    from(#b2bbca), 
+                    color-stop(0.25, #a7b0c3),
+                    color-stop(0.5, #909cb3), 
+                    color-stop(0.5, #8593ac), 
+                    color-stop(0.75, #7c8ba5),
+                    to(#73839f)); 
+
+}
+
+/* buttons */
+.button {
+    border: 1px solid #0C1118;
+}
+
+.button > span.label {
+
+    font-weight: normal;
+    font-size: 12px;
+    color: #aab;
+    letter-spacing: 0.1em;
+    
+    text-shadow: 0px 1px 0px #ddd;
+}
+
+
+.button-down {
+/* no iphoe style yet */
+}
+
+.button-up {
+
+    border: solid 1px #54617d;
+    
+                
+    -webkit-box-shadow: 0 1px 1px #9aa5bb, 0 -1px 1px #8e96a5; 
+
+    background-image: 
+        -webkit-gradient(linear, left top, left bottom, 
+            from(#92a1bf), 
+            color-stop(0.25, #798aad),
+            color-stop(0.5, #6276a0), 
+            color-stop(0.5, #556a97), 
+            color-stop(0.75, #566c98),
+            to(#546993)); 
+
+}
+
+.button.back {
+
+        color: #fff;
+        
+}
+
+
+
+.button.back > span.pointer {
+
+        box-sizing: border-box;
+            
+            background-image: 
+                -webkit-gradient(linear, left top, right bottom, 
+                    from(#92a1bf), 
+                    color-stop(0.32, #798aad),
+                    color-stop(0.50, #6276a0), 
+                    color-stop(0.50, #556a97), 
+                    color-stop(0.75, #566c98),
+                    to(#546993)); 
+
+
+                    border-left: solid 1px #484e59;
+                    border-bottom: solid 1px #9aa5bb;
+
+            
+            
+}
+
+.button-up > span.pointer {
+    background-image: 
+        -webkit-gradient(linear, left top, right bottom, 
+            from(#5A81AF), color-stop(0.05, #304864), to(#192533)); 
+}
+
+.button-down > span.pointer {
+        background-image: 
+        -webkit-gradient(linear, left top, right bottom, 
+            from(#080C11), color-stop(0.1, #111922), color-stop(0.65, #192533), to(#1A2635)); 
+}
+
+
+
+
+/* panel defaults */
+.thin-border {
+    border: 1px solid;
+    border-color: black;
+}
+
+.pop-up {
+    border: 4px solid;
+    border-color: black;
+    z-index: 30;
+}
+

@@ -1,0 +1,108 @@
+/* iphone style */
+
+body {
+    /* default font for this theme*/
+    font-family: "Helvetica Neue", HelveticaNeue, "Helvetica-Neue", Helvetica, "BBAlpha Sans", sans-serif;
+    /* some artifacts when this not a dark colour */
+    background-color: #000;
+}
+
+
+.panel {
+    /* default panel colour */
+    background-color: #EEE;
+}
+
+
+.panel.main-panel {
+    /* the big parent panel background keep this colour consistent with the toolbars as the rounded corners let the background through on safari */
+    background-color: #042348;
+}
+
+/* bars */
+.top-bar {
+    border-bottom: 1px solid;
+    border-color: black;
+
+}
+
+.title-panel {
+    /* very important to override panel background here so no pale dots on rounded corners */
+    background-color: #042348;
+}
+
+.dark-bar {
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#5A81AF), color-stop(0.02, #304864), to(#192533)); 
+    background-image: -moz-linear-gradient(#5A81AF 0%, #304864 2%, #192533 100%);  
+}
+
+.light-bar {
+    
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#7C9BC0), color-stop(0.02, #416086), to(#293E56));
+    background-image: -moz-linear-gradient(#7C9BC0 0%, #416086 2%, #293E56 100%);
+}
+
+/* buttons */
+.button {
+    border: 1px solid #000;
+    /* very important to override panel background here so no pale dots on rounded corners */
+    background-color: #042348;
+}
+
+.button > span.label {   
+
+    font-weight: normal;
+    font-size: 14px;
+    color: #6C8Ba0;
+    letter-spacing: 0.1em;
+    text-shadow: 0px -1px 0px #000
+}
+
+
+.button-down {
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#080C11), color-stop(0.1, #111922), color-stop(0.65, #192533), to(#1A2635));
+    -webkit-box-shadow: #0B1119 0px 0px 0.1em inset, rgba(255, 255, 255, 0.0976562) 0px 0.1em 0px;
+}
+
+.button-up {
+    
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#5A81AF), color-stop(0.03, #304864), to(#192533));
+    background-image: -moz-linear-gradient(#5A81AF 0%, #304864 3%, #192533 100%);
+    -webkit-box-shadow: rgba(255, 255, 255, 0.0976562) 0px 0.1em 0px;
+}
+
+.button.back {   
+    /* needed ?? */
+    color: #fff;
+}
+
+
+.button.back > span.pointer {
+    border: 1px solid #0C1118;
+    background-image: -webkit-gradient(linear, 0% 50%, 100% 55%, from(#5A81AF), color-stop(0.04, #304864), to(#192533));    
+}
+
+.button-up > span.pointer {
+    background-image: 
+        -webkit-gradient(linear, left top, right bottom, 
+            from(#5A81AF), color-stop(0.05, #304864), to(#192533)); 
+}
+
+.button-down > span.pointer {
+        background-image: 
+        -webkit-gradient(linear, left top, right bottom, 
+            from(#080C11), color-stop(0.1, #111922), color-stop(0.65, #192533), to(#1A2635)); 
+}
+
+
+/* panel defaults */
+.thin-border {
+    border: 1px solid;
+    border-color: black;
+}
+
+.pop-up {
+    border: 3px solid;
+    border-color: black;
+}
+

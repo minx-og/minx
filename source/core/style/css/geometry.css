@@ -1,0 +1,77 @@
+/* core geometry */
+html {
+}
+
+body {
+    overflow: hidden;
+}
+
+/* we are using sections instead of divs */
+span, div, section, header {
+    position: absolute;
+}
+
+.panel {
+    overflow: hidden;
+}
+
+/* bars */
+.round-bottom {
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+}
+
+.round-top {
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+}
+
+.title-panel {
+    -webkit-border-top-left-radius: 7px;
+    -webkit-border-top-right-radius: 7px;
+}
+
+
+.pop-up {
+    border: 3px solid;
+    border-color: black;
+    z-index: 20;
+
+    -moz-border-radius: 8px; 
+    border-radius: 8px;
+
+    -webkit-box-shadow: 0px 0px 20px rgba(0,0,0,.8);
+    -moz-box-shadow: 0px 0px 20px rgba(0,0,0,.8);
+    box-shadow: 0px 0px 20px rgba(0,0,0,.8);
+}
+
+
+.test-panel {
+    background: rgba(150,0,0,.65);
+}
+
+
+/* animation classes */
+.anim-geom {
+    -webkit-transition: bottom,top,left,right,height,width, border-color,border-spacing,border-width,padding,margin,z-index,opacity;
+    -moz-transition: bottom,top,left,right,height,width,border-color,border-spacing,border-width,padding,margin,z-index,opacity;
+    -o-transition: bottom,top,left,right,height,width,border-color,border-spacing,border-width,padding,margin,z-index,opacity;
+    transition: bottom,top,left,right,height,width,border-color,border-spacing,border-width,padding,margin,z-index,opacity;
+
+    -webkit-transition-duration: 0.2s; 
+    -moz-transition-duration: 0.2s; 
+    -o-transition-duration: 0.2s; 
+    transition-duration: 0.2s;
+}
+
+.anim-fade-only {
+    -webkit-transition: z-index, opacity; 
+    -moz-transition: z-index, opacity;
+    -o-transition: z-index, opacity;
+    transition: z-index, opacity;
+
+    -webkit-transition-duration: 0.3s; 
+    -moz-transition-duration: 0.3s; 
+    -o-transition-duration: 0.3s; 
+    transition-duration: 0.3s;
+}

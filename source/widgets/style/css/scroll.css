@@ -1,0 +1,31 @@
+
+
+/*only use this one for desktop */
+
+.scroll-overflow {
+    overflow-y: scroll;
+}
+
+
+.scroll-content li{
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid white;
+    font-size: 14px;
+    height: 80px;
+    line-height: 40px;
+    padding: 0px 10px;
+
+}
+
+li {
+    display: list-item;
+}
+
+ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+    width: 100%;
+}

@@ -1,0 +1,177 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <!-- meta data, as in data about data where data is this file -->
+        <meta charset="utf-8">
+        <meta name="description" content="Willis a simple mobile optimised widget library">
+        <meta name="author" content="MoneyToolkit">
+
+        <!-- title -->
+        <title>Minx Core Sample</title> 
+
+        <!-- styles -->
+        <!-- core structural css -->
+        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.1">
+        
+        <!-- lib code -->
+        <script src="../source/extern/my.class.js"></script>
+
+        <!-- core code -->
+        <script src="../source/core/src/panelmanager.js"></script>
+        <script src="../source/core/src/panel.js"></script>
+        <script src="../source/core/src/pinnedpanel.js"></script>
+        
+        <!-- our main entry -->
+        <script type="text/javascript" charset="utf-8">
+
+            /* When this function is called, PhoneGap has been initialized and is ready to roll */
+            function onDeviceReady() {
+                console.log('onDeviceReady');
+                Minx.pm.init();
+                
+                var panel = Minx.pm.add();
+
+                panel.setStyle('background-color', 'green');
+                panel.setSize(800, 600);
+
+                panel.show();
+
+                var innerPanel = Minx.pm.add(panel);
+
+                innerPanel.setStyle('background','red');
+                innerPanel.setSize(400, 270);
+                innerPanel.setPos(100, 120);
+                innerPanel.show();
+
+
+                var inner2Panel = Minx.pm.add(innerPanel);
+
+                inner2Panel.setStyle('background','blue');
+                inner2Panel.setSize(50, 20);
+                inner2Panel.setPos(30, 40);
+                inner2Panel.show();
+
+                var inner2Panel = Minx.pm.add(innerPanel);
+
+                inner2Panel.setStyle('background','yellow');
+                inner2Panel.setSize(0, 20);
+                
+                inner2Panel.setPos(0, 20);
+
+                inner2Panel.setParentPin('r', 5);
+                inner2Panel.setParentPin('l', 0);
+
+                inner2Panel.show();
+
+                var inner2Panel = Minx.pm.add(innerPanel);
+
+                inner2Panel.setStyle('background','blue');
+                inner2Panel.setSize(50, 20);
+                inner2Panel.setPos(50, 60);
+                inner2Panel.show();
+
+                var inner2Panel = Minx.pm.add(innerPanel);
+
+                inner2Panel.setStyle('background','orange');
+                inner2Panel.setSize(100, 20);
+                inner2Panel.setPos(0, 150);
+
+                inner2Panel.setParentPin('l', 5);
+
+                inner2Panel.show();
+
+                inner2Panel.layout();
+
+
+                var pbot = Minx.pm.add(innerPanel);
+                pbot.setSize(0, 20);
+                pbot.setParentPin('l', 1);
+                pbot.setParentPin('r', 1);
+                pbot.setParentPin('b', 1);
+                pbot.show();
+
+
+                // log our panels
+                Minx.pm.log();
+
+                // remove all but one panel after 2 seconds
+                setTimeout(function() {
+
+                        inner2Panel.setParentPin('r', 30);
+                        innerPanel.hide();
+
+
+                        setTimeout(function() {
+                            
+                            innerPanel.show();
+
+                            setTimeout(function() {
+
+                                var pan = Minx.pm.add(innerPanel);
+
+                                pan.setStyle('background','blue');
+                                pan.setSize(100, 100);
+                                pan.setPos(200, 10);
+                                pan.show();
+
+                                
+                                setTimeout(function() {
+
+                                    Minx.pm.remove(inner2Panel);    // remove by panel reference
+                                    Minx.pm.log();
+
+
+                                    pan.setParentPin('t', 0);
+                                    pan.setParentPin('b', 5);
+
+                                    pan.show();
+        
+                                    
+
+                                    setTimeout(function() {
+                                        pan.setParentPin('r', 13);
+                                        pan.show();
+
+
+                                        setTimeout(function() {
+                                                
+                                        
+                                            innerPanel.setParentPin('l', 10);
+
+                                            innerPanel.show();
+                                        
+                                    
+                                            setTimeout(function() {
+
+                                                innerPanel.setSize(700, 460);
+
+                                                innerPanel.show();
+                                                
+
+
+                                                //Minx.pm.remove('pn1');      // remove by id
+                                                Minx.pm.log();
+                                                
+                                            }, 5000);
+                                        }, 2000);
+                                    }, 2000);
+
+                                }, 2000);
+
+                            }, 2000);
+
+
+                        }, 2000);
+                }, 2000);
+
+            }
+
+        </script>
+
+    </head>
+    <body onload="onDeviceReady()" style="background-color: #ddd">
+        <h3 style="font-family: arial, sans-serif; color: #bbb; text-shadow: 0px 1px 0px #fff;"> 
+            core.html - core css, no theme, transitions.
+        </h3>
+    </body>
+</html>

@@ -1,0 +1,267 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <!-- meta data, as in data about data where data is this file -->
+        <meta charset="utf-8">
+        <meta name="description" content="Minx samples">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="author" content="MoneyToolkit">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+        <!-- title -->
+        <title>Minx popup samples</title> 
+        <!-- styles -->
+        <!-- core structural css -->
+        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.1">
+
+        <!-- theme css -->
+        <link rel="stylesheet" href="../source/themes/css/iphone.css?v=1.1">
+
+        
+        <!-- core lib code -->
+        <script src="../source/extern/my.class.js"></script>
+        
+        <!-- my code -->
+        <!-- core panels -->
+        <script src="../source/core/src/panelmanager.js"></script>
+        <script src="../source/core/src/panel.js"></script>
+        <script src="../source/core/src/pinnedpanel.js"></script>
+        <script src="../source/core/src/popup.js"></script>
+        
+        <!-- more panels -->
+        <script src="../source/more/src/button.js"></script>
+        <link rel="stylesheet" href="../source/more/style/css/button.css?v=1.1">
+
+        <script src="../source/more/src/toolbar.js"></script>
+        
+        <script src="../source/more/src/titlepanel.js"></script>        
+
+        <script src="../source/more/src/inputpop.js"></script>
+        
+
+        <!-- our main entry -->
+        <script type="text/javascript" charset="utf-8">
+
+            /* When this function is called, PhoneGap has been initialized and is ready to roll */
+            function onDeviceReady() {
+                console.log('onDeviceReady');
+
+                // true to create the first main panel and set it to auto size
+
+                var main = Minx.pm.init(true);             
+
+
+                // navigation panel
+                var titp = Minx.pm.add(main,'title-panel');
+                // 300 wide
+                titp.setSize(300, 0);
+                // max height and pinned to left
+                titp.setParentPin('l');
+                titp.setParentPin('b');
+                titp.setParentPin('t');
+
+                // make it lighter
+                titp.getTitle().removeClass('dark-bar');
+                titp.getTitle().addClass('light-bar');
+
+                // add a back button
+                var button = titp.getTitle().addButton('l', 10);
+                button.setType('back');
+                button.setText('Account');
+
+                // and a handler
+                button.onClick(function(panel,e){
+                    alert("I got a click on " + panel.getId());
+                });
+
+
+                // right hand content panel
+                var mitp = Minx.pm.add(main,'title-panel');
+                // pin it to the nav panel
+                mitp.setSiblingPin(titp, 'l');
+
+                //pin it to right hand side
+                mitp.setParentPin('r');
+
+                // and full height
+                mitp.setParentPin('b');
+                mitp.setParentPin('t');
+                
+                // add two buttons
+                var lbutton = mitp.getTitle().addButton('l', 10, 'Menu');
+                
+                lbutton.onClick(function(panel,e){
+                    pop();
+                });
+
+                lbutton.hide();
+
+
+                var rbutton = mitp.getTitle().addButton('r', 20, 'Pop');
+
+                rbutton.onClick(function(panel,e){
+                    popup();
+                });
+                
+
+                // nowshow the main window
+                main.show();
+
+
+                function land() {
+                        
+                        titp.setSize(300,600);
+
+                        titp.setParentPin('b', 0);
+
+                        titp.setParentPin('l', 0);
+                        
+                        titp.setParentPin('t', 0);
+
+                        titp.setStyle('z-index', '1');
+
+                        // add custom class
+                        titp.removeClass('pop-up');
+
+
+                        titp.show();
+
+
+                
+                        setTimeout(function() {
+
+                            
+
+                            mitp.setSiblingPin(titp, 'l');
+                            mitp.unsetParentPin('l');
+                            
+                            lbutton.hide();
+
+                            mitp.show();
+
+                            
+                        }, 200);
+                }
+
+                function port() {
+                        mitp.unsetSiblingPin('l');
+                        mitp.setParentPin('l');
+
+
+                        
+                        titp.unsetParentPin('l');
+                        titp.setPos(-300, 0);
+                        
+                        titp.show();
+
+                        mitp.show();
+                        setTimeout(function() {
+                            //titp.setSize(0,600);
+                            
+                            lbutton.show();
+                
+                            titp.hide();
+                            // reposition
+                            titp.setPos(0, 0);
+
+                        }, 200);
+                }
+
+                function pop() {
+                        
+                        if(titp.isHidden()) {
+                            titp.setSize(300,600);
+
+                            titp.unPin();
+
+                            titp.setParentPin('l', 20);
+                            titp.setParentPin('t', 50);
+
+                            titp.setStyle('z-index', '10');
+
+                            // add custom class
+                            titp.addClass('pop-up');
+
+                            // fade only animation - on pop
+                            titp.addClass('anim-fade-only');
+                            titp.removeClass('anim-geom');
+                            
+                            // boom!
+                            titp.show();
+
+                            // slide animation back
+                            titp.removeClass('anim-fade-only');
+                            titp.addClass('anim-geom');
+                        }
+                        else {
+                            titp.hide()
+                        }
+
+    
+                }
+
+                var nw = document.documentElement.clientWidth;
+                var nh = document.documentElement.clientHeight
+                var ori = nw < nh;
+
+                if(ori) {
+                    port();
+                }
+
+
+                window.addEventListener('resize', function(){
+                    nw = document.documentElement.clientWidth;
+                    nh = document.documentElement.clientHeight
+
+                    var nori = nw < nh
+                    if(nori != ori){
+                        ori = nori;
+                        if(nori) {
+                            port();
+                        }
+                        else {
+                            land();
+                        }
+                    }
+                });
+
+                function popup(){
+                    var pop = Minx.pm.add('main', 'input-pop-up');
+                    pop.setSize(400, 300);
+                   
+                    var cancelBtn = pop.getFootBar().addButton('l', 10, 'Cancel');
+                    
+                    cancelBtn.onClick(function(panel,e){
+                        alert('cancleled');
+                    });
+                    
+                    var okBtn = pop.getFootBar().addButton('r', 10, 'Logon');
+                    
+                    okBtn.onClick(function(panel,e){
+                        alert('OK');
+                    });                    
+
+                    pop.show();
+
+                    setTimeout(function() {
+
+                        Minx.pm.remove(pop);
+
+
+                    }, 4000);    
+                }
+                // remove all but one panel after 2 seconds
+                
+
+            }
+
+        </script>
+
+    </head>
+    <body onload="onDeviceReady()" style="background-color: #ddd">
+        <h3 style="font-family: arial, sans-serif; color: #bbb; text-shadow: 0px 1px 0px #fff;"> 
+            title-button-pop.html - core css, iphone theme, transitions.
+        </h3>
+    </body>
+</html>
