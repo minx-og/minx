@@ -7,11 +7,21 @@ if (typeof Minx.Layout === "undefined") {
 
 Minx.Layout.SplitLayout = my.Class({
 
-    constructor: function(main) {
+    constructor: function(main, lnw, pnw) {
         this._navSlideTimer = null;        // clearable timeout so can cancel delayed hides
         this._stuffSlideTimer = null;        // clearable timeout so can cancel delayed hides
-        this._navLandWidth = 300;             // 30% by default - in landscape mode
-        this._navPortWidth = 300;            // 300 px by default
+
+        if( typeof lnw == 'undefined') {
+            this._navLandWidth = 300;             // 30% by default - in landscape mode
+        } else {
+            this._navLandWidth = lnw;
+        }
+
+        if( typeof pnw == 'undefined') {
+            this._navPortWidth = 300;            // 300 px by default
+        } else {
+            this._navPortWidth = pnw;            // 300 px by default
+        }
 
         var me = this;
 
@@ -76,18 +86,18 @@ Minx.Layout.SplitLayout = my.Class({
 
         var nisPort = nw < nh;
 
-        // if is portrait and is a percentage the redraw it anyway
-        if(!nisPort) {
-            var navWidth = this._navLandWidth;
-            if(this._navLandWidth < 1) {        // then it is a ratio
-                navWidth = nw * this._navLandWidth;
-                // set the nav panel to docked in width    
-                this._navPanel.setSize(navWidth, 0);
-            }
-        }
-
         // orientation changed
         if(nisPort !== this._isPort){
+            // if it is landscape - then get any new navpanel width (the portrait popup width is calculated during the popup)
+            if(!nisPort) {
+                var navWidth = this._navLandWidth;
+                if(this._navLandWidth < 1) {        // then it is a ratio
+                    navWidth = nw * this._navLandWidth;
+                    // set the nav panel to docked in width    
+                    this._navPanel.setSize(navWidth, 0);
+                }
+            }
+        
             this._isPort = nisPort;
             if(nisPort) {
                 this._setPortrait(initial);

@@ -12,7 +12,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         Minx.ListScrollPanel.Super.call(this, parent, id);
 
         this._touch = Minx.pm.isTouch(); // saves calling loads
-
+        
         this._scroller = null;         // scroller is not really the view in this case - it is behaviour added, for iScroll the view is the markup
 
         this._didResize = false;       // ser if the parent got resized so we know ro refresh the scroller after a parent panel draw
@@ -25,6 +25,9 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             // if not touch device then add this...
             this.addClass('scroll-overflow');
         }
+
+        // default renderer
+        this._rowRenderer = this.getRowMarkup;
 
         // for iscroll the view is the dom node of this widget container
         this.setView(this.getNode());
@@ -61,26 +64,32 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         this._didResize = false;
     },
 
+    // a callback to return the row content
+    setRowRenderer: function(fn) {
+        this._rowRenderer = fn;
+    },
+
     // munge my model intomy view 
     munge: function() {
 
-        // call functions that i as widget designer know about my model
+        var view = this.getView();
 
-        // call functions on the view that I a widget designer know about
+        // trash any stuff in my node....
+        if(this._widgetRoot) {
+            view.removeChild(this._widgetRoot); 
+        }
+
 
         // for iscroller we call dom functions on our view
-        var ul = document.createElement('ul');
-        var view = this.getView()
+        // my root node is the ul that the iscroller expects
+        this._widgetRoot = document.createElement('ul');
+        
+        view.appendChild(this._widgetRoot);  
 
-        view.appendChild(ul);  
-
+        var pId = this.getId();
         // now apply stuff from our model - for now its just hard coded li's
         var li;
-        var text;
-        var pId = this.getId();
-        
-        // for now assume a model with a property 'name'
-
+        var liNode;
         
         var list = this.getModel();
         console.log(list);
@@ -88,20 +97,29 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         var row;
         for(var h in list) {
             row = list[h];
-
+            
             li = document.createElement('li');
             li.setAttribute('id', pId + "-i" + h);
 
+            // capture clicks
             Minx.eq.subscribe(this, li, 'click');
 
-            ul.appendChild(li);  
+            // call potentially a callback that will return my row content as a node
+            liNode = this._rowRenderer(pId, row);
+            if(liNode != null) {
+                li.appendChild(liNode);
+            }
 
-            
-            text = document.createTextNode('help');
-            text = document.createTextNode(row.name);
-            li.appendChild(text);  
+            this._widgetRoot.appendChild(li);
         }
+    },
 
+    getRowMarkup: function(parentId, row) {
+        // for now assume a model with a property 'name'
+        var div = document.createElement('div');
+        var text = document.createTextNode(row.display);
+        div.appendChild(text);
+        return div;  
     },
 
     resized: function() {
@@ -111,9 +129,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
         // capture that we did resize so that we know to refresh the scroller after drawing parent
         this._didResize = true;
-
     },
-
     
     // private override to decide what html element my node will be
     getMyElement: function() {

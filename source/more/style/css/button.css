@@ -6,6 +6,11 @@
     text-align: center;
     margin-left: auto; 
     margin-right: auto;
+    position: absolute;
+}
+
+.button > span {
+    position: absolute;
 }
 
 .button > span.label {
@@ -13,6 +18,7 @@
 
     white-space: nowrap;
     text-overflow: ellipsis;    
+
 }
 
 

@@ -1,0 +1,69 @@
+/* widget specific css */
+* {
+    padding:0;
+    margin:0;
+    font-size: 12pt;
+}
+
+body {
+  background-color: #eee;
+  font-family: arial, sans-serif;
+  color: #666; 
+  text-shadow: 0px 1px 0px #fff;
+  
+}
+
+.hide { display:none; }
+.left { float:left; }
+.right { float:right; }
+.clear { clear:both; height:1px; font-size:1px; line-height:1px; }
+
+.clear-r {
+  clear: right;
+  height: 1px;
+}
+
+.dblk {
+  height: 30px;
+}
+
+.midtop {
+  height: 32px;
+  float: none;  
+}
+
+.midbot {
+  height: 32px;
+  float: left;  
+}
+
+.right {
+  float: right;
+}
+
+.cred {
+  color: #068606;
+}
+
+.debi {
+  color: #860606;
+}
+
+.amt {
+  color: #333;
+}
+
+img.bank {
+  padding: 5px 10px;
+}
+
+.star {
+  width:  28px;
+  height: 30px;
+}
+
+.star img {
+  float: right;
+  width: 28px;
+  height: 28px;
+}

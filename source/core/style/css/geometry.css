@@ -6,13 +6,9 @@ body {
     overflow: hidden;
 }
 
-/* we are using sections instead of divs */
-span, div, section, header {
-    position: absolute;
-}
-
 .panel {
     overflow: hidden;
+    position: absolute;
 }
 
 /* bars */
