@@ -38,17 +38,8 @@ Minx.Layout.SplitLayout = my.Class({
         // and give the panel a rouncded bum
         this._navPanel.getContentPanel().addClass('round-bottom');
 
-        // add a back button
-        this._navBackButton = this._navPanel.getTitle().addButton('l', 10);
-        this._navBackButton.setType('back');
-        // client must setText
         
-        // navigation back button handler
-        this._navBackButton.onClick(function(panel,e){
-            alert("I got a nav click on " + panel.getId());
-        });
-
-
+        
         // --- right hand  panel of stuff
         this._stuff = Minx.pm.add(main,'title-panel');
 

@@ -64,6 +64,10 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         this._didResize = false;
     },
 
+    setKeyField : function(key) {
+        this._keyField = key;
+    },
+
     // a callback to return the row content
     setRowRenderer: function(fn) {
         this._rowRenderer = fn;
@@ -79,7 +83,6 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             view.removeChild(this._widgetRoot); 
         }
 
-
         // for iscroller we call dom functions on our view
         // my root node is the ul that the iscroller expects
         this._widgetRoot = document.createElement('ul');
@@ -88,18 +91,18 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
         var pId = this.getId();
         // now apply stuff from our model - for now its just hard coded li's
-        var li;
-        var liNode;
+        var li;         // a li for our row
+        var liNode;     // the node to attach to the li
         
         var list = this.getModel();
-        console.log(list);
-
-        var row;
+        
+        var row;        // each row
+        
         for(var h in list) {
             row = list[h];
-            
+            // make a new li for this row
             li = document.createElement('li');
-            li.setAttribute('id', pId + "-i" + h);
+            li.setAttribute('id', row[this._keyField]);       // set element attribute to my id
 
             // capture clicks
             Minx.eq.subscribe(this, li, 'click');

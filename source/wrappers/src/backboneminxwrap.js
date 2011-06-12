@@ -60,7 +60,8 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
         this._widget.onEvents(this.allWidgetFired);
     },
 });
-// TODO: fart a lot
+
+
 // plain old class to marry up the view and widget (now that I have discovered _bindAll)
 // we may not need this, thugh i'm still usefull for passing in the el from the Minx widget.
 BackboneMinxWrap.WidgetWrap = function(container, type) {    
@@ -92,7 +93,7 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
         view.updateWidgetModel();
     };
 
-    // naughty private fidler - make a setter
+    // naughty private fidler but tells me when any clicks on our widget TODO - make a setter
     this.onViewEvents = function(fn) {
         view._eventListener = fn;
     }
