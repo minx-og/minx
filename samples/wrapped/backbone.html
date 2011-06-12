@@ -1,0 +1,80 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <!-- meta data, as in data about data where data is this file -->
+        <meta charset="utf-8">
+        <meta name="description" content="Willis a simple mobile optimised widget library">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="author" content="MoneyToolkit">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+        <!-- title -->
+        <title>The HTML5 Test</title> 
+
+        <!-- styles -->
+        <link rel="stylesheet" href="../../source/core/style/css/geometry.css?v=1.1">
+        
+        <!-- core structural css -->
+        <link rel="stylesheet" href="../../source/core/style/css/geometry.css?v=1.1">
+
+        <!-- theme css -->
+        <link rel="stylesheet" href="../../source/themes/css/sencha.css?v=1.1">
+
+        <!-- core lib code -->
+        <script src="../../source/extern/my.class.js"></script>
+        
+        <!-- my code -->
+        <!-- core panels -->
+        <script src="../../source/core/src/panelmanager.js"></script>
+        <script src="../../source/core/src/panel.js"></script>
+        <script src="../../source/core/src/pinnedpanel.js"></script>
+        <script src="../../source/core/src/popup.js"></script>
+        <script src="../../source/core/src/widgetpanel.js"></script>
+        
+        <!-- more panels -->
+        <script src="../../source/more/src/button.js"></script>
+        <link rel="stylesheet" href="../../source/more/style/css/button.css?v=1.1">
+
+        <script src="../../source/more/src/toolbar.js"></script>
+        
+        <script src="../../source/more/src/titlepanel.js"></script>        
+
+        <script src="../../source/more/src/inputpop.js"></script>
+        
+        <!-- custom widgets -->
+        <script src="../../source/widgets/src/listscrollpanel.js"></script>
+        <link rel="stylesheet" href="../../source/widgets/style/css/scroll.css?v=1.1">
+
+        <!-- layouts -->
+        <script src="../../source/layouts/src/splitlayout.js"></script>
+        
+
+        <!-- libraries for the wrapper -->
+
+        <script src="../../source/extern/iscroll.js"></script>
+        <script src="../../source/wrappers/extern/underscore.js"></script>
+        <script src="../../source/wrappers/extern/backbone.js"></script>
+        
+        <!-- application source -->
+        <script src="../../source/wrappers/src/backboneminxwrap.js"></script>
+
+        <script src="src/mtk.app.backbone.js"></script>
+
+        <!-- our main entry -->
+        <script type="text/javascript" charset="utf-8">
+
+            /* When this function is called, PhoneGap has been initialized and is ready to roll */
+        function onDeviceReady() {
+                console.log('onDeviceReady');
+                // make my app and inititalise it
+                Mtk.AppStart();
+        }
+            
+        </script>
+
+    </head>
+    <body onload="onDeviceReady()">
+        
+    </body>
+</html>
