@@ -21,12 +21,13 @@ I see minx as a basic window (panel) layout tool where each panel can contain 'w
 Organisation
 ------------
 
-Minx is pretty much composed of four parts things...
+Minx is pretty much composed of five parts ...
 
 *  core 		- the panel and panel manager and a widget wrap panel. 	
 *  more 		- more usefull things like buttons, title bars and popups - and common arrangements of them
-*  widgets     - widgets have some graphical behaviour and some data wrapped with a panel
+*  widgets      - widgets have some graphical behaviour and some data wrapped with a panel
 *  layouts		- arangements of multiple things made from 'more' things - a layout is not a panel itself
+*  wrappers		- classes that are specific to other frameworks and minx that allow them to work together, sharing models, views and events.
 
 
 Core
@@ -154,6 +155,11 @@ Widgets
 -------
 
 V important
+
+Wrappers
+--------
+
+Wrappers really wrap widgets as it is these things that do all the real work - widgets have models and can display them
 
 
 Orientation change and Pop Up
