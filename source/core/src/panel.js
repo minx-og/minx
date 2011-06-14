@@ -205,6 +205,25 @@ Minx.Panel = my.Class({
         }
     },
 
+    // add a style pair - which will end up on the style attribute after a call to _applyStyles
+    // this is used to set geometry and everything
+    // if the this._style list changes then we are dirty - so need a redraw
+    setStyle: function(key, val) {
+        // check we dont have this style or if we do that it is for a different value
+        if(!(key in this._style) || (this._style[key] !== val)) {
+            this._style[key] = val;  
+            this._dirty = true;
+        }
+    },
+
+    removeStyle: function(key) {
+        // make sure we do have this key before marking dirty
+        if(key in this._style) {
+            delete this._style[key];
+            this._dirty = true;
+        }
+    },
+
     // getters
     // =======
 
@@ -265,6 +284,8 @@ Minx.Panel = my.Class({
     // actions
     // =======
     
+    // event 
+    // -----
     //register a handler for all my events
     onEvents: function(fn) {
         this._eventListener = fn;
@@ -284,26 +305,7 @@ Minx.Panel = my.Class({
     eventParse: function(event) {
         return {e: event};
     },
-
-    // add a style pair - which will end up on the style attribute after a call to _applyStyles
-    // this is used to set geometry and everything
-    // if the this._style list changes then we are dirty - so need a redraw
-    setStyle: function(key, val) {
-        // check we dont have this style or if we do that it is for a different value
-        if(!(key in this._style) || (this._style[key] !== val)) {
-            this._style[key] = val;  
-            this._dirty = true;
-        }
-    },
-
-    removeStyle: function(key) {
-        // make sure we do have this key before marking dirty
-        if(key in this._style) {
-            delete this._style[key];
-            this._dirty = true;
-        }
-    },
-
+    
 /* 
 Laying out Drawing and Rendering
 ================================

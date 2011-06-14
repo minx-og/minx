@@ -36,7 +36,7 @@ Minx.Events = function(){
                 panel.addEvent({node: node, ev: ev, mEv: mEv});
             }
 
-            node.addEventListener(ev, mEv.trigger, true);
+            node.addEventListener(ev, mEv.trigger, true);   // let it bubble around
         }
 };
 
@@ -102,6 +102,10 @@ Minx.PanelManager = function() {
     this.isTouch = function() {
         var t = this.agent();
         var touch = t.iphone || t.ipad || t.ipad || t.android || t.blackberry;
+
+        //DEV - simulate touch
+        return true;
+
         return touch;
     }
 

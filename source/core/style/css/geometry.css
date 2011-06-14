@@ -49,6 +49,8 @@ body {
 
 /* animation classes */
 .anim-geom {
+    -webkit-transform: translateZ(0);
+    
     -webkit-transition: bottom,top,left,right,height,width, border-color,border-spacing,border-width,padding,margin,z-index,opacity;
     -moz-transition: bottom,top,left,right,height,width,border-color,border-spacing,border-width,padding,margin,z-index,opacity;
     -o-transition: bottom,top,left,right,height,width,border-color,border-spacing,border-width,padding,margin,z-index,opacity;

@@ -16,7 +16,7 @@ body {
 
 .panel.main-panel {
     /* the big parent panel background keep this colour consistent with the toolbars as the rounded corners let the background through on safari */
-    background-color: #042348;
+    background-color: #000;
 }
 
 /* bars */

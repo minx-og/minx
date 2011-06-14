@@ -36,7 +36,9 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
     eventParse: function(event) {
         // augement with explicit id
         // e must be in the param object
-        return {id: event.srcElement.id, e: event};
+        console.log(event);
+        // currentTarget - the element that recieved the event
+        return {id: event.currentTarget.id, e: event};
     },
 
     // iScroll can only attach properly when the dic it is in is layed out - so create my scroller on first drawing
@@ -49,8 +51,10 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         // if touch and we dont have one allready
         if(this._touch) {
             if(this._scroller == null) {
-                // create a new scroller for my id
-                this._scroller = new iScroll(this.getId());
+                // create a new scroller for my id only if there is any thing in the model
+                //if(this.getModel().length > 0) {
+                    this._scroller = new iScroll(this.getNode());
+                //}
             }
             else if(wasdirty && this._didResize) {
                 // scroller needs t know about div size changes - give it time for animations to take effect
@@ -76,6 +80,21 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
     // munge my model intomy view 
     munge: function() {
 
+        // as our munge function completely recreates the ul and all lis in it we may as well recreate the scroller.
+        // if we simply call refresh the scroller expects the ul to be the same on that was in place when we created the scroller in the first place
+
+        // this may be sub-optimal - but given the total recreation i doubt it...
+        var list = this.getModel();
+
+        if(this._touch && this._scroller != null) {
+            
+            this._scroller.destroy();
+            this._scroller = null;
+            if(list.length > 0) {
+                this._scroller = new iScroll(this.getNode());
+            }
+        }
+
         var view = this.getView();
 
         // trash any stuff in my node....
@@ -93,8 +112,6 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         // now apply stuff from our model - for now its just hard coded li's
         var li;         // a li for our row
         var liNode;     // the node to attach to the li
-        
-        var list = this.getModel();
         
         var row;        // each row
         
@@ -114,6 +131,12 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             }
 
             this._widgetRoot.appendChild(li);
+        }
+        // create the new scroller
+        if(this._touch && this._scroller == null) {   
+            if(list.length > 0) {
+                this._scroller = new iScroll(this.getNode());
+            }
         }
     },
 
