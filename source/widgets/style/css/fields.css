@@ -1,0 +1,68 @@
+
+.field-list {
+    background: #e5e5e7;
+}
+
+.field-list h2{
+    color: #aab;
+}
+
+ul.field-list {
+    padding: 10px;
+    width: auto;
+}
+
+ul.field-list li {
+    height: auto;
+    min-height: 45px;
+    
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    
+    box-sizing: border-box;
+    background-clip: border-box;
+}
+
+ul.field-list li.first {
+    -webkit-border-top-left-radius: 7px;
+    -webkit-border-top-right-radius: 7px;   
+    border-top: 1px solid #ccc;
+}
+
+ul.field-list li.last {
+    -webkit-border-bottom-left-radius: 7px;
+    -webkit-border-bottom-right-radius: 7px;   
+ 
+}
+
+
+ul.field-list li.break {
+    border: 0px;
+    background: transparent;
+}
+
+
+label {
+    font-size: 15px;
+    font-weight: bold;
+
+    padding-left: 10px;
+}
+
+#pn11 label {
+    display: block;
+    width: 120px;    
+    float: left;
+}
+
+input, select {
+    font-size: 18px;
+    padding: 7px;
+    border: 0px;
+    text-shadow: none;
+}
+
+input::-webkit-input-placeholder, isindex::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: #ddd;
+}
