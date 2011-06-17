@@ -7,16 +7,16 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="author" content="MoneyToolkit">
 
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 
         <!-- title -->
         <title>Minx split-layout and scroll list widget</title> 
         <!-- styles -->
         <!-- core structural css -->
-        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.6">
+        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.1">
 
         <!-- theme css -->
-        <!--link rel="stylesheet" href="../source/themes/css/iphone.css?v=1.1"-->
+        <link rel="stylesheet" href="../source/themes/css/iphone.css?v=1.1">
 
         <!-- core lib code -->
         <script src="../source/extern/my.class.js"></script>
@@ -44,6 +44,9 @@
         <script src="../source/widgets/src/listscrollpanel.js"></script>
         <link rel="stylesheet" href="../source/widgets/style/css/scroll.css?v=1.1">
 
+        <script src="../source/widgets/src/fieldlist.js"></script>
+        <link rel="stylesheet" href="../source/widgets/style/css/fields.css?v=1.1">
+
         <!-- layouts -->
         <script src="../source/layouts/src/splitlayout.js"></script>
 
@@ -60,7 +63,6 @@
                 // true to create the first main panel and set it to auto size
 
                 var main = Minx.pm.init(true);       
-
                 
                 console.log(Minx.pm.agent());      
 
@@ -68,7 +70,6 @@
 
                 var layout = new Minx.Layout.SplitLayout(main);
                 
-                /*
                 
                 // add my specific button
                 var rbutton = layout.getMainPanel().getTitle().addButton('r', 20, 'Pop');
@@ -93,6 +94,12 @@
                    alert(par.id); 
                 });
 
+              
+
+                 // nowshow the main window
+                main.show();
+
+
                 navList.setModel([
                   {name: "Tim", age: 5},
                   {name: "Ida", age: 26},
@@ -105,8 +112,8 @@
                   {name: "Rob", age: 55},
                   {name: "Tim", age: 5},
                   {name: "Ida", age: 26},
-                  {name: "Rob", age: 55},
-                  {name: "Tim", age: 5},
+                  {name: "RBb", age: 55},
+                  {name: "ddd", age: 5},
                   {name: "Ida", age: 26},
                   {name: "Rob", age: 55},
                   {name: "Tim", age: 5},
@@ -125,9 +132,38 @@
                 
                 // combine the view and model
                 navList.munge();
-*/
-                // nowshow the main window
-                main.show();
+
+
+                // now do our new widgetty thing
+
+                var mainPanel = layout.getMainPanel().getContentPanel();
+
+                var fieldForm = Minx.pm.add(mainPanel);
+                fieldForm.addClass('test-panel');
+                fieldForm.fillParent(50);
+                
+
+                var fieldList = Minx.pm.add(fieldForm, 'field-list-panel');
+              
+
+                fieldList.setModel([
+                  {name:'name', label: 'Name', type: 'text',   value: '', placeholder: 'name'},
+                  {name:'type', label: 'Class', type: 'select', value: '', options:[{value:'upper', disp:'Better'}, {value:'middle', disp:'Worse and Better'},{value: 'lower', disp:'Worse'}]},
+                  {name:'street', label: 'Street', type: 'text',   value: '', placeholder: '1 The Street', style: 'last'},
+                  {name:'br1', type: 'break'},
+                  {name:'tr1', type: 'title', value: 'Some More...'},
+                  {name:'town', label: 'Town', type: 'text',   value: '', placeholder: 'ville', style: 'first'},
+                  {name:'country', label: 'Country of birth', type: 'password',   value: '', placeholder: ''},
+                  {name:'1name', label: 'Name', type: 'text',   value: '', placeholder: 'name'},
+                  {name:'1type', label: 'Class', type: 'select', value: '', options:[{value:'upper', disp:'Better'}, {value:'middle', disp:'Worse and Better'},{value: 'lower', disp:'Worse'}]},
+                  {name:'1street', label: 'Street', type: 'text',   value: '', placeholder: '1 The Street', style: 'last'},
+                  {name:'1tr1', type: 'title', value: 'Some More...'},
+                  {name:'1town', label: 'Town', type: 'text',   value: '', placeholder: 'ville', style: 'first'},
+                  {name:'1country', label: 'Country of birth', type: 'password',   value: '', placeholder: ''},
+                ]);
+
+                fieldList.munge();
+      
 
 
                 function popup(){

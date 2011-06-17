@@ -40,6 +40,10 @@ Minx.Events = function(){
         }
 };
 
+
+// ipad = 1024 x 610
+//      = 768 x 866
+
 // new event queue
 Minx.eq = new Minx.Events();
 
@@ -49,6 +53,9 @@ Minx.eq = new Minx.Events();
 // removes panels
 // gives the ability to set z-order
 Minx.PanelManager = function() {
+
+    this.localMobileTest = false;
+
     var _panels = {};           // hash of all panels by id
     var _idCounter = 0;         // internal id counter
     var _pref = 'pn';           // panel id prefix - e.g. pn1, pn2...
@@ -66,20 +73,50 @@ Minx.PanelManager = function() {
         if(auto) {
             main = Minx.pm.add(_root_node, 'simple');
             main.addClass('main-panel');
+            main.setAnimate(false);                                     // TODO - try it both ways
+
             var w = document.documentElement.clientWidth;
             var h = document.documentElement.clientHeight
-            main.setSize(w, h);
+            //main.setSize(w, h);
+            //main.setSize(w, 1024);
 
-            // this pretty much deals with any orientation change
-            window.addEventListener('resize', function(){
-                var nw = document.documentElement.clientWidth;
-                var nh = document.documentElement.clientHeight
-                main.setSize(nw, nh);
+            main.setSize(100, 100);
 
-                // this redraws all kidies if thier geometry has changed
-                main.render();
+            var changing = false;
+            function oChange(){
 
-            }, true);
+                if(!changing) {
+                    changing = true;
+                    var nw = document.documentElement.clientWidth;
+                    var nh = document.documentElement.clientHeight
+
+                    console.log("w="+nw + " h="+ nh);
+                    main.setSize(nw, 1024);
+                    
+                    // this constructs main panel geometry and updates kids - redraws all kidies if thier geometry has changed
+                    // but doesnt redraw the main panel
+                    //main.layout();
+                    //main.drawKids();
+
+                    //main.render();
+                    changing = false;
+                }
+            }
+        
+            if(this.isTouch() && !this.localMobileTest) {
+                window.addEventListener('orientationchange', function(){
+                    var orientation = window.orientation;
+
+                    console.log(orientation);
+                    oChange();
+
+                }, true);
+            } else {
+
+                // this pretty much deals with any orientation change
+                window.addEventListener('resize', oChange, true);
+            }
+
         }
 
         this._main = main;
@@ -104,7 +141,9 @@ Minx.PanelManager = function() {
         var touch = t.iphone || t.ipad || t.ipad || t.android || t.blackberry;
 
         //DEV - simulate touch
-        return true;
+        if(this.localMobileTest){
+            return true;
+        }
 
         return touch;
     }

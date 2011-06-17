@@ -1,17 +1,31 @@
 /* core geometry */
-html {
+
+*, h1, h2, p {
+    padding:0;
+    margin:0;
+    font-size: 12pt;
 }
 
 body {
     overflow: hidden;
+
+    background: #000;
+    /* perf?? */
+    /*text-shadow: 0px 1px 0px white;*/
+}
+
+#pn0 {
+    overflow: visible !important;  /*allowing overflow allows the viewport to stay stable*/
 }
 
 .panel {
     overflow: hidden;
     position: absolute;
+    border: dashed 1px blue;
 }
 
-/* bars */
+/*
+
 .round-bottom {
     -webkit-border-bottom-left-radius: 5px;
     -webkit-border-bottom-right-radius: 5px;
@@ -40,27 +54,56 @@ body {
     -moz-box-shadow: 0px 0px 20px rgba(0,0,0,.8);
     box-shadow: 0px 0px 20px rgba(0,0,0,.8);
 }
+*/
 
-
+/* alpha might fuck up hw rendering */
 .test-panel {
-    background: rgba(150,0,0,.65);
+/*    background: rgba(150,0,0,.65);*/
+      background: rgb(200,200,230);
 }
+
+.test-panel2 {
+/*    background: rgba(0, 100, 0, .45); */
+    background: rgb(200,230,200);
+}
+
 
 
 /* animation classes */
 .anim-geom {
-    -webkit-transform: translateZ(0);
     
+
+/*    
+    -webkit-transition:  -webkit-transform, bottom,top,left,right, height, width, opacity;
+        
+    -webkit-transition-duration: 2s;
+    
+    -webkit-transition-timing-function: linear;
+*/
+
+    /* transitioning height means constanlty altering the content - needing a reflow */
+
+    -webkit-transition: -webkit-transform, top,left;
+
+    -webkit-transition-timing-function: linear;
+
+
+/*
     -webkit-transition: bottom,top,left,right,height,width, border-color,border-spacing,border-width,padding,margin,z-index,opacity;
     -moz-transition: bottom,top,left,right,height,width,border-color,border-spacing,border-width,padding,margin,z-index,opacity;
     -o-transition: bottom,top,left,right,height,width,border-color,border-spacing,border-width,padding,margin,z-index,opacity;
     transition: bottom,top,left,right,height,width,border-color,border-spacing,border-width,padding,margin,z-index,opacity;
 
-    -webkit-transition-duration: 0.2s; 
-    -moz-transition-duration: 0.2s; 
-    -o-transition-duration: 0.2s; 
-    transition-duration: 0.2s;
+
+    -webkit-transition-duration: 0.4s; 
+    -moz-transition-duration: 0.4s; 
+    -o-transition-duration: 0.4s; 
+    transition-duration: 0.4s;
+
+*/
+
 }
+
 
 .anim-fade-only {
     -webkit-transition: z-index, opacity; 
@@ -68,7 +111,9 @@ body {
     -o-transition: z-index, opacity;
     transition: z-index, opacity;
 
-    -webkit-transition-duration: 0.3s; 
+    -webkit-transition-duration: 1s; 
+    
+
     -moz-transition-duration: 0.3s; 
     -o-transition-duration: 0.3s; 
     transition-duration: 0.3s;

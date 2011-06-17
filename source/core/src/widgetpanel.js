@@ -54,7 +54,8 @@ Minx.WidgetPanel = my.Class(Minx.PinnedPanel, {
 	    }
     },
 
-    // munge my model into my view 
+    // munge my model into my view - called manually be the client  - could add an 'auto' mode that looked for changes in the model
+    // this is what something like the backbone widget wrapper does 
     munge: function() {
 
         // call functions that i as widget designer know about my model

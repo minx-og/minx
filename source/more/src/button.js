@@ -30,7 +30,6 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         this.setSize(70, 30);
         this.setPos(10, 10);
         
-        this.addClass('button');
         this.addClass('button-up');
 
         // register my events in Minx.eq wrapper 
@@ -171,6 +170,10 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         }
     },
 
+    getClassName: function() {
+        return 'button';
+    },
+    
     getMyElement: function() {
         return 'div';
     },

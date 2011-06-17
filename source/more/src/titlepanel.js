@@ -12,9 +12,17 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
         // call my base constructor
         Minx.TitlePanel.Super.call(this, parent, id);
 
+        this.addClass('test-panel')
+
+/*
+
+
         // add a title-bar
         this._titleBar = Minx.pm.add(this,'tool-bar');
         this._titleBar.dock('t');
+
+        this._titleBar.hide();
+        
 
 
         // add a plain pinned panel
@@ -22,9 +30,9 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
 
         // and round the bottom off - in case asked to pop up
         this._mainPanel.addClass('round-bottom');
+        //this._mainPanel.setAnimated(false);
 
-        // title-panel styles, and a thin border
-        this.addClass('title-panel');
+    
         this.addClass('thin-border');
         
         // pin the main panel to bottom of title bar
@@ -34,6 +42,9 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
         this._mainPanel.setParentPin('l', 0);
         this._mainPanel.setParentPin('r', 0);
         this._mainPanel.setParentPin('b', 0);
+
+        this._mainPanel.addClass('test-panel2')
+*/
 
     },
 
@@ -47,7 +58,11 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
         return this._mainPanel;
     },
 
-    // private override to decide what html element my node will be
+    // title-panel styles, and a thin border
+    getClassName: function() {
+        return 'title-panel';
+    },
+        // private override to decide what html element my node will be
     getMyElement: function() {
         return 'div';
     },

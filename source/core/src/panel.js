@@ -38,10 +38,41 @@ Minx.Geom = my.Class({
     }
 });
 
+
+// Webkit accelerated animations
+
+Minx.anim = {
+    trans: '-webkit-transform',
+    transpeed: '-webkit-transition-duration',
+    setpos: function(pan, x, y) {
+        pan.setStyle(Minx.anim.trans, 'translate3d(' + x + 'px,' + y + 'px, 0px)');
+
+        
+    },
+    settime: function(pan, speed) {
+        pan.setStyle(Minx.anim.transpeed, speed + 'ms');
+    }
+};
+
+/*
+
+// None accelerated animations
+
+Minx.anim = {
+    trans: '-webkit-transform',                     // this setting not used in none accel
+    setpos: function(pan, x, y) {
+        pan.setStyle('left', x + 'px');
+        pan.setStyle('top',  y + 'px');
+    }
+};
+
+*/
+
 // the seat of all power - THE PANEL
 // keeps a list of all child panels
 // builds up new geometry to decide ifa change is needed
 // holds a reference to its dom node
+
 
 Minx.Panel = my.Class({
     
@@ -59,12 +90,15 @@ Minx.Panel = my.Class({
         this._events = [];               // array of events i have subscribed to
         
         this._nowG = new Minx.Geom();    // my geometry now
+        this._aniG = new Minx.Geom();    // my geometry to be applied pending animation completion
         this._newG = new Minx.Geom();    // my geometry to be
 
         this._dirty = false;             // has anything changed that requires me to update my style attributes in th dom
 
-        this._animate = true;
+        this._animate = 500;             // enabe full animation by default with duration 500
+        
         this._firstDraw = true;          // pesky once off flag to say if this is the first drawing
+
 
         // SPECIAL - have we just made the root node - dont create nodes
         if(id == "root") {
@@ -104,6 +138,7 @@ Minx.Panel = my.Class({
         this.setSize(100, 100);
         this.setPos(0,0);
     },
+
     
     // this adds the panel to our kids list and 
     // appends the new dom node to my node
@@ -184,8 +219,9 @@ Minx.Panel = my.Class({
     },
 
     // dont like smoth transitions? simples
-    setAnimated: function(tf) {
-        this._animate = tf;
+    setAnimate: function(time) {
+        this._animate = time;
+        this._setTime(this, time);
     },
 
     // add a css class - 'class' a reserved word on gecko
@@ -254,6 +290,10 @@ Minx.Panel = my.Class({
     // override for specific elements like title bar shoud be header
     getMyElement: function() {
         return 'section';
+    },
+
+    getClassName: function() {
+        return 'panel';
     },
 
     isDirty: function() {
@@ -356,7 +396,11 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         clearTimeout(this._hideTimer);
         // set visible - inherit the parents visibility
         this.setStyle('visibility', 'inhertied');
-        this.setStyle('opacity', '1');
+
+        //DEBUG - remove opacity for hw accell
+        //this.setStyle('opacity', '1');
+
+        
         // make sure it is rendered
         this.render();
     },
@@ -372,6 +416,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         this.draw();        
     },
 
+
     // apply the geometry to our css style map - (only actually actioned after a call to _applyStyles)
     // first check how I am altered by my parent based on parent pinning
     // then if pinning changed anything
@@ -381,11 +426,10 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         //check if geometary changed
         if(!this._nowG.equal(this._newG)) {
 
-            // need to test now before we clone the dimensions (because then they would be equal and we would never know)
-            var newDims = !this._nowG.dimsEqual(this._newG); 
+            this._mapAllStuff();
 
-            // set my new coordinates here as kid layouts need them to work out thiers
-            this._nowG.clone(this._newG);
+            // need to test to see if actual dimensions have changed
+            var newDims = !this._nowG.dimsEqual(this._newG); 
 
             // if my dimensions have changed (as checked before the clone) - then ask my kids to lay themselves out
             if(newDims) {
@@ -394,10 +438,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
                 }  
                 
                 this.resized();
-            }
-            
-            // add my new geometry to the style map
-            this._mapMyGeometry();
+            }            
         }
     },
 
@@ -409,7 +450,10 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         // set hidden
         var me = this;
         // even if instant set opacity to zero so we can fade up on show
-        this.setStyle('opacity', '0');
+
+        //DEBUG - remove opacity for hw accell
+        //this.setStyle('opacity', '0');
+
         if(instant){
             me.setStyle('visibility', 'hidden');
         }
@@ -427,84 +471,145 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         this._applyStyles();
     },
 
+
     // if i'm dirty I shal clean myself by building a cssstyle and telling the browser
     // then make sure my kids do the same
     // because there is every chance some of them are pinned to me and since i changed so did they
     // if they aren't diry then no biggy - do nothing 
-    draw: function() {
-        // any of our style or position changed
-        if(this._dirty) {
-            // apply my styles to the dom cos kiddies (specially widgets might like them)
-            this._applyStyles();
-            
-            // now ask my kids  to do the same if they are dirty
-            for(var kid in this._kidies) {
-                this._kidies[kid].draw();
-            }
-            // tell every one I'm clean
-            this._dirty = false;
+    draw: function(kidsonly) {
+
+        // apply my styles to the dom - sets dirty if any have changed
+        this._applyStyles();
+        
+        // now ask my kids  to do the same if they are dirty
+        this.drawKids();
+
+    },
+
+
+    drawKids: function (){
+        for(var kid in this._kidies) {
+            this._kidies[kid].draw();
         }
     },
 
 
-    //private - make sure my new geometry is in the style map - which ultimately gets set on the style text of my node via _applyStyles
-    _mapMyGeometry: function() {
+    // does the normal dom drawing - only called by draw()
+    // force current geometry (killing any animation in progress)
+    // sets up new animation
+    // sets up new geometry
+    // and blasts it to the dom
+    _applyStyles: function() {
         
-        this.setStyle('left', this._nowG.l + 'px');
-        this.setStyle('top',  this._nowG.t + 'px');
+        // if I have new Geometry...
+        // add my new geometry to the style map to be applied when I get drawn
+        if(!this._nowG.equal(this._newG)) {
+            this._mapAllStuff();
+        
+            
+            // and update the dom with these new geom changes
+            this._blastStyles();
+        }
 
-        // apply width
-        this.setStyle('width',  this._nowG.w + 'px');
-        this.setStyle('height', this._nowG.h + 'px');
+        this._nowG.clone(this._newG);
+    },
 
-        // apply transition animations only if not first draw
-        if(!this._firstDraw && this._animate) {
-            this.addClass('anim-geom');
+
+    // remove all animation classes and styles
+    // not sure this is needed
+    _clearAnims: function() {
+           
+        this.removeClass('speady');
+        this.removeClass('anim-geom');
+        
+        this.addClass('trans-now');
+    },
+
+    // private - make sure my new geometry is in the style map - which ultimately gets set on the style text of my node via _applyStyles
+    // passing in the deltas as calculated earlier - required for the transform 
+    // maps all the new geometry into the sets of styles that will be applied on next draw
+    _mapAllStuff: function() {
+
+        // this._firstDraw indicates that this is the first time this panel has been put on screen
+        // so this is setting up its inital starting position - and will (likely) be initially hidden
+
+        // apply transition animations only if not first draw && (difx > 0 || dify > 0)
+        if(this._firstDraw) {
+            this._clearAnims();
         }
         else {
-            this.removeClass('anim-geom');
+            // coords and dimensions
+            this._mapGeometry(this._newG);
         }
 
-        // all others are not first drawings are they
         this._firstDraw = false;
-
-        // now set up new corrds as per now...
-        this._newG.clone(this._nowG);
     },
+
+
+    _mapGeometry: function(geo) {
+        // add the new coords
+        this._setXY(this, this._newG.l, this._newG.t);
+        this._setTime(this, this._animate);
+        
+        // apply new dimensions 
+        if(this._newG.w == 0 && this._newG.h == 0) {
+            this.removeStyle('width');
+            this.removeStyle('height');    
+        } else {
+            this.setStyle('width',  this._newG.w + 'px');
+            this.setStyle('height', this._newG.h + 'px');
+        }
+    },
+
+    
+    // default coordinate and animation function
+    
+    _setXY: Minx.anim.setpos,
+    _setTime: Minx.anim.settime,
+    
 
     // private - make the style string from my map of styles - and set it on the node
-    _applyStyles: function() {
-        // compose the class 
-        var cText = "";
-        var hasClass = false;
-        for(cl in this._classes) {
-            cText += cl + " ";
-            hasClass = true;
+    // apply the new Geometry
+    _blastStyles: function() {
+        // any of our style or position changed
+        if(this._dirty) {
+            // compose the class 
+            var cText = "";
+            var hasClass = false;
+            for(cl in this._classes) {
+                cText += cl + " ";
+                hasClass = true;
+            }
+
+            // if we have any class 
+            if(hasClass) {
+                //- then trust the css and remove any styly stuff
+                this.removeStyle('background-color');
+                // add the class attributes
+                this._node.setAttribute('class', cText);
+            }
+
+            // compose the style string from the hash of style attributes
+            var sText = ""
+            for(key in this._style) {
+                sText += key + ": " + this._style[key] + "; ";
+            }
+
+            // this does the dead and changes the style in the dom thereby triggering the browser to redraw the node
+            console.log("Laying out: " + this.getId() +"   class->" + cText + "<-   style: ->" + sText);
+            this._node.style.cssText = sText;
+
         }
-
-        // if we have any class 
-        if(hasClass) {
-            //- then trust the css and remove any styly stuff
-            this.removeStyle('background-color');
-            // add the class attributes
-            this._node.setAttribute('class', cText);
-        }
-
-
-        // compose the style string from the hash of style attributes
-        var sText = ""
-        for(key in this._style) {
-            sText += key + ": " + this._style[key] + "; ";
-        }
-
-        // this does the dead and changes the style in the dom thereby triggering the browser to redraw the node
-        this._node.style.cssText = sText;
+        // tell every one I'm clean
+        this._dirty = false;
     },
+
 
     // private - set up any default values
     // should padding and shit be set here - NO that should be a external style thing
     _setDefaultStyle: function(panel) {
         panel.addClass('panel');
+        this.addClass(this.getClassName());                  // overridden to apply specific class
         panel.setStyle('visibility', 'inherited');
         panel.setStyle('position', 'absolute');
         panel.setStyle('background-color','#eeeeee');

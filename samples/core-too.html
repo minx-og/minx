@@ -11,7 +11,7 @@
 
         <!-- styles -->
         <!-- core structural css -->
-        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.1">
+        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.2">
         
         <!-- lib code -->
         <script src="../source/extern/my.class.js"></script>
@@ -30,6 +30,10 @@
             function onDeviceReady() {
                 console.log('onDeviceReady');
                 Minx.pm.init();
+
+
+                window.addEventListener('orientationchange', moveit, false);
+                
 
                 var panel = Minx.pm.add(null, 'simple');
 
@@ -98,7 +102,7 @@
 
 
                     i2p.show();
-                }, 1000);
+                }, 2000);
 
                 // log our panels
                 Minx.pm.log();
@@ -110,69 +114,114 @@
                         inner2Panel.show();
 
 
+
+                        var normPanel = Minx.pm.add(panel);
+
+                        normPanel.setStyle('background','white');
+                        normPanel.setSize(100, 1000);
+                        normPanel.setPos(122, 120);
+                        normPanel.show();
+
+                        var fastPanel = Minx.pm.add(panel);
+
+                        fastPanel.setStyle('background','#AAF');
+                        fastPanel.setSize(100, 1000);
+                        fastPanel.setPos(100, 120);
+                        
+                        
+                        fastPanel.show();
+
+                        
+                        
                         setTimeout(function() {
+                            normPanel.setPos(800, 120);
+                            
+                            normPanel.show();
+
+                            setTimeout(function() {
+                                fastPanel.setPos(800, 120);
+                                fastPanel.setSize(200,200);
+                                
+
+                                fastPanel.show();
+                            }, 2000);
+                            
+                        }, 5000);
+
+                        
+                }, 20);
+
+
+                function moveit() {
                            // Minx.pm.remove(inner2Panel);    // remove by panel reference
                             Minx.pm.log();
 
-                            setTimeout(function() {
+                            if(window.orientation / 90 == 0) {
 
                                 var pan = Minx.pm.add(innerPanel);
 
                                 pan.setStyle('background','blue');
                                 pan.setSize(600, 600);
                                 pan.setPos(200, 10);
-                                pan.show();
+                                
 
                                 
-                                setTimeout(function() {
+
                                     pan.setParentPin('t', 0);
                                     pan.setParentPin('b', 5);
 
-                                    pan.show();
+                                    
         
                                     
 
-                                    setTimeout(function() {
+
                                         pan.setParentPin('r', 13);
-                                        pan.show();
+                                        
 
 
-                                        setTimeout(function() {
-                                                
                                         
                                             innerPanel.setParentPin('l', 10);
 
-                                            innerPanel.show();
+                                
                                         
                                     
-                                            setTimeout(function() {
+                                            
                                                 innerPanel.unPin();
 
                                                 innerPanel.setSize(300, 900);
                                                 innerPanel.setPos(400,100);
 
-                                                innerPanel.show();
+                                
                                                 Minx.pm.log();
 
-                                                setTimeout(function() {
+                                                
                                                     //Minx.pm.remove('pn1');      // remove by id
                                                     innerPanel.setSize(800, 1000);
+                                
+
+                                                    inner2Panel.show();
+                                                    pan.show();
                                                     innerPanel.show();
+
                                                     Minx.pm.log();
+
+
+                                } else {
+
+                                    innerPanel.setSize(300, 100);
+                                    innerPanel.setPos(40,10);
+                                    innerPanel.show();
+
+                                    
+                                }
                                                     
-                                                }, 5000);
                                                 
-                                            }, 5000);
-                                        }, 2000);
-                                    }, 2000);
-
-                                }, 2000);
-
-                            }, 2000);
+                                                
+                                        
 
 
-                        }, 2000);
-                }, 2000);
+                }
+
 
             }
 

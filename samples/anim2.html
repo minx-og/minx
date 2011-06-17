@@ -1,0 +1,155 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <!-- meta data, as in data about data where data is this file -->
+        <meta charset="utf-8">
+        <meta name="description" content="Willis a simple mobile optimised widget library">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="author" content="MoneyToolkit">
+
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+        <!-- title -->
+        <title>Minx split-layout and scroll list widget</title> 
+        <!-- styles -->
+        <style>
+        
+          #anim2 {
+            position:absolute;
+            left: 0px;
+            top: 0px;
+            width:300px;
+            height:760px;
+            background: blue;
+            font-size: larger;
+            color: white;
+            border-radius: 10px;
+            padding: 0;
+            -webkit-transition: -webkit-transform;
+
+            -webkit-transition-duration: 0.5s;
+            
+            -webkit-transition-timing-function: linear;
+          }
+
+          #anim3 {
+            position:absolute;
+            left:0px;
+            top: 0px;
+            width:700px;
+            height:760px;
+            background: green;
+            font-size: larger;
+            color: white;
+            border-radius: 10px;
+            padding: 0;
+            -webkit-transition: -webkit-transform;
+
+            -webkit-transition-duration: 0.5s;
+            
+            -webkit-transition-timing-function: linear;
+                    
+          }
+          
+        </style>
+
+        
+        <script>
+
+        // shim layer with setTimeout fallback
+          window.requestAnimFrame = (function(){
+            return  window.requestAnimationFrame || 
+                    window.webkitRequestAnimationFrame || 
+                    window.mozRequestAnimationFrame || 
+                    window.oRequestAnimationFrame || 
+                    window.msRequestAnimationFrame || 
+                    function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element){
+                      window.setTimeout(callback, 1000 / 60);
+                    };
+          })();
+
+
+          function onDeviceReady() {
+
+
+
+            window.addEventListener('orientationchange', function(){
+                var nw = document.documentElement.clientWidth;
+                var nh = document.documentElement.clientHeight
+
+                console.log('ochange w=' + nw + ' h=' + nh);
+            }, false);
+                  
+            window.addEventListener('resize', function(){
+                var nw = document.documentElement.clientWidth;
+                var nh = document.documentElement.clientHeight
+
+                elem4.style['background'] = 'grey';
+
+                console.log('resize w=' + nw + ' h=' + nh);
+            }, false);
+
+
+            
+            var startTime = undefined;
+  
+                       
+            
+
+            var elem2 = document.getElementById("anim2");
+            elem2.onclick = function() {
+              elem2.style['-webkit-transform'] =  'translate3d(500px,0px, 0px)';
+
+              elem4.style['-webkit-transform'] =  'translate3d(700px,300px, 0px)';
+      
+            };
+
+            var elem3 = document.getElementById("anim3");
+
+            elem3.style['-webkit-transform'] =  'translate3d(300px,0px, 0px)';
+            
+            elem3.onclick = function() {
+              elem3.style['-webkit-transform'] =  'translate3d(500px,0px, 0px) scale3d(2,2,2)';
+
+              
+
+/*
+              elem3.style.height = '300px';
+
+              elem3.style.width = '300px';
+*/  
+            };
+
+
+          }
+
+        </script>
+
+
+    </head>
+    <body onload="onDeviceReady()">
+        
+        <div id="anim2">Click here to start hwaccel xlate</div> 
+        <div id="anim3">Click here to start hwaccel xlate + scale </div>
+          
+         
+    </body>
+</html>
+
+
+
+
+<!--
+
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame || 
+          window.webkitRequestAnimationFrame || 
+          window.mozRequestAnimationFrame || 
+          window.oRequestAnimationFrame || 
+          window.msRequestAnimationFrame || 
+          function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+-->

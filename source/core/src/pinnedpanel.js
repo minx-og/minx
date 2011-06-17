@@ -93,9 +93,12 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     },
 
     // like a greedy spoilt child taking up all that its parent can offer
-    fillParent: function() {
+    fillParent: function(off) {
+        if (typeof off == "undefined") {
+            off = 0;
+        }
         this.unPin();
-        this.pinParent({'l': 0, 't': 0, 'r': 0, 'b': 0});
+        this.pinParent({'l': off, 't': off, 'r': off, 'b': off});
     },
 
     // dock to my parent

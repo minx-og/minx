@@ -145,3 +145,8 @@ body {
     z-index: 30;
 }
 
+.test-panel {
+    background: rgba(150,0,0,.65);
+}
+
+

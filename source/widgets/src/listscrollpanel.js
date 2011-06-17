@@ -31,6 +31,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
         // for iscroll the view is the dom node of this widget container
         this.setView(this.getNode());
+
     },
 
     eventParse: function(event) {
@@ -53,11 +54,18 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             if(this._scroller == null) {
                 // create a new scroller for my id only if there is any thing in the model
                 //if(this.getModel().length > 0) {
-                    this._scroller = new iScroll(this.getNode());
+
+                    // only create the scroller after munging
+
+                    //this._scroller = new iScroll(this.getNode());
+
+
+
                 //}
             }
             else if(wasdirty && this._didResize) {
                 // scroller needs t know about div size changes - give it time for animations to take effect
+                
                 setTimeout(function() {
                     me._scroller.refresh();    
                 }, 310);
@@ -77,7 +85,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         this._rowRenderer = fn;
     },
 
-    // munge my model intomy view 
+    // munge my model into my view called by client manually - likely to be set to an event when the data model changes
     munge: function() {
 
         // as our munge function completely recreates the ul and all lis in it we may as well recreate the scroller.
@@ -85,14 +93,13 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
         // this may be sub-optimal - but given the total recreation i doubt it...
         var list = this.getModel();
+        if(list == null) {
+            throw "munge called, but no model set";
+        }
 
         if(this._touch && this._scroller != null) {
-            
             this._scroller.destroy();
             this._scroller = null;
-            if(list.length > 0) {
-                this._scroller = new iScroll(this.getNode());
-            }
         }
 
         var view = this.getView();
@@ -105,6 +112,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         // for iscroller we call dom functions on our view
         // my root node is the ul that the iscroller expects
         this._widgetRoot = document.createElement('ul');
+        this._widgetRoot.setAttribute('class', this.getClassName());
         
         view.appendChild(this._widgetRoot);  
 
@@ -120,12 +128,18 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             // make a new li for this row
             li = document.createElement('li');
             li.setAttribute('id', row[this._keyField]);       // set element attribute to my id
+            if(h == 0) {
+                li.setAttribute('class', 'first');       
+            }
+            if(h == list.length-1) {
+                li.setAttribute('class', 'last');
+            }
 
             // capture clicks
             Minx.eq.subscribe(this, li, 'click');
 
             // call potentially a callback that will return my row content as a node
-            liNode = this._rowRenderer(pId, row);
+            liNode = this._rowRenderer(pId, row, li);
             if(liNode != null) {
                 li.appendChild(liNode);
             }
@@ -140,10 +154,11 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         }
     },
 
+    // default function assigned to the _rowRenderer callback
     getRowMarkup: function(parentId, row) {
         // for now assume a model with a property 'name'
         var div = document.createElement('div');
-        var text = document.createTextNode(row.display);
+        var text = document.createTextNode(row.name);
         div.appendChild(text);
         return div;  
     },
@@ -161,6 +176,10 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
     getMyElement: function() {
         return 'div';
     },
+
+    getClassName: function() {
+        return 'scroll-list';
+    }
 
 });
 

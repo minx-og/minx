@@ -1,0 +1,97 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <!-- meta data, as in data about data where data is this file -->
+        <meta charset="utf-8">
+        <meta name="description" content="Willis a simple mobile optimised widget library">
+        <meta name="author" content="MoneyToolkit">
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+        <!-- title -->
+        <title>Minx Core Sample</title> 
+
+        <!-- styles -->
+        <!-- core structural css -->
+        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.6">
+        
+        <!-- lib code -->
+        <script src="../source/extern/my.class.js"></script>
+
+        <!-- core code -->
+        <script src="../source/core/src/panelmanager.js"></script>
+        <script src="../source/core/src/panel.js"></script>
+        <script src="../source/core/src/pinnedpanel.js"></script>
+        
+
+
+        <!-- our main entry -->
+        <script type="text/javascript" charset="utf-8">
+
+            /* When this function is called, PhoneGap has been initialized and is ready to roll */
+            function onDeviceReady() {
+                console.log('onDeviceReady');
+                Minx.pm.init();
+
+
+                window.addEventListener('orientationchange', moveit, false);
+
+                var nav = Minx.pm.add(null, 'simple');
+
+                nav.setStyle('background', '#aaf');
+                nav.setPos(0, 0);
+                nav.setSize(300, 700);
+
+                nav.getNode().onclick=mv1;
+
+                nav.show();
+
+                var con = Minx.pm.add(null, 'simple');
+
+                con.setStyle('background', '#8f8');
+                con.setPos(300, 0);
+                con.setSize(300, 700);
+
+                con.getNode().onclick=mv0;
+
+                con.show();
+
+                function mv1() {
+                    moveit(1);
+                }
+
+                function mv0() {
+                    moveit(0);
+                }
+
+                function moveit(wha) {
+                    if((window.orientation == 0) || (window.orientation == 180) || wha == 1) {
+                        nav.setPos(-300, 0);
+                        con.setPos(0, 0);
+                        //con.setSize(768, 886);
+
+                        nav.show();
+                        con.show();
+                    }
+                    else {
+                        nav.setPos(0, 0);
+                        con.setPos(300, 0);
+                        //con.setSize(724, 688);
+
+                        nav.show();
+                        con.show();
+                    }
+                }
+
+            }
+
+        </script>
+
+    </head>
+    <body onload="onDeviceReady()" style="background-color: #ddd">
+        <h3 style="font-family: arial, sans-serif; color: #bbb; text-shadow: 0px 1px 0px #fff;"> 
+            core-again.html - core css, no theme, transitions. sibling pin
+        </h3>
+    </body>
+</html>
