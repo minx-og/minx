@@ -54,7 +54,7 @@ Minx.eq = new Minx.Events();
 // gives the ability to set z-order
 Minx.PanelManager = function() {
 
-    this.localMobileTest = false;
+    this.localMobileTest = true;
 
     var _panels = {};           // hash of all panels by id
     var _idCounter = 0;         // internal id counter
@@ -77,10 +77,10 @@ Minx.PanelManager = function() {
 
             var w = document.documentElement.clientWidth;
             var h = document.documentElement.clientHeight
-            //main.setSize(w, h);
+            main.setSize(w, h);
             //main.setSize(w, 1024);
 
-            main.setSize(100, 100);
+            //main.setSize(100, 100);
 
             var changing = false;
             function oChange(){
@@ -91,14 +91,14 @@ Minx.PanelManager = function() {
                     var nh = document.documentElement.clientHeight
 
                     console.log("w="+nw + " h="+ nh);
-                    main.setSize(nw, 1024);
+                    main.setSize(nw, nh);
                     
                     // this constructs main panel geometry and updates kids - redraws all kidies if thier geometry has changed
                     // but doesnt redraw the main panel
                     //main.layout();
                     //main.drawKids();
 
-                    //main.render();
+                    main.render(); 
                     changing = false;
                 }
             }

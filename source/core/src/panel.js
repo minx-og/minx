@@ -41,6 +41,7 @@ Minx.Geom = my.Class({
 
 // Webkit accelerated animations
 
+
 Minx.anim = {
     trans: '-webkit-transform',
     transpeed: '-webkit-transition-duration',
@@ -54,15 +55,17 @@ Minx.anim = {
     }
 };
 
-/*
+
 
 // None accelerated animations
-
+/*
 Minx.anim = {
     trans: '-webkit-transform',                     // this setting not used in none accel
     setpos: function(pan, x, y) {
         pan.setStyle('left', x + 'px');
         pan.setStyle('top',  y + 'px');
+    },
+    settime: function(pan, speed) {
     }
 };
 
@@ -90,12 +93,11 @@ Minx.Panel = my.Class({
         this._events = [];               // array of events i have subscribed to
         
         this._nowG = new Minx.Geom();    // my geometry now
-        this._aniG = new Minx.Geom();    // my geometry to be applied pending animation completion
         this._newG = new Minx.Geom();    // my geometry to be
 
         this._dirty = false;             // has anything changed that requires me to update my style attributes in th dom
 
-        this._animate = 500;             // enabe full animation by default with duration 500
+        this._animate = 2000;             // enabe full animation by default with duration 500
         
         this._firstDraw = true;          // pesky once off flag to say if this is the first drawing
 
@@ -221,7 +223,6 @@ Minx.Panel = my.Class({
     // dont like smoth transitions? simples
     setAnimate: function(time) {
         this._animate = time;
-        this._setTime(this, time);
     },
 
     // add a css class - 'class' a reserved word on gecko
@@ -440,6 +441,8 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
                 this.resized();
             }            
         }
+        // nowG does not mean that it has been applied to the DOM
+        this._nowG.clone(this._newG);
     },
 
 
@@ -504,26 +507,13 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         // if I have new Geometry...
         // add my new geometry to the style map to be applied when I get drawn
         if(!this._nowG.equal(this._newG)) {
-            this._mapAllStuff();
-        
-            
-            // and update the dom with these new geom changes
-            this._blastStyles();
+            this._mapAllStuff(); 
         }
-
-        this._nowG.clone(this._newG);
-    },
-
-
-    // remove all animation classes and styles
-    // not sure this is needed
-    _clearAnims: function() {
-           
-        this.removeClass('speady');
-        this.removeClass('anim-geom');
         
-        this.addClass('trans-now');
+        // and update the dom with these new geom changes
+        this._blastStyles();
     },
+
 
     // private - make sure my new geometry is in the style map - which ultimately gets set on the style text of my node via _applyStyles
     // passing in the deltas as calculated earlier - required for the transform 
@@ -533,13 +523,24 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         // this._firstDraw indicates that this is the first time this panel has been put on screen
         // so this is setting up its inital starting position - and will (likely) be initially hidden
 
+        this._mapAnim();
+        
+        // coords and dimensions
+        this._mapGeometry(this._newG);
+        
+    },
+
+
+    _mapAnim: function() {
         // apply transition animations only if not first draw && (difx > 0 || dify > 0)
-        if(this._firstDraw) {
-            this._clearAnims();
+        if(this._firstDraw || (this._animate <=0)) {
+            this._setTime(this, 0);
+            this.removeClass('anim-geom');
         }
-        else {
-            // coords and dimensions
-            this._mapGeometry(this._newG);
+        else
+        {
+            this.addClass('anim-geom');
+            this._setTime(this, this._animate);
         }
 
         this._firstDraw = false;
@@ -549,7 +550,6 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     _mapGeometry: function(geo) {
         // add the new coords
         this._setXY(this, this._newG.l, this._newG.t);
-        this._setTime(this, this._animate);
         
         // apply new dimensions 
         if(this._newG.w == 0 && this._newG.h == 0) {

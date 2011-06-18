@@ -21,7 +21,7 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
     // but then on resize the panel lags the title
     _onCreation: function() {
         //dont call base
-        // this.setAnimated(false);
+        // this.setAnimate(0);
         this.setSize(0,45);
     },
 

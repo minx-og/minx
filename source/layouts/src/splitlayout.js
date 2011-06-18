@@ -30,25 +30,25 @@ Minx.Layout.SplitLayout = my.Class({
 
 
         // dock it right
-        //this._navPanel.pinParent({'l': 0, 't': 0, 'r': -1, 'b': 0});
+        this._navPanel.pinParent({'l': 0, 't': 0, 'r': -1, 'b': 0});
 
 
-        this._navPanel.pinParent({'l': -1, 't': -1, 'r': -1, 'b': -1});
-        this._navPanel.setAnimate(100);
+        //this._navPanel.pinParent({'l': -1, 't': -1, 'r': -1, 'b': -1});
+        this._navPanel.setAnimate(500);
 
 
         // make it lighter
-        //this._navPanel.getTitle().removeClass('dark-bar');
-        //this._navPanel.getTitle().addClass('light-bar');
+        this._navPanel.getTitle().removeClass('dark-bar');
+        this._navPanel.getTitle().addClass('light-bar');
 
         // and give the panel a rouncded bum
-        //this._navPanel.getContentPanel().addClass('round-bottom');
+        this._navPanel.getContentPanel().addClass('round-bottom');
 
         
         
         // --- right hand  panel of stuff
         this._stuff = Minx.pm.add(main,'title-panel');
-        this._stuff.setAnimate(100);
+        this._stuff.setAnimate(500);
     
 
         this._stuff.setSize(768,700);
@@ -57,23 +57,25 @@ Minx.Layout.SplitLayout = my.Class({
         this._stuff.setSiblingPin(this._navPanel, 'l');
 
         //dock it right as well
-        this._stuff.pinParent({'l': -1, 't': -1, 'r': -1, 'b': -1});
+        //this._stuff.pinParent({'l': -1, 't': -1, 'r': -1, 'b': -1});
+
+        this._stuff.pinParent({'l': -1, 't': 0, 'r': 0, 'b': 0});
         
         // add button to pop up the navigation when in portrait
-        //this._navPopButton = this._stuff.getTitle().addButton('l', 10, 'Menu');
+        this._navPopButton = this._stuff.getTitle().addButton('l', 10, 'Menu');
         
         //TODO and a handler - client should do this
 
-        // this._navPopButton.onClick(function(panel,e){
-        //     me._popNavigation();
-        // });
+        this._navPopButton.onClick(function(panel,e){
+             me._popNavigation();
+        });
 
         // orientation
         this._isPort = 'doit';
         this.reOrient(true);            // initial = true so dont do timers and dont call show
         
         // hook into window resize 
-        //Minx.eq.subscribe(this, window, 'resize', '_resizeEvent');
+        Minx.eq.subscribe(this, window, 'resize', '_resizeEvent');
 
         //Minx.eq.subscribe(this, window, 'orientationchange', '_resizeEvent');
         
@@ -99,6 +101,7 @@ Minx.Layout.SplitLayout = my.Class({
         }
            
         if(nisPort !== this._isPort){
+            console.log('Flipping');
             // if it is landscape - then get any new navpanel width (the portrait popup width is calculated during the popup)
             if(!nisPort) {
                 var navWidth = this._navLandWidth;
@@ -150,18 +153,10 @@ Minx.Layout.SplitLayout = my.Class({
         // set the nav panel to docked in width    
         this._navPanel.setSize(navWidth, nh);
 
-        // show it offscreen so it can slide back on
-        //if(!initial) {
-        //    this._navPanel.show();
-        //}
+                // and dock it left
+        this._navPanel.pinParent({'l': 0, 't': 0, 'r': -1, 'b': 0});
 
-        // and dock it left
-        //this._navPanel.pinParent({'l': 0, 't': 0, 'r': -1, 'b': 0});
-
-        this._navPanel.unPin();
-        this._navPanel.setPos(0, 0);
-
-
+        
         // TODO: handle this in the panel manager
         this._navPanel.setStyle('z-index', '1');
 
@@ -169,17 +164,20 @@ Minx.Layout.SplitLayout = my.Class({
         // stop it being rendered like a popup
         this._navPanel.removeClass('pop-up');
 
-        this._navPanel.show();
+        me._stuff.setSize(nw-navWidth, nh);
 
-        var me = this;
-        setTimeout(function() {
 
-            me._stuff.setSize(nw-navWidth, nh);
+        // want to lay it all out and dump it onscreen with no geometry animation
+        if(!initial) {
+            this._navPanel.show();
 
-            me._stuff.show();
+            var me = this;
+            //setTimeout(function() {
 
-            
-        }, 200);
+                me._stuff.show();
+                
+            //}, 0);
+        }
 
         
 
@@ -191,12 +189,7 @@ Minx.Layout.SplitLayout = my.Class({
         
         // hide the left main stuff panel nav pop button
         // have to hide instantly else it can finish the hide transition after the show
-        //me._navPopButton.hide(true);
-
-        // show it again so it can slide back on
-        if(!initial) {
-            this._navPanel.show();
-        }
+        me._navPopButton.hide(true); // instant = true
         
     },
 
@@ -210,30 +203,31 @@ Minx.Layout.SplitLayout = my.Class({
         var nh = document.documentElement.clientHeight;
 
         this._stuff.setSize(nw, nh);
-        this._stuff.show();
 
         //me._stuff.unSetSiblingPin('l');
         
         
         // slide the nav panel out to left
-        //this._navPanel.unsetParentPin('l');
+        this._navPanel.unsetParentPin('l');
 
-        var me = this;
-        setTimeout(function() {
-
-            me._navPanel.setPos(0 - navp.w - 1 , 0);
-
-            me._navPanel.show();
-            
-            
-        }, 10);
+        me._navPanel.setPos(0 - navp.w - 1 , 0);
 
 
-            
+        if(!initial) {
 
-        
-        
-        
+            this._stuff.show();
+
+            var me = this;
+            //setTimeout(function() {
+
+
+                me._navPanel.show();
+                
+                
+           // }, 1);
+        }
+
+        me._navPopButton.show(); 
         
         
     },

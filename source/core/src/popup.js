@@ -28,7 +28,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
     _onCreation: function() {
         //dont call base
         // default size
-        this.setAnimated(false);
+        this.setAnimate(0);
         this.hide(true);            // hide instantly
         
         this.setSize(300, 200);

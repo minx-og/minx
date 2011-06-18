@@ -141,7 +141,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         // work out my position if pinned to any of my siblings
         this._doSiblingPinning();
 
-        // if any geometry changed with me then ask any panels pinned to me to lay themselves out as well
+        // if any geometry changed with me then ask any sibling panels pinned to me to lay themselves out as well
         for(var pin in this._pinned) {
             this._pinned[pin].layout();
         }
@@ -265,7 +265,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     _doParentPinning: function() {
         var pp = this._pPin;
         // get my parents geometry
-        var pG = this.getParent().getDims();
+        var pG = this.getParent().getNewDims();
         // my Geometry
         var nG = this.getNewDims();
         // the new dimensions

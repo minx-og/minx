@@ -46,7 +46,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
     // last thing called in the construction - so overrides stuff
     _onCreation: function() {
         // buttons just stay within thier parents
-        this.setAnimated(false);
+        this.setAnimate(false);
     },
 
     // special one for buttons
