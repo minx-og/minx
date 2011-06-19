@@ -7,7 +7,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="author" content="MoneyToolkit">
 
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no width=device-height">
 
         <!-- title -->
         <title>Minx split-layout and scroll list widget</title> 
@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.6">
 
         <!-- theme css -->
-        <link rel="stylesheet" href="../source/themes/css/iphone.css?v=1.1">
+        <link rel="stylesheet" href="../source/themes/css/debug.css?v=1.1">
 
         <!-- core lib code -->
         <script src="../source/extern/my.class.js"></script>
@@ -136,6 +136,8 @@
                 // nowshow the main window
                 main.show();
 
+                layout.show();
+
 
                 //navList.show();
 
@@ -146,6 +148,7 @@
 
                     var pop = Minx.pm.add('main', 'input-pop-up');
                     pop.setSize(400, 300);
+                    pop.setStyle('z-index', '10');
                    
                     var cancelBtn = pop.getFootBar().addButton('l', 10, 'Cancel');
                     

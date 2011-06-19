@@ -54,7 +54,7 @@ Minx.eq = new Minx.Events();
 // gives the ability to set z-order
 Minx.PanelManager = function() {
 
-    this.localMobileTest = true;
+    this.localMobileTest = false;
 
     var _panels = {};           // hash of all panels by id
     var _idCounter = 0;         // internal id counter
@@ -78,9 +78,7 @@ Minx.PanelManager = function() {
             var w = document.documentElement.clientWidth;
             var h = document.documentElement.clientHeight
             main.setSize(w, h);
-            //main.setSize(w, 1024);
-
-            //main.setSize(100, 100);
+            
 
             var changing = false;
             function oChange(){
@@ -117,6 +115,9 @@ Minx.PanelManager = function() {
                 window.addEventListener('resize', oChange, true);
             }
 
+        }
+        else {
+            
         }
 
         this._main = main;

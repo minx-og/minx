@@ -97,7 +97,7 @@ Minx.Panel = my.Class({
 
         this._dirty = false;             // has anything changed that requires me to update my style attributes in th dom
 
-        this._animate = 2000;             // enabe full animation by default with duration 500
+        this._animate = 500;             // enabe full animation by default with duration 500
         
         this._firstDraw = true;          // pesky once off flag to say if this is the first drawing
 
@@ -596,7 +596,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
             }
 
             // this does the dead and changes the style in the dom thereby triggering the browser to redraw the node
-            console.log("Laying out: " + this.getId() +"   class->" + cText + "<-   style: ->" + sText);
+            // DEBUG console.log("Laying out: " + this.getId() +"   class->" + cText + "<-   style: ->" + sText);
             this._node.style.cssText = sText;
 
         }

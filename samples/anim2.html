@@ -7,12 +7,52 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="author" content="MoneyToolkit">
 
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+        <!--meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"-->
+
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no width=device-height">
+
+        <!--meta name = "viewport" content = "user-scalable=no, width=device-width"-->
 
         <!-- title -->
         <title>Minx split-layout and scroll list widget</title> 
         <!-- styles -->
         <style>
+
+          body{
+            background: red;
+          }
+
+
+          #buml {
+            position:absolute;
+            left: 0px;
+            top: 700px;
+            width:300px;
+            height:300px;
+            background: blue;
+            
+          }
+
+          #bumr {
+            position:absolute;
+            left: 300px;
+            top: 700px;
+            width:724px;
+            height:300px;
+            background: green;
+            
+          }
+
+          #bumtr {
+            position:absolute;
+            left: 700px;
+            top: 0px;
+            width:340px;
+            height:1024px;
+            background: green;
+            
+          }
+          
         
           #anim2 {
             position:absolute;
@@ -23,11 +63,11 @@
             background: blue;
             font-size: larger;
             color: white;
-            border-radius: 10px;
+            
             padding: 0;
             -webkit-transition: -webkit-transform;
 
-            -webkit-transition-duration: 0.5s;
+            -webkit-transition-duration: 0.2s;
             
             -webkit-transition-timing-function: linear;
           }
@@ -41,11 +81,11 @@
             background: green;
             font-size: larger;
             color: white;
-            border-radius: 10px;
+            
             padding: 0;
             -webkit-transition: -webkit-transform;
 
-            -webkit-transition-duration: 0.5s;
+            -webkit-transition-duration: 0.2s;
             
             -webkit-transition-timing-function: linear;
                     
@@ -71,7 +111,31 @@
 
           function onDeviceReady() {
 
+            var startTime = undefined;
+            var time = undefined;
+            var startPos = 0;
+             
+            function render(time) {
+              time = Date.now();
+              // time difference in 10ths of secconds - divide by 10 - one second - divide by 2 (as below) = (10/2) 10ths of a second or half a second
+              var npos = startPos - (time - startTime)/2;
 
+              console.log(npos);
+              
+              if(npos < 0) {
+                  npos = 0;
+              }   
+                         
+              window.scrollTo(npos, 0);
+
+              return npos > 0;
+            }
+             
+            
+
+                
+                  
+            
 
             window.addEventListener('orientationchange', function(){
                 var nw = document.documentElement.clientWidth;
@@ -82,9 +146,55 @@
                   
             window.addEventListener('resize', function(){
                 var nw = document.documentElement.clientWidth;
-                var nh = document.documentElement.clientHeight
+                var nh = document.documentElement.clientHeight;
 
-                elem4.style['background'] = 'grey';
+                var port = (nw < nh);
+
+                if(port) {
+                  
+                  elem3.innerHTML = "<p>Portrait sx=" + window.scrollX + " w=" + nw +  " h=" + nh + "</p>";
+                  elem3.style['width'] = '768px';
+
+                  elem3.style['height'] = '1004px';
+                  elem2.style['height'] = '1004px';
+
+                  elem3.style['-webkit-transform'] =  'translate3d(0px,0px, 0px)';
+                  elem2.style['-webkit-transform'] =  'translate3d(-300px,0px, 0px)';
+
+
+                  startPos = window.scrollX;
+                  startTime = Date.now();
+
+/*
+                  (function animloop(){
+                    if(render()) {
+                      console.log("looping");
+                      requestAnimFrame(animloop);
+                    }
+                  })();
+
+  */                
+
+                }
+                else {
+                  
+
+                  setTimeout(function() {
+                    elem3.style['width'] = (1024 - 300) + 'px';  
+                  }, 300);
+
+                  setTimeout(function() {
+                    elem3.innerHTML = "<p>Landscape</p>";
+                    elem3.style['-webkit-transform'] =  'translate3d(300px,0px, 0px)';
+                    elem2.style['-webkit-transform'] =  'translate3d(0px,0px, 0px)';
+                    
+                    elem3.style['height'] = '748px';
+                    elem2.style['height'] = '748px';
+                  }, 10);
+
+
+                }
+
 
                 console.log('resize w=' + nw + ' h=' + nh);
             }, false);
@@ -97,28 +207,20 @@
             
 
             var elem2 = document.getElementById("anim2");
-            elem2.onclick = function() {
-              elem2.style['-webkit-transform'] =  'translate3d(500px,0px, 0px)';
-
-              elem4.style['-webkit-transform'] =  'translate3d(700px,300px, 0px)';
-      
-            };
+            
 
             var elem3 = document.getElementById("anim3");
 
             elem3.style['-webkit-transform'] =  'translate3d(300px,0px, 0px)';
             
-            elem3.onclick = function() {
-              elem3.style['-webkit-transform'] =  'translate3d(500px,0px, 0px) scale3d(2,2,2)';
+            
 
-              
 
-/*
-              elem3.style.height = '300px';
 
-              elem3.style.width = '300px';
-*/  
-            };
+
+
+
+
 
 
           }
@@ -128,28 +230,14 @@
 
     </head>
     <body onload="onDeviceReady()">
-        
+        <div id="buml"></div>
+        <div id="bumr"></div>
+        <div id="bumtr"></div>
         <div id="anim2">Click here to start hwaccel xlate</div> 
         <div id="anim3">Click here to start hwaccel xlate + scale </div>
+        
           
          
     </body>
 </html>
 
-
-
-
-<!--
-
-window.requestAnimFrame = (function(){
-  return  window.requestAnimationFrame || 
-          window.webkitRequestAnimationFrame || 
-          window.mozRequestAnimationFrame || 
-          window.oRequestAnimationFrame || 
-          window.msRequestAnimationFrame || 
-          function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element){
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
-
--->

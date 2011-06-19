@@ -80,17 +80,23 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 li.setAttribute('class', row.style);
             }
 
-            var ip = document.createElement(ipType);
             
             if(row.label) {
+                var idiv = document.createElement('div');
+                idiv.setAttribute('class', 'mx-label');
+
                 var lb = document.createElement('label');
                 lb.setAttribute('for', row.name);
 
                 var label = document.createTextNode(row.label);
                 lb.appendChild(label);
-                div.appendChild(lb);
+                
+                idiv.appendChild(lb);
+                div.appendChild(idiv);
             }
 
+
+            var ip = document.createElement(ipType);
             ip.setAttribute('id', 'f-'+ this.getId() + '-' + row.name);
 
             for( var lb in row ) {
@@ -114,7 +120,13 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 }
             }
 
-            div.appendChild(ip);
+
+            var idiv = document.createElement('div');
+            idiv.setAttribute('class', 'mx-input');
+
+            idiv.appendChild(ip);
+
+            div.appendChild(idiv);
 
         }
         

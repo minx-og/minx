@@ -1,0 +1,34 @@
+/* iphone style */
+
+body {
+    overflow: hidden;
+    font-family: sans-serif;
+}
+
+.panel {
+    background-color: #eef;
+    /*opacity: .8;*/
+}
+
+/*
+.panel.main-panel {
+    background-color: blue;
+}
+*/
+
+
+/* bars */
+.panel {
+    border: 1px dashed blue;
+    
+}
+
+
+/*
+.title-panel {
+    background-color: red;
+    opacity: .2;
+}
+*/
+
+

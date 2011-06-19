@@ -7,7 +7,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="author" content="MoneyToolkit">
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no width=device-height">
 
         <!-- title -->
         <title>Minx split-layout and scroll list widget</title> 
@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.1">
 
         <!-- theme css -->
-        <link rel="stylesheet" href="../source/themes/css/iphone.css?v=1.1">
+        <link rel="stylesheet" href="../source/themes/css/sencha.css?v=1.1">
 
         <!-- core lib code -->
         <script src="../source/extern/my.class.js"></script>
@@ -56,19 +56,28 @@
 
             /* When this function is called, PhoneGap has been initialized and is ready to roll */
             function onDeviceReady() {
-                console.log('onDeviceReady');
+console.log('onDeviceReady');
 
                 var touch = true;
 
                 // true to create the first main panel and set it to auto size
 
                 var main = Minx.pm.init(true);       
+
                 
                 console.log(Minx.pm.agent());      
 
                 console.log(Minx.pm.agent().ipad);      
 
                 var layout = new Minx.Layout.SplitLayout(main);
+
+
+
+                
+
+
+
+                
                 
                 
                 // add my specific button
@@ -94,12 +103,6 @@
                    alert(par.id); 
                 });
 
-              
-
-                 // nowshow the main window
-                main.show();
-
-
                 navList.setModel([
                   {name: "Tim", age: 5},
                   {name: "Ida", age: 26},
@@ -112,8 +115,8 @@
                   {name: "Rob", age: 55},
                   {name: "Tim", age: 5},
                   {name: "Ida", age: 26},
-                  {name: "RBb", age: 55},
-                  {name: "ddd", age: 5},
+                  {name: "Rob", age: 55},
+                  {name: "Tim", age: 5},
                   {name: "Ida", age: 26},
                   {name: "Rob", age: 55},
                   {name: "Tim", age: 5},
@@ -132,6 +135,12 @@
                 
                 // combine the view and model
                 navList.munge();
+                
+                // nowshow the main window
+                main.show();
+
+                layout.show();
+
 
 
                 // now do our new widgetty thing
