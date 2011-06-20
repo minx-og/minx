@@ -13,22 +13,39 @@ body {
     background-color: #EEE;
 }
 
+#back-top {
+    height: 45px;
+    width: 100%;
+    background-color: #000;
+    position: absolute;
+    left: 0;
+    top:0;
+}
 
 .panel.main-panel {
-    /* the big parent panel background keep this colour consistent with the toolbars as the rounded corners let the background through on safari */
-    background-color: #000;
+    
+    background-color: #DDD;
 }
 
 /* bars */
 .top-bar {
-    border-bottom: 1px solid;
+    /*
+    border: 1px solid;
     border-color: black;
+    */
 
+    /* very important to override panel background here so no pale dots on rounded corners */
+    background-color: #042348;
+}
+
+.bottom-bar {
+    background-color: #042348;
+    border: 1px solid;
+    border-color: black;
 }
 
 .title-panel {
-    /* very important to override panel background here so no pale dots on rounded corners */
-    background-color: #042348;
+
 }
 
 .dark-bar {

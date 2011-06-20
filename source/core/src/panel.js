@@ -99,7 +99,7 @@ Minx.Panel = my.Class({
 
         this._animate = 500;             // enabe full animation by default with duration 500
         
-        this._firstDraw = true;          // pesky once off flag to say if this is the first drawing
+        this._instantFirstDraw = true;   // pesky once off flag to say if this is the first drawing and we want it to be blasted with no animation
 
 
         // SPECIAL - have we just made the root node - dont create nodes
@@ -130,8 +130,10 @@ Minx.Panel = my.Class({
         // add myself to my parent - maintaining panel tree
         this._parent.addKid(this);
 
+        // TODO - dont add the top level on create  - as each child may cause a dow redraw - but if visibility hidden - should be ok
         this._parent._addToDom(this);
     },
+
 
     // override this to set up any initial positioning before being added to the dom
     // this gets called after all other defaults so takes precidence
@@ -141,7 +143,73 @@ Minx.Panel = my.Class({
         this.setPos(0,0);
     },
 
+
+    _rebuildMyDom: function (add) {
+
+        if(this.kiddieCount() == 0) {
+            var newnode = this._node.cloneNode(true);
+        }
+        else {
+            var newnode = this._node.cloneNode(false);
+        }
+
+        this._node = newnode
+
+
+        // total recreation - but does not create the widget markup
+        //this._node = document.createElement(this.getMyElement());         // the dom node - or el really
+        //this._node.setAttribute('id', this._id);
+
+        
+        // just update my dom with current styles - client can change size and call layout 
+        //this._dirty = true;
+        //this._blastStyles();
+
+
+        for(var kid in this._kidies) {
+            this._kidies[kid]._rebuildMyDom(true);
+        }
+
+
+        if(add) {
+            this._parent._addToDom(this);
+        }
+    },
+
+
+    domReAttach: function() {
+        var me = this;
+        
+            
+            me._parent._addToDom(me);
+
+            setTimeout(function() {
+                // and remove my old one
+                me._parent._node.removeChild(me._oldNode);
+            
+            }, 1000);
+        
+
+        
+    },
+
+    kiddieCount: function() {
+        var count = 0;
+        for(var kid in this._kidies) {
+            count++;
+        }
+        return count;
+    },
+
+
+    domReCreate: function() {
+        this._oldNode = this._node;
+
+        // add it to my parent
+        this._rebuildMyDom(false);
+    },
     
+
     // this adds the panel to our kids list and 
     // appends the new dom node to my node
     addKid: function(panel) {
@@ -158,19 +226,23 @@ Minx.Panel = my.Class({
         
     },
 
+
     addEvent: function(eventTripple) {
         this._events.push(eventTripple);
     },
+
 
     _addToDom: function(panel) {
         //and add the panels node to the dom as a child of my node
         this._node.appendChild(panel.getNode());
     },
 
+
     // almost a delete, but just remove me from my parent
     removeMe: function() {
         return this._parent.removeKid(this);
     },
+
 
     // remove a child by first recursively removing my children
     // then removing my node from the dom
@@ -191,6 +263,7 @@ Minx.Panel = my.Class({
 
         return list;
     },
+
 
     // itterate my kid panels and remove them recursively
     // return the list of panel id's the got removed
@@ -399,7 +472,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         this.setStyle('visibility', 'inhertied');
 
         //DEBUG - remove opacity for hw accell
-        //this.setStyle('opacity', '1');
+        this.setStyle('opacity', '1');
 
         
         // make sure it is rendered
@@ -455,7 +528,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         // even if instant set opacity to zero so we can fade up on show
 
         //DEBUG - remove opacity for hw accell
-        //this.setStyle('opacity', '0');
+        this.setStyle('opacity', '0');
 
         if(instant){
             me.setStyle('visibility', 'hidden');
@@ -468,7 +541,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
                 me.setStyle('visibility', 'hidden');    
                 // tell the browser
                 me._applyStyles();
-            }, 300);        // annoyingly kinda dependant on the 0.3s value in the css
+            }, this._animate);        // fade after whatever the animation time is
         }
         // tell the browser about first change
         this._applyStyles();
@@ -520,20 +593,20 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     // maps all the new geometry into the sets of styles that will be applied on next draw
     _mapAllStuff: function() {
 
-        // this._firstDraw indicates that this is the first time this panel has been put on screen
+        // this._instantFirstDraw indicates that this is the first time this panel has been put on screen
         // so this is setting up its inital starting position - and will (likely) be initially hidden
 
         this._mapAnim();
         
         // coords and dimensions
-        this._mapGeometry(this._newG);
+        this._mapGeometry();
         
     },
 
 
     _mapAnim: function() {
         // apply transition animations only if not first draw && (difx > 0 || dify > 0)
-        if(this._firstDraw || (this._animate <=0)) {
+        if(this._instantFirstDraw || (this._animate <=0)) {
             this._setTime(this, 0);
             this.removeClass('anim-geom');
         }
@@ -543,11 +616,11 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
             this._setTime(this, this._animate);
         }
 
-        this._firstDraw = false;
+        this._instantFirstDraw = false;
     },
 
 
-    _mapGeometry: function(geo) {
+    _mapGeometry: function() {
         // add the new coords
         this._setXY(this, this._newG.l, this._newG.t);
         

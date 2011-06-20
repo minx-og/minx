@@ -21,20 +21,23 @@ if (typeof Minx.Layout === "undefined") {
 Minx.Layout.SplitLayout = my.Class({
 
     constructor: function(main, lnw, pnw) {
+
+
+
         this._navSlideTimer = null;        // clearable timeout so can cancel delayed hides
         this._stuffSlideTimer = null;        // clearable timeout so can cancel delayed hides
 
         if( typeof lnw == 'undefined') {
-            this._navLandWidth = 300;             // 30% by default - in landscape mode
-        } else {
-            this._navLandWidth = lnw;
+            lnw = 300;             // 30% by default - in landscape mode
         }
 
         if( typeof pnw == 'undefined') {
-            this._navPortWidth = 300;            // 300 px by default
-        } else {
-            this._navPortWidth = pnw;            // 300 px by default
+            pnw = 300;            // 300 px by default
         }
+
+        this.setNavLandWidth(lnw);
+        this.setNavPortWidth(pnw);
+
 
         var me = this;
         var touch = Minx.pm.isTouch();
@@ -57,9 +60,6 @@ Minx.Layout.SplitLayout = my.Class({
         this._stuff.setAnimate(200);
 
 
-        // pin it to the nav panel
-        this._stuff.setSiblingPin(this._navPanel, 'l');
-
         if(!touch) {
             //dock it right as well
             this._stuff.pinParent({'l': -1, 't': 0, 'r': 0, 'b': 0});
@@ -76,6 +76,7 @@ Minx.Layout.SplitLayout = my.Class({
 
         // orientation
         this._isPort = 'doit';
+        this.inChange = false;
         this.reOrient(true);            // initial = true so dont do timers and dont call show
         
         // hook into window resize 
@@ -86,14 +87,18 @@ Minx.Layout.SplitLayout = my.Class({
     },
 
     _resizeEvent: function(e) {
-        this.reOrient(false);           // true ro draw it all
+        if(!this.inChange) {
+            this.inChange = true;
+            Minx.pm.calcDims();
+            this.reOrient(false);           // true ro draw it all
+            this.inChange = false;
+        }
     },
 
     reOrient: function(initial) {
-        var nw = document.documentElement.clientWidth;
-        var nh = document.documentElement.clientHeight
-
-        var nisPort = nw < nh;
+        
+        var nisPort = (Minx.pm.dims.or === 'p');
+        console.log('or = ' + Minx.pm.dims.or);
 
         if(nisPort !== this._isPort){
             
@@ -118,11 +123,17 @@ Minx.Layout.SplitLayout = my.Class({
     // set nav width in landscape - only takes effect on next orientation change
     setNavLandWidth: function(width) {
         this._navLandWidth = width;          // nav width in landscape
+        if(this._navLandWidth < 1) {        // then it is a ratio
+            this._navLandWidth = Minx.pm.dims.lw * this._navLandWidth;
+        }
     },
 
     // set nav width in portrait - only takes effect on next orientation change
     setNavPortWidth: function(width) {
         this._navPortWidth = width;            // nav width in portrait
+        if(this._navPortWidth < 1) {        // then it is a ratio
+            this._navPortWidth = Minx.pm.dims.pw * this._navPortWidth;
+        }
     },
 
     show: function() {
@@ -132,37 +143,37 @@ Minx.Layout.SplitLayout = my.Class({
 
     _setLandscape: function(initial) {
         var me = this;
-        var nw = document.documentElement.clientWidth;
-        var nh = document.documentElement.clientHeight;
+        var nw = Minx.pm.dims.w;
+        var nh = Minx.pm.dims.h;
         var touch = Minx.pm.isTouch();
 
         window.scrollTo(0, 0);
 
+        // pin it to the nav panel
+        this._stuff.setSiblingPin(this._navPanel, 'l');
 
-        var navWidth = this._navLandWidth;
-        if(this._navLandWidth < 1) {        // then it is a ratio
-            navWidth = nw * this._navLandWidth;
-        }
+        this._navPanel.unPin();
 
         if(!touch) {
             // set the nav panel to docked in width    
-            this._navPanel.setSize(navWidth, nh);
+            
 
             // and dock it left
             this._navPanel.pinParent({'l': 0, 't': 0, 'r': -1, 'b': 0});
 
-            me._stuff.setSize(nw-navWidth, nh);
+            
         }
-        else {
+        
             //setTimeout(function() {
-                me._stuff.setSize(1024 - navWidth, 748);        
+                me._stuff.setSize(nw - this._navLandWidth, nh);        
+            //    me._stuff.show();    
             //}, 300);
 
-            this._navPanel.setSize(navWidth, 748);
+            this._navPanel.setSize(this._navLandWidth, nh);
 
             this._navPanel.setPos(0, 0);
 
-        }
+        
     
 
         // TODO: handle this in the panel manager
@@ -191,8 +202,9 @@ Minx.Layout.SplitLayout = my.Class({
         // need to know current width to slide left that much
         var navp = this._navPanel.getDims();
 
-        var nw = document.documentElement.clientWidth;
-        var nh = document.documentElement.clientHeight;
+        var nw = Minx.pm.dims.w;
+        var nh = Minx.pm.dims.h;
+        
         var touch = Minx.pm.isTouch();
 
         var startTime = undefined;
@@ -218,29 +230,32 @@ Minx.Layout.SplitLayout = my.Class({
         this._navPanel.unsetParentPin('l');
 
         
-        
+
+        // make stuff full size off dom
+
+        //this._stuff.domReCreate();
+
+        this._stuff.setSize(nw, nh);
+        this._stuff.show();
+
+        //this._stuff.domReAttach();
+
+/*
+        setTimeout(function() {    
+        }, 1000);
+*/
 
 
         if(!touch) {
-            this._stuff.setSize(nw, nh);
-            me._navPanel.setPos(0 - navp.w - 1 , 0);
+            
+            me._navPanel.setPos((0 - this._navLandWidth) - 1 , 0);
             me._navPanel.show();
         }
         else {
 
-            this._stuff.setSize(768, 1004);
-            this._navPanel.setSize(300, 1004);
-
-            if(!initial) {
-                this._stuff.show();
-            }
-
-
-            
 
             //TODO scroll theview
-            
-            
+
 
             setTimeout(function() {
             //    window.scrollTo(0, 0);    
@@ -248,23 +263,26 @@ Minx.Layout.SplitLayout = my.Class({
                 startTime = Date.now();
                 
                 (function animloop(){
-                if(render()) {
-                  requestAnimFrame(animloop);
-                }
-            })();
+                    if(render()) {
+                      requestAnimFrame(animloop);
+                    }
+                })();
 
-            }, 390);
-            
+            }, 90);
+
+          
+            // 390  400 and 1.5 - for 300 
 
             setTimeout(function() {
-                    me._navPanel.setPos(0 - navp.w - 1 , 0);
-                    me._navPanel.show();
-            }, 400);
+                me._navPanel.setPos((0 - me._navLandWidth) - 1 , 0);
+                me._navPanel.show();
+
+            }, 100);
 
         }
 
         
-
+/*
 
         if(!initial) {
 
@@ -272,20 +290,9 @@ Minx.Layout.SplitLayout = my.Class({
 
             this._navPanel.show();                
         }
-
+*/
         me._navPopButton.show(); 
         
-    },
-
-    _getPortraitNavWidth: function() {
-        var navWidth = this._navPortWidth;
-        var nw = document.documentElement.clientWidth;
-
-        if(this._navPortWidth < 1) {        // then it is a ratio
-            navWidth = nw * this._navPortWidth;
-        }
-        
-        return navWidth;    
     },
 
     // in portrait the nav pops up
@@ -300,10 +307,12 @@ Minx.Layout.SplitLayout = my.Class({
         // set hidden or offscreen
         if(this._navPanel.isHidden() || left < 0) {
 
-            var navWidth = this._getPortraitNavWidth();
+            
+            // un pin main from the nav panel
+            this._stuff.unsetSiblingPin('l');
             
             // set a popup size
-            this._navPanel.setSize(navWidth,600);
+            this._navPanel.setSize(this._navPortWidth, 600);
 
             // unpin it
             this._navPanel.unPin();

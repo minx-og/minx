@@ -186,13 +186,15 @@
                     var cancelBtn = pop.getFootBar().addButton('l', 10, 'Cancel');
                     
                     cancelBtn.onClick(function(panel,e){
-                        pop.hide();
+                        pop.removeMe();
                     });
                     
                     var okBtn = pop.getFootBar().addButton('r', 10, 'Logon');
                     
                     okBtn.onClick(function(panel,e){
                         layout.setNavPortWidth(500);
+
+
                         alert('OK');
                     });                    
 
@@ -208,6 +210,5 @@
 
     </head>
     <body onload="onDeviceReady()">
-        
     </body>
 </html>

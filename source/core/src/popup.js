@@ -28,7 +28,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
     _onCreation: function() {
         //dont call base
         // default size
-        this.setAnimate(0);
+        this.setAnimate(300);
         this.hide(true);            // hide instantly
         
         this.setSize(300, 200);
@@ -47,6 +47,17 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         this._centre = true;
     },
 
+
+    // override to hide first - so it fades
+    removeMe: function() {
+        this.hide();
+        // wait animation time to trash it
+        var me = this;
+        setTimeout(function() {
+           Minx.PinnedPanel.Super.prototype.removeMe.call(me);
+        }, this._animate);
+    },
+
     // override layout to check if we should re-centre
     layout: function() {
 
@@ -56,6 +67,12 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
 
         // now call the base panel layout - we shouldn't have pinning but we could i suppose
         Minx.PinnedPanel.Super.prototype.layout.call(this);
+    },
+
+    show: function() {
+        // override to allow initial animation
+        this._instantFirstDraw = false;
+        Minx.PinnedPanel.Super.prototype.show.call(this);
     },
 
     // private - center to the viewport - should make these dimensions available in the panel manager
