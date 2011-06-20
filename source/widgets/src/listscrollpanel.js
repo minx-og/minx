@@ -51,21 +51,9 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
         // if touch and we dont have one allready
         if(this._touch) {
-            if(this._scroller == null) {
-                // create a new scroller for my id only if there is any thing in the model
-                //if(this.getModel().length > 0) {
-
-                    // only create the scroller after munging
-
-                    //this._scroller = new iScroll(this.getNode());
-
-
-
-                //}
-            }
-            else if(wasdirty && this._didResize) {
+            if(this._scroller != null) {
                 // scroller needs t know about div size changes - give it time for animations to take effect
-                
+                // timer to give other sht a go                
                 setTimeout(function() {
                     me._scroller.refresh();    
                 }, 310);

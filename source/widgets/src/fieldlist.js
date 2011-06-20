@@ -1,5 +1,5 @@
 /*
-ListScrollPanel - registered as list-scroll-panel
+FieldList - registered as list-scroll-panel
 =================================================
 
 one event 'click' on a list item
@@ -49,6 +49,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
     
     getRowMarkup: function(parentId, row, li) {
         var div = document.createElement('div');
+        div.setAttribute('class', 'mx-row');
 
         var ipType = 'input';
         if(row.type == 'select') {
@@ -129,7 +130,19 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             div.appendChild(idiv);
 
         }
-        
+
+// no end box needed now
+/*
+        if(row.type == 'text') {
+            var idiv = document.createElement('div');
+            idiv.setAttribute('class', 'mx-input-end');
+
+            // some internal appendings - idiv.appendChild(ip);
+
+            div.appendChild(idiv);
+            
+        }
+ */       
         //{name:'name', label: 'Name', type: 'text',   value: '', placeholder: 'name'},
         //{name:'type', label: 'Class', type: 'select', value: '', options:[{value:'upper', disp:'Better'}, {value:'middle', disp:'Worse and Better'},{value: 'lower', disp:'Worse'}]}
         

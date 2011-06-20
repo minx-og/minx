@@ -4,15 +4,23 @@
     padding:0;
     margin:0;
     font-size: 12pt;
+
     -webkit-appearance: none;
+    -webkit-text-size-adjust: none;
+    -webkit-user-select: none;
+
+    -webkit-box-sizing: border-box;
 }
+
+/* remove default safari style */
+input, textarea {outline-style:none;}
 
 body {
     overflow: hidden;
 
     background: #000;
     /* perf?? */
-    /*text-shadow: 0px 1px 0px white;*/
+    text-shadow: 0px 1px 0px white;
 }
 
 #pn0 {
@@ -22,6 +30,9 @@ body {
 .panel {
     overflow: hidden;
     position: absolute;
+
+    /* allows borders to overlap neatly */
+    -webkit-box-sizing: content-box;
 }
 
 

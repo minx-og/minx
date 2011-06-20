@@ -1,14 +1,22 @@
 
+/*override scroll padding */
+
+.field-list li {
+    padding: 0;
+    /*centers the text vertically */
+    line-height: 45px;
+}
+
 .field-list {
     background: #e5e5e7;
 }
 
 .field-list h2{
-    color: #aab;
+    color: #666;
 }
 
 ul.field-list {
-    padding: 10px;
+    padding: 20px;
     width: auto;
 }
 
@@ -22,6 +30,8 @@ ul.field-list li {
     
     box-sizing: border-box;
     background-clip: border-box;
+
+    background: white;
 }
 
 ul.field-list li.first {
@@ -48,21 +58,73 @@ label {
     font-weight: bold;
 
     padding-left: 10px;
-}
 
-#pn11 label {
     display: block;
-    width: 120px;    
+    width: 100%;
+    height: 100%;
     float: left;
+
 }
 
 input, select {
+    padding: 0;
+    margin: 0;
+
+    text-overflow: ellipsis;
+    -webkit-user-select: text;
+
     font-size: 18px;
-    padding: 7px;
+    
     border: 0px;
+    width: 100%;
+    height: 100%;
+
     text-shadow: none;
+
+    display: block;
+ 
 }
 
-input::-webkit-input-placeholder, isindex::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-    color: #ddd;
+select {
+    padding-left: 10px;
+}
+
+.mx-row {
+    height: 45px;
+    width: 100%;
+}
+
+.mx-label {
+    height: 100%;
+    width: 30%;
+    float: left;
+
+    background: #F3F3F3;
+}
+
+.mx-input {
+ 
+    height: 100%;
+    width: 65%;
+    padding-left: 5px;
+    float: left;
+    position: relative;
+}
+
+
+.mx-input-end {
+    float: right;
+    height: 100%;
+    width: 5%;
+    min-width: 30px;
+    
+}
+
+
+.first .mx-label {
+    -webkit-border-top-left-radius: 7px;
+}
+
+.last .mx-label {
+    -webkit-border-bottom-left-radius: 7px;
 }

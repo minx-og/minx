@@ -56,7 +56,7 @@
 
             /* When this function is called, PhoneGap has been initialized and is ready to roll */
             function onDeviceReady() {
-console.log('onDeviceReady');
+                console.log('onDeviceReady');
 
                 var touch = true;
 
@@ -136,11 +136,7 @@ console.log('onDeviceReady');
                 // combine the view and model
                 navList.munge();
                 
-                // nowshow the main window
-                main.show();
-
-                layout.show();
-
+                
 
 
                 // now do our new widgetty thing
@@ -148,30 +144,35 @@ console.log('onDeviceReady');
                 var mainPanel = layout.getMainPanel().getContentPanel();
 
                 var fieldForm = Minx.pm.add(mainPanel);
-                fieldForm.addClass('test-panel');
-                fieldForm.fillParent(50);
+
+                fieldForm.fillParent(0);
                 
 
                 var fieldList = Minx.pm.add(fieldForm, 'field-list-panel');
               
 
                 fieldList.setModel([
-                  {name:'name', label: 'Name', type: 'text',   value: '', placeholder: 'name'},
+                  {name:'name', label: 'Name', type: 'search',   value: '', placeholder: 'name'},
                   {name:'type', label: 'Class', type: 'select', value: '', options:[{value:'upper', disp:'Better'}, {value:'middle', disp:'Worse and Better'},{value: 'lower', disp:'Worse'}]},
-                  {name:'street', label: 'Street', type: 'text',   value: '', placeholder: '1 The Street', style: 'last'},
+                  {name:'street', label: 'Street', type: 'search',   value: '', placeholder: '1 The Street', style: 'last'},
                   {name:'br1', type: 'break'},
                   {name:'tr1', type: 'title', value: 'Some More...'},
-                  {name:'town', label: 'Town', type: 'text',   value: '', placeholder: 'ville', style: 'first'},
+                  {name:'town', label: 'Town', type: 'search',   value: '', placeholder: 'ville', style: 'first'},
                   {name:'country', label: 'Country of birth', type: 'password',   value: '', placeholder: ''},
-                  {name:'1name', label: 'Name', type: 'text',   value: '', placeholder: 'name'},
+                  {name:'1name', label: 'Name', type: 'search',   value: '', placeholder: 'name'},
                   {name:'1type', label: 'Class', type: 'select', value: '', options:[{value:'upper', disp:'Better'}, {value:'middle', disp:'Worse and Better'},{value: 'lower', disp:'Worse'}]},
-                  {name:'1street', label: 'Street', type: 'text',   value: '', placeholder: '1 The Street', style: 'last'},
+                  {name:'1street', label: 'Street', type: 'search',   value: '', placeholder: '1 The Street', style: 'last'},
                   {name:'1tr1', type: 'title', value: 'Some More...'},
-                  {name:'1town', label: 'Town', type: 'text',   value: '', placeholder: 'ville', style: 'first'},
+                  {name:'1town', label: 'Town', type: 'search',   value: '', placeholder: 'ville', style: 'first'},
                   {name:'1country', label: 'Country of birth', type: 'password',   value: '', placeholder: ''},
                 ]);
 
                 fieldList.munge();
+
+                // iportant to call show after creating stuff else it wont e layed out correctly
+                // nowshow the main window
+                main.show();
+
       
 
 
