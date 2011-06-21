@@ -50,6 +50,8 @@
         <!-- layouts -->
         <script src="../source/layouts/src/splitlayout.js"></script>
 
+        <script src="Stats.js"></script>
+
 
         <!-- our main entry -->
         <script type="text/javascript" charset="utf-8">
@@ -203,6 +205,17 @@
                 }
                 // remove all but one panel after 2 seconds     
                 
+                // frames er second
+                /*
+                var stats = new Stats();
+                layout.getMainPanel().getNode().appendChild( stats.domElement );
+
+                setInterval( function () {
+
+                    stats.update();
+
+                }, 1000 / 60 );
+                */
 
             }
 

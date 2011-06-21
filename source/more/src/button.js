@@ -126,9 +126,30 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
             var offTop = (h - nw)/2;
             var offLeft = nw/2 ;
 
-            // add sizing to the span element
-            sp.style.cssText = 'width: ' + nw + 'px; height: ' + nw + 'px; top:' + offTop + 'px; left: -' + offLeft + 'px;'; 
 
+            //the above maths redundant with transforms 
+
+
+            // add sizing to the span element
+            //sp.style.cssText = 'width: ' + nw + 'px; height: ' + nw + 'px; top:' + offTop + 'px; left: -' + offLeft + 'px;'; 
+
+            var h = nw + 2;
+            var h2 = h/2;
+            
+            var off = Math.sqrt(Math.pow((h/2),2)/2);
+            offLeft = off - 1.5;
+            offTop = off -.5;
+            
+            sp.style.cssText = 'width: ' + h + 'px; height: ' + h + 'px; -webkit-transform: rotate(45deg) translate3d(-'+offLeft+'px, '+ offTop +'px, 0px);'
+
+/*
+            26
+
+            -13, 1.7
+
+            h,w = 27
+            -8, 9
+*/
             // TODO: if i'm pinned left then increase my offset for a back button
             if(this._pPin.l >= 0) {
                 this._pPin.l = this._pPin.l + offLeft;

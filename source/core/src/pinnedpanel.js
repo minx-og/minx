@@ -188,6 +188,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         // my Geometry
         var nG = this.getNewDims();
 
+        // shorthand for the new dimensions
         var l = nG.l, t = nG.t, w = nG.w, h = nG.h;
 
         // --- left and right pinning
@@ -198,22 +199,25 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
             l = pp.l;
         }
 
-        // or sibling pin??
+        // or sibling pin - my left is my siblings left + width and the offset
         if(sp.l != null) {
             var sd = sp.l.panel.getNewDims(); 
             l = sd.l + sd.w + sp.l.off;
         }
 
+
         // get my right from any pinned
-        var right = l + w;
+        var right = l + w;              // temp value of a 'right' coord - used to wor out width
+
+        // inned to my parents right - so my right is my parents left and width minus offset
         if(pp.r >= 0) {
             right = pd.w - pp.r;
         }
 
-        // or sibling pin??
+        // or sibling pin?? - so my right is my siblings left  minus offset
         if(sp.r != null) {
             var rd = sp.r.panel.getNewDims(); 
-            right = sd.l + sp.r.off;
+            right = sd.l - sp.r.off;
         }
 
         // get my width = right - left
@@ -257,6 +261,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     },
 
 
+    // TODO - review - this might be redundent the sibling pin function might do all the parent pinning as well 
     // private work out parent pinning
     // update my geometary based on how I am pinned to my parent
     // each parent pin has to be mutully exclusive to sibling pinning

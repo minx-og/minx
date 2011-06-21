@@ -1,4 +1,16 @@
-/* panel */
+/* 
+Minx.Panel 
+==========
+
+core class - all derived from this (not layouts)
+
+some code could be written in shorthand forms - but I have sacrificed brevity for readability 
+- all to often clever syntax just serves to confuse, and for little or no performnce gain 
+
+
+*/
+
+
 
 // geometry values 0 used by panel to - could be internal class?
 // really to check for any geometry changes or dimension changes
@@ -39,8 +51,15 @@ Minx.Geom = my.Class({
 });
 
 
-// Webkit accelerated animations
+// These litle classes are used to provide the markup for animations
+// they are substituted for the functions...
+// _setXY ==> setpos
+// _setTime ==> settime
 
+// these atre set up once at load time so no constant agent checking - there is no code to do the agent checking yet...
+
+
+// Webkit accelerated animations
 
 Minx.anim = {
     trans: '-webkit-transform',
@@ -56,11 +75,15 @@ Minx.anim = {
 };
 
 
+//TODO Add firefox -moz version
 
-// None accelerated animations
+
+
+// None accelerated animations - left and right
+// timings of transitions are specified in the CSS
+
 /*
 Minx.anim = {
-    trans: '-webkit-transform',                     // this setting not used in none accel
     setpos: function(pan, x, y) {
         pan.setStyle('left', x + 'px');
         pan.setStyle('top',  y + 'px');
@@ -79,207 +102,14 @@ Minx.anim = {
 
 Minx.Panel = my.Class({
     
-    constructor: function (parent, id) {
-        this._parent = parent;           // parent panel
-        this._id = id;                   // my managed id   
-        this._hideTimer = null;          // a timer to set hidden after transitioning to full transparency
-                                         // which needs clearing on show - else a timed hide could still happen 
-
-        this._kidies = {};               // my map of child panels
-        
-        this._style = {};                // my map of css style elements, no duplicates for me - used to compose the style string
-        this._classes = {};
-
-        this._events = [];               // array of events i have subscribed to
-        
-        this._nowG = new Minx.Geom();    // my geometry now
-        this._newG = new Minx.Geom();    // my geometry to be
-
-        this._dirty = false;             // has anything changed that requires me to update my style attributes in th dom
-
-        this._animate = 500;             // enabe full animation by default with duration 500
-        
-        this._instantFirstDraw = true;   // pesky once off flag to say if this is the first drawing and we want it to be blasted with no animation
-
-
-        // SPECIAL - have we just made the root node - dont create nodes
-        if(id == "root") {
-            this._node = document.body;
-        }
-        else {      // normal node so create it 
-            this._create();
-        }
-    },
-
-    // Structural stuff
-    // ================
-
-    // create my panel details
-    // mainly the dom node - and add me to my parent
-    _create: function() {
-        // create the node and set the managed id
-        this._node = document.createElement(this.getMyElement());         // the dom node - or el really
-        this._node.setAttribute('id', this._id);
-
-        // set some default styles
-        this._setDefaultStyle(this);
-        
-        // any sppecific setup overrides
-        this._onCreation();  
-                
-        // add myself to my parent - maintaining panel tree
-        this._parent.addKid(this);
-
-        // TODO - dont add the top level on create  - as each child may cause a dow redraw - but if visibility hidden - should be ok
-        this._parent._addToDom(this);
-    },
-
-
-    // override this to set up any initial positioning before being added to the dom
-    // this gets called after all other defaults so takes precidence
-    _onCreation: function() {
-        //default  sizes and positions
-        this.setSize(100, 100);
-        this.setPos(0,0);
-    },
-
-
-    _rebuildMyDom: function (add) {
-
-        if(this.kiddieCount() == 0) {
-            var newnode = this._node.cloneNode(true);
-        }
-        else {
-            var newnode = this._node.cloneNode(false);
-        }
-
-        this._node = newnode
-
-
-        // total recreation - but does not create the widget markup
-        //this._node = document.createElement(this.getMyElement());         // the dom node - or el really
-        //this._node.setAttribute('id', this._id);
-
-        
-        // just update my dom with current styles - client can change size and call layout 
-        //this._dirty = true;
-        //this._blastStyles();
-
-
-        for(var kid in this._kidies) {
-            this._kidies[kid]._rebuildMyDom(true);
-        }
-
-
-        if(add) {
-            this._parent._addToDom(this);
-        }
-    },
-
-
-    domReAttach: function() {
-        var me = this;
-        
-            
-            me._parent._addToDom(me);
-
-            setTimeout(function() {
-                // and remove my old one
-                me._parent._node.removeChild(me._oldNode);
-            
-            }, 1000);
-        
-
-        
-    },
-
-    kiddieCount: function() {
-        var count = 0;
-        for(var kid in this._kidies) {
-            count++;
-        }
-        return count;
-    },
-
-
-    domReCreate: function() {
-        this._oldNode = this._node;
-
-        // add it to my parent
-        this._rebuildMyDom(false);
-    },
     
-
-    // this adds the panel to our kids list and 
-    // appends the new dom node to my node
-    addKid: function(panel) {
-        // check to see if we have this node allready in my list of childs
-        if(panel.getId() in this._kidies) {
-            // cant add a duplicate panel - cant replace one implicitly - need explicit delete first soo...
-            // raise an exception
-            throw 'duplicate panel id' +  panel.getId();
-        }
-
-        // now add our child panel - to our child list
-        this._kidies[panel.getId()] = panel;
-
-        
-    },
+    // Public API
+    // ==========
 
 
-    addEvent: function(eventTripple) {
-        this._events.push(eventTripple);
-    },
-
-
-    _addToDom: function(panel) {
-        //and add the panels node to the dom as a child of my node
-        this._node.appendChild(panel.getNode());
-    },
-
-
-    // almost a delete, but just remove me from my parent
-    removeMe: function() {
-        return this._parent.removeKid(this);
-    },
-
-
-    // remove a child by first recursively removing my children
-    // then removing my node from the dom
-    // taking this child out of my child list
-    // and return the list of id's removed
-    removeKid: function(panel) {
-        // get rid of my kids
-        var list = panel.removeKids();
-
-        // now remove child from my node
-        this._node.removeChild(panel.getNode());
-
-        // and delete from my panel list
-        delete this._kidies[panel.getId()];
-
-        // add myself to the list of keys removed
-        list.push(panel.getId());
-
-        return list;
-    },
-
-
-    // itterate my kid panels and remove them recursively
-    // return the list of panel id's the got removed
-    removeKids: function(){
-        var list = []
-        for(var kid in this._kidies) {
-            keys = this.removeKid(this._kidies[kid]);
-            list = list.concat(keys);
-        } 
-
-        return list;
-    },
-
-
-    // setters
+    // Setters
     // =======
+
 
     // simple relative positioning where 0,0 is top left corner of my parent
     setPos: function(left, top) {
@@ -287,16 +117,20 @@ Minx.Panel = my.Class({
         this._newG.t = top;
     },
 
-    // specific size - but pinning overrides these
+
+    // specific size - but pinning overrides these values if we are an instance of a pinned panel
     setSize: function(width, height) {
         this._newG.w = width;
         this._newG.h = height;
     },
 
-    // dont like smoth transitions? simples
+
+    // set the animation duration in ms
+    // dont like smoth transitions? simples time = 0
     setAnimate: function(time) {
         this._animate = time;
     },
+
 
     // add a css class - 'class' a reserved word on gecko
     addClass: function(cl) {
@@ -307,6 +141,9 @@ Minx.Panel = my.Class({
         }
     },
 
+
+    // extract a css class from my class list
+    // cl = string css class to add to the list of classes for this panel
     removeClass: function(cl) {
         // make sure we have it before we dirtyfy things
         if(cl in this._classes) {
@@ -326,6 +163,9 @@ Minx.Panel = my.Class({
         }
     },
 
+
+    // remove a style pair 
+    // key - stlye name e.g. 'left', 'border' etc.
     removeStyle: function(key) {
         // make sure we do have this key before marking dirty
         if(key in this._style) {
@@ -334,7 +174,9 @@ Minx.Panel = my.Class({
         }
     },
 
-    // getters
+
+
+    // Getters
     // =======
 
     // the dom node 
@@ -342,38 +184,50 @@ Minx.Panel = my.Class({
         return this._node;   
     },
 
-    // my managed id
+
+    // my managed id - this internal _id - is used as the dom id and is managed by the panel manager
     getId: function() {
         return this._id; 
     },
+
 
     // return my current dimensions object
     getDims: function() {
         return this._nowG;
     },
 
-    // return my next dimensions object
+
+    // return my next dimensions object - this is normally more used for calculations
     getNewDims: function() {
         return this._newG;
     },
 
+
+    // return my parent panel
     getParent: function() {
         return this._parent;  
     },
 
+
     // override for specific elements like title bar shoud be header
+    // all panel classes derived from pinnedpanels should override this
     getMyElement: function() {
         return 'section';
     },
 
+
+    // default class name (panel is allways added)
+    // all panel classes derived from pinnedpanels should override this
     getClassName: function() {
         return 'panel';
     },
 
+    // if there are any unnapplied styles
     isDirty: function() {
         return this._dirty;  
     },
-    
+
+    // a thing is hidden if it its visibility is set hidden or it is completely opaque
     isHidden: function() {
         var hidden = false;
         if('visibility' in this._style) {
@@ -390,22 +244,61 @@ Minx.Panel = my.Class({
         return hidden;
     },
 
-    // events that my derived classes might like to know bout 
-    resized: function() {
-        // pass
+    // utility to count any kiddies in the kiddie hash - a more optimal way??
+    kiddieCount: function() {
+        var count = 0;
+        for(var kid in this._kidies) {
+            count++;
+        }
+        return count;
     },
 
-    // actions
+
+
+    // Actions
     // =======
     
     // event 
     // -----
-    //register a handler for all my events
+    // events that my derived classes might like to know bout 
+
+    // This gets called when my geometry changed - override it to do some resizing based activity
+    resized: function() {
+        // pass
+    },
+
+
+    // register a handler for all my default events
+    // the function passed in here gets passed the parsed event 
     onEvents: function(fn) {
         this._eventListener = fn;
     },
+
     
-    // kind a protected - override eventParse instead
+    // override this to extract something specific from the event to pass to any listeners
+    // importat to return a parameter object containing {e: event as a minimum}
+    // event is the raw dom event
+    eventParse: function(event) {
+        return {e: event};
+    },
+
+
+    //@protected - used by Minx.Events 
+    // events are all wrapped in Minx.events and stored in the (misleadingly named, as it is not a queue, just a list) Minx.eq
+    // the pm tells the panel via this function that an event handler has been created
+    // TODO this could be used to destroy the events when this panel is destroyed - it does not yet, so is a bit of a leak, but trivial
+    // the event tripple is..
+    //    node - is probably my own node but does not have to be if my panel handles events from other nodes
+    //    ev   - the dom event attached to 
+    //    mEv  - the event wrapper containing the 'trigger' function which is the thing actually attached to the dom - the trigger then calls the callback on this panel
+    //         - which by default is the reserved function  
+    addEvent: function(eventTripple) {
+        this._events.push(eventTripple);
+    },
+
+
+    //@protected - override eventParse instead
+    // the default callback for all subscribed events via Minx.eq
     eventFired: function(event) {
         // pass down to kids who may want to extract something specific from the event
         var myEv = this.eventParse(event);
@@ -414,11 +307,6 @@ Minx.Panel = my.Class({
         }  
     },
 
-    // override this to extract something specific from the event to pass to any listeners
-    // importat to return a parameter object containing {e: event as a minimum}
-    eventParse: function(event) {
-        return {e: event};
-    },
     
 /* 
 Laying out Drawing and Rendering
@@ -686,7 +574,207 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         panel.setStyle('visibility', 'inherited');
         panel.setStyle('position', 'absolute');
         panel.setStyle('background-color','#eeeeee');
-    }
+    },
+
+
+    // Structural internal stuff
+    // =========================
+
+    // set up my most important members
+    constructor: function (parent, id) {
+        this._parent = parent;           // parent panel
+        this._id = id;                   // my managed id   
+        this._hideTimer = null;          // a timer to set hidden after transitioning to full transparency
+                                         // which needs clearing on show - else a timed hide could still happen 
+
+        this._kidies = {};               // my map of child panels
+        
+        this._style = {};                // my map of css style elements, no duplicates for me - used to compose the style string
+        this._classes = {};
+
+        this._events = [];               // array of events i have subscribed to
+        
+        this._nowG = new Minx.Geom();    // my geometry now
+        this._newG = new Minx.Geom();    // my geometry to be
+
+        this._dirty = false;             // has anything changed that requires me to update my style attributes in th dom
+
+        this._animate = 500;             // transition time in ms - enabe full animation by default with duration 500
+        
+        this._instantFirstDraw = true;   // pesky once off flag to say if this is the first drawing and we want it to be blasted with no animation
+
+
+        // SPECIAL - have we just made the root node - dont create nodes
+        if(id == "root") {
+            this._node = document.body;
+        }
+        else {      // normal node so create it 
+            this._create();
+        }
+    },
+
+
+    // @protected-ish
+    // @friend Minx.PanelManager 
+    //
+    // remove my kids bottum up then me from my parent
+    // normally this should not be called - instead panel deletion should be called from the panel manager, via remove
+    removeMe: function() {
+        return this._parent._removeKid(this);
+    },
+
+    
+    // create my panel details
+    // mainly the dom node - and add me to my parent
+    _create: function() {
+        // create the node and set the managed id
+        this._node = document.createElement(this.getMyElement());         // the dom node - or el really
+        this._node.setAttribute('id', this._id);
+
+        // set some default styles
+        this._setDefaultStyle(this);
+        
+        // any sppecific setup overrides
+        this._onCreation();  
+                
+        // add myself to my parent - maintaining panel tree
+        this._parent._addKid(this);
+
+        // TODO - dont add the top level on create  - as each child may cause a dow redraw - but if visibility hidden - should be ok
+        this._parent._addToDom(this);
+    },
+
+
+    // override this to set up any initial positioning before being added to the dom
+    // this gets called after all other defaults so takes precidence
+    _onCreation: function() {
+        //default  sizes and positions
+        this.setSize(100, 100);
+        this.setPos(0,0);
+    },
+
+
+    // this adds the panel to our kids list and 
+    // appends the new dom node to my node
+    // called from the constructor
+    _addKid: function(panel) {
+        // check to see if we have this node allready in my list of childs
+        if(panel.getId() in this._kidies) {
+            // cant add a duplicate panel - cant replace one implicitly - need explicit delete first soo...
+            // raise an exception
+            throw 'duplicate panel id' +  panel.getId();
+        }
+
+        // now add our child panel - to our child list
+        this._kidies[panel.getId()] = panel;    
+    },
+
+
+    //@private
+    // remove a child by first recursively removing my children
+    // then removing my node from the dom
+    // taking this child out of my child list
+    // and return the list of id's removed
+    _removeKid: function(panel) {
+        // get rid of my kids
+        var list = panel.removeKids();
+
+        // now remove child from my node
+        this._node.removeChild(panel.getNode());
+
+        // and delete from my panel list
+        delete this._kidies[panel.getId()];
+
+        // add myself to the list of keys removed
+        list.push(panel.getId());
+
+        return list;
+    },
+
+
+    //@private
+    // itterate my kid panels and remove them recursively
+    // return the list of panel id's the got removed
+    _removeKids: function(){
+        var list = []
+        for(var kid in this._kidies) {
+            keys = this.removeKid(this._kidies[kid]);
+            list = list.concat(keys);
+        } 
+
+        return list;
+    },
+
+
+    //and add the node from the passed panel to the dom as a child of my node
+    _addToDom: function(panel) {
+        this._node.appendChild(panel.getNode());
+    },
+
+
+
+
+//********************************************
+    // All the following are !! BROKEN !! and not used now - it was really an experiment
+    // can completely reconstruct the dom from the panel tree
+    // but *WITHOUT EVENTS* at the moment
+    // the clonenode with depth will recreate widget content - but again no evetns get cloned
+    _rebuildMyDom: function (add) {
+
+        if(this.kiddieCount() == 0) {
+            var newnode = this._node.cloneNode(true);
+        }
+        else {
+            var newnode = this._node.cloneNode(false);
+        }
+
+        this._node = newnode
+
+
+        // total recreation - but does not create the widget markup
+        //this._node = document.createElement(this.getMyElement());         // the dom node - or el really
+        //this._node.setAttribute('id', this._id);
+
+        
+        // just update my dom with current styles - client can change size and call layout 
+        //this._dirty = true;
+        //this._blastStyles();
+
+
+        for(var kid in this._kidies) {
+            this._kidies[kid]._rebuildMyDom(true);
+        }
+
+
+        if(add) {
+            this._parent._addToDom(this);
+        }
+    },
+
+
+    // the public function
+    domReAttach: function() {
+        var me = this;
+            
+            me._parent._addToDom(me);
+
+            setTimeout(function() {
+                // and remove my old one
+                me._parent._node.removeChild(me._oldNode);
+            
+            }, 1000);
+        
+    },
+
+
+    // the public function
+    domReCreate: function() {
+        this._oldNode = this._node;
+
+        // add it to my parent
+        this._rebuildMyDom(false);
+    },
+    
 });
 
 Minx.pm.register('simple', Minx.Panel);

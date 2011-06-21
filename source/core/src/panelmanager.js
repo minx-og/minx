@@ -13,7 +13,9 @@ Minx.Event = function(panel, callback) {
         }
 }
 
-// the event 'queue'
+// the event 'queue' - not even a queue but could be if we wanted to manage all events
+// for now this creates a simple wrapper function so that when the handler is called on the panel - 'this' is in scope
+// it also adds the event to the list of events for the individual panel - so each panel could manage its own event list
 Minx.Events = function(){
         // any global list?
 
@@ -23,11 +25,10 @@ Minx.Events = function(){
                 callback = 'eventFired';
             }
             
+            // wrapper to call the event on the panel
             var mEv = new Minx.Event(panel, callback);
 
             // now add it back to the object that subscribed
-
-
             if(node == null) {
                 node = panel.getNode();
             }
@@ -290,6 +291,7 @@ Minx.PanelManager = function() {
 
 
     // remove a panel and all children from our dom and managed lists
+    // equivalent to delete 
     this.remove = function(panel) {
         // if pnel is an id - find it in our managed list of _panels
         if(typeof panel == 'string') {
@@ -304,7 +306,7 @@ Minx.PanelManager = function() {
             
             // then remove from the dom .3 seconds later
             setTimeout(function() {
-                var list = panel.removeMe();
+                var list = panel._removeMe();
 
                 // delete al the removed panels from our managed list
                 for(key in list) {

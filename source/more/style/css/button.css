@@ -41,7 +41,7 @@
             -webkit-border-bottom-right-radius: 8px;
             -webkit-border-bottom-left-radius: 7px;            
             
-            -webkit-transform: rotate(45deg); 
+            /* -webkit-transform: rotate(45deg); */
 
             -webkit-mask-image: 
                 -webkit-gradient(linear, left bottom, right top, 
