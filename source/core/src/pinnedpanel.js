@@ -1,4 +1,10 @@
-/* panel */
+/* 
+Minx.PinnedPanel
+
+core class - a panel that knows how to relate to others geometrically
+
+*/
+
 
 // geometry values 0 used by panel to - could be internal class?
 // really to check for any geometry changes or dimension changes
@@ -9,10 +15,9 @@ Minx.PinTo = function(){
     this.panel = null;      // the panel to pin to
 }
 
-// the seat of all power - THE PANEL
-// keeps a list of all child panels
-// builds up new geometry to decide ifa change is needed
-// holds a reference to its dom node
+
+// the seat of more power - THE PINNED PANEL
+// Does everything a panel can do and knows about parent and siblings positions and can stick to them
 
 Minx.PinnedPanel = my.Class(Minx.Panel, {
 
