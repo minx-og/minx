@@ -3,11 +3,11 @@
     <head>
         <!-- meta data, as in data about data where data is this file -->
         <meta charset="utf-8">
-        <meta name="description" content="Willis a simple mobile optimised widget library">
+        <meta name="description" content="Minx a simple mobile optimised widget library">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="author" content="MoneyToolkit">
-
-        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no width=device-height">
+        <!--- must have width set to device height - otherwise ipads snap back to zero on resize and it looks ugly -->
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no ">
 
         <!-- title -->
         <title>Minx split-layout and scroll list widget</title> 
@@ -18,6 +18,7 @@
         <!-- theme css -->
         <link rel="stylesheet" href="../source/themes/css/debug.css?v=1.1">
 
+        <script src="http://192.168.1.103:8090/target/target-script-min.js#anonymous"></script>
         <!-- core lib code -->
         <script src="../source/extern/my.class.js"></script>
         
@@ -46,6 +47,7 @@
 
         <!-- layouts -->
         <script src="../source/layouts/src/splitlayout.js"></script>
+        <script src="../source/layouts/src/phonelayout.js"></script>
 
 
         <!-- our main entry -->
@@ -67,6 +69,8 @@
                 console.log(Minx.pm.agent().ipad);      
 
                 var layout = new Minx.Layout.SplitLayout(main, 300, 300);
+
+                // var layout = new Minx.Layout.PhoneLayout(main, 300, 300);
 
 
 
@@ -348,7 +352,7 @@
                 navList.munge();
                 
                 // nowshow the main window
-                main.show();
+                //main.show();
 
                 layout.show();
 

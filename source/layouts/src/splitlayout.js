@@ -186,9 +186,9 @@ Minx.Layout.SplitLayout = my.Class({
 
         // want to lay it all out and dump it onscreen with no geometry animation
         if(!initial) {
-            this._navPanel.show();
+            this._navPanel.render();
 
-            me._stuff.show();    
+            me._stuff.render();    
         }
 
         // have to hide instantly else it can finish the hide transition after the show
@@ -236,7 +236,7 @@ Minx.Layout.SplitLayout = my.Class({
         //this._stuff.domReCreate();
 
         this._stuff.setSize(nw, nh);
-        this._stuff.show();
+        this._stuff.render();
 
         //this._stuff.domReAttach();
 
@@ -249,7 +249,7 @@ Minx.Layout.SplitLayout = my.Class({
         if(!touch) {
             
             me._navPanel.setPos((0 - this._navLandWidth) - 1 , 0);
-            me._navPanel.show();
+            me._navPanel.render();
         }
         else {
 
@@ -275,7 +275,7 @@ Minx.Layout.SplitLayout = my.Class({
 
             setTimeout(function() {
                 me._navPanel.setPos((0 - me._navLandWidth) - 1 , 0);
-                me._navPanel.show();
+                me._navPanel.render();
 
             }, 100);
 

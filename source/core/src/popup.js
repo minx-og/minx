@@ -39,7 +39,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
     // if a specific position is set then unpin from the centre
     setPos: function(left, top) {
         this._centre = false;
-        Minx.PinnedPanel.Super.prototype.setPos.call(this, left, top);
+        Minx.Popup.Super.prototype.setPos.call(this, left, top);
     },
 
     // re-pin to the centre - (should probably render again)
@@ -54,7 +54,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         // wait animation time to trash it
         var me = this;
         setTimeout(function() {
-           Minx.PinnedPanel.Super.prototype.removeMe.call(me);
+           Minx.Popup.Super.prototype.removeMe.call(me);
         }, this._animate);
     },
 
@@ -66,13 +66,13 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         }
 
         // now call the base panel layout - we shouldn't have pinning but we could i suppose
-        Minx.PinnedPanel.Super.prototype.layout.call(this);
+        Minx.Popup.Super.prototype.layout.call(this);
     },
 
     show: function() {
         // override to allow initial animation
         this._instantFirstDraw = false;
-        Minx.PinnedPanel.Super.prototype.show.call(this);
+        Minx.Popup.Super.prototype.show.call(this);
     },
 
     // private - center to the viewport - should make these dimensions available in the panel manager
@@ -85,7 +85,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         var d = this.getNewDims();
 
         // call the base setPos directly
-        Minx.PinnedPanel.Super.prototype.setPos.call(this, (dw - d.w) / 2, (dh - d.h) / 2);
+        Minx.Popup.Super.prototype.setPos.call(this, (dw - d.w) / 2, (dh - d.h) / 2);
     },
 
     getClassName: function() {

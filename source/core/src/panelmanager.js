@@ -69,6 +69,11 @@ Minx.PanelManager = function() {
         
         var nw = document.documentElement.clientWidth;
         var nh = document.documentElement.clientHeight
+        var orn = -1;
+
+        if(window.orientation) {
+            orn = window.orientation;
+        }
 
         // height is sorted automatically
         this.dims.h = nh;
@@ -81,22 +86,35 @@ Minx.PanelManager = function() {
 
         // need to detect real evice width because the client width has been fixed to allow smooth repositioning
         // if it is set to auto size then the snap to 0,0 is ugly
+        // ipad tells us the height nicely
         if(this.dims.ipad) {
-            
-                if(nh > 768) {  // must be portrait
-                    this.dims.or = 'p';
-                    // TODO - get te ipad2 dimensions!!
-                    this.dims.w = 768;
-                }
-                else {
-                    this.dims.or = 'l';
-                }
-                
+            if(nh > 768 || orn == 0 || orn == 180) {  // must be portrait
+                this.dims.or = 'p';
+                // TODO - get te ipad2 dimensions!!
+                this.dims.w = 768;
+            }
+            else {
+                this.dims.or = 'l';
+            }
         }
 
-        // portrait - 1024, 1155
-        // landscape - 1024, 610
+        
+        if(this.dims.ipod || this.dims.iphone) {
 
+            if(nh > 320 || orn == 0 || orn == 180) {  // must be portrait
+                this.dims.or = 'p';
+                // TODO - get the iphone 4 dimensions - and be cleverer for Android if we ever support it!!
+                this.dims.w = 320;
+                this.dims.h = 460;
+            }
+            else {
+                this.dims.or = 'l';
+                this.dims.w = 480;
+                this.dims.h = 300;
+            }
+        }
+
+        // what no android!! - Android performance sucs
     };
 
     this.calcDevice = function() {
@@ -114,6 +132,14 @@ Minx.PanelManager = function() {
         this.dims.android      = this.agent().android; 
         this.dims.webos        = this.agent().webos;
         this.dims.blackberry   = this.agent().blackberry; 
+
+        //DEV - simulate touch
+        if(this.localMobileTest){
+            this.dims.iphone = true;
+        }
+        
+        var t = this.dims;      // just to save typing
+        this.dims.touch = t.iphone || t.ipad || t.ipad || t.android || t.blackberry;
 
         this.ver = 0;
         
@@ -168,7 +194,19 @@ Minx.PanelManager = function() {
 
             main.getNode().innerHTML = '<div id="back-top"></div>';
 
-            main.setSize(this.dims.w, this.dims.h);            
+            main.setSize(this.dims.w, this.dims.h);         
+
+            touchMove = function(event) {
+                // Prevent scrolling on this element
+                event.preventDefault();
+            }
+
+            main.getNode().ontouchmove = touchMove
+            
+            
+            
+       
+
 
             var changing = false;
             function oChange(){
@@ -226,17 +264,11 @@ Minx.PanelManager = function() {
         };
     };
 
+
     this.isTouch = function() {
-        var t = this.agent();
-        var touch = t.iphone || t.ipad || t.ipad || t.android || t.blackberry;
-
-        //DEV - simulate touch
-        if(this.localMobileTest){
-            return true;
-        }
-
-        return touch;
+        return this.dims.touch;
     }
+
 
     // add a panel type to my map to look up
     this.register = function(key, type) {
@@ -306,7 +338,7 @@ Minx.PanelManager = function() {
             
             // then remove from the dom .3 seconds later
             setTimeout(function() {
-                var list = panel._removeMe();
+                var list = panel.removeMe();
 
                 // delete al the removed panels from our managed list
                 for(key in list) {

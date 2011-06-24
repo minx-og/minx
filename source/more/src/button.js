@@ -133,12 +133,12 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
             // add sizing to the span element
             //sp.style.cssText = 'width: ' + nw + 'px; height: ' + nw + 'px; top:' + offTop + 'px; left: -' + offLeft + 'px;'; 
 
-            var h = nw + 2;
+            var h = nw + 1.5;
             var h2 = h/2;
             
             var off = Math.sqrt(Math.pow((h/2),2)/2);
             offLeft = off - 1.5;
-            offTop = off -.5;
+            offTop = off + .5;
             
             sp.style.cssText = 'width: ' + h + 'px; height: ' + h + 'px; -webkit-transform: rotate(45deg) translate3d(-'+offLeft+'px, '+ offTop +'px, 0px);'
 

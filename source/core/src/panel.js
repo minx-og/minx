@@ -356,6 +356,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     show: function() {
         // make sure the hide wont still be called
         clearTimeout(this._hideTimer);
+
         // set visible - inherit the parents visibility
         this.setStyle('visibility', 'inhertied');
 
@@ -363,8 +364,13 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         this.setStyle('opacity', '1');
 
         
-        // make sure it is rendered
+        // make sure it is rendered and 
         this.render();
+
+        if(this._detached) {
+            this._parent._addToDom(this);
+            this._detached = false;
+        }        
     },
 
 
@@ -406,11 +412,11 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         this._nowG.clone(this._newG);
     },
 
-
     // just hide this panel - kids inherit hidden, so no real need to tell kids anything
     // hiding does not affect the dom
     // instant  = hide at same time as opacity - so no transition on visibility so instant hide, no timing issues
-    hide: function(instant) {
+    // detach - take it out of the dom
+    hide: function(instant, detach) {
         // set hidden
         var me = this;
         // even if instant set opacity to zero so we can fade up on show
@@ -420,16 +426,29 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
 
         if(instant){
             me.setStyle('visibility', 'hidden');
+
+            if(detach && !this._detached) {
+                me._parent._node.removeChild(me._node);
+                me._detached = true;
+            }
+
         }
         else {
 
             // must hide as well but only after enough time for the animation - got a reference on this timer to cancel if show called before transition finished
             // otherwise we could have the situation where we hide and show within .3s and this timer still fires the hide!
-            this._hideTimer = setTimeout(function() {
+            this._hideTimer = setTimeout(function(det) {
                 me.setStyle('visibility', 'hidden');    
                 // tell the browser
                 me._applyStyles();
-            }, this._animate);        // fade after whatever the animation time is
+
+                // want to detach fully and is not allready detached
+                if(det[0] && !me._detached) {
+                    me._parent._node.removeChild(me._node);
+                    me._detached = true;
+                }
+
+            }, this._animate, [detach]);        // fade after whatever the animation time is
         }
         // tell the browser about first change
         this._applyStyles();
@@ -603,6 +622,8 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         
         this._instantFirstDraw = true;   // pesky once off flag to say if this is the first drawing and we want it to be blasted with no animation
 
+        this._detached = true;            // initially all are detached
+
 
         // SPECIAL - have we just made the root node - dont create nodes
         if(id == "root") {
@@ -642,6 +663,9 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
 
         // TODO - dont add the top level on create  - as each child may cause a dow redraw - but if visibility hidden - should be ok
         this._parent._addToDom(this);
+
+        // mark it as attached
+        this._detached = false;
     },
 
 
@@ -677,7 +701,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     // and return the list of id's removed
     _removeKid: function(panel) {
         // get rid of my kids
-        var list = panel.removeKids();
+        var list = panel._removeKids();
 
         // now remove child from my node
         this._node.removeChild(panel.getNode());
@@ -698,7 +722,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     _removeKids: function(){
         var list = []
         for(var kid in this._kidies) {
-            keys = this.removeKid(this._kidies[kid]);
+            keys = this._removeKid(this._kidies[kid]);
             list = list.concat(keys);
         } 
 
@@ -710,7 +734,6 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     _addToDom: function(panel) {
         this._node.appendChild(panel.getNode());
     },
-
 
 
 
@@ -748,6 +771,8 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
 
         if(add) {
             this._parent._addToDom(this);
+
+            this._detached = false;
         }
     },
 
@@ -756,13 +781,14 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     domReAttach: function() {
         var me = this;
             
-            me._parent._addToDom(me);
+        me._parent._addToDom(me);
+        this._detached = false;
 
-            setTimeout(function() {
-                // and remove my old one
-                me._parent._node.removeChild(me._oldNode);
-            
-            }, 1000);
+        setTimeout(function() {
+            // and remove my old one
+            me._parent._node.removeChild(me._oldNode);
+        
+        }, 1000);
         
     },
 
