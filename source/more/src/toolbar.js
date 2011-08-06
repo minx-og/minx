@@ -42,7 +42,9 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
         }
 
         this.addClass(cl + '-bar');
-        this.addClass('round-' + cl);
+        if(!Minx.pm.dims.phone) {
+            this.addClass('round-' + cl);
+        }
         
     },
 

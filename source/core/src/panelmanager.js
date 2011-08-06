@@ -139,7 +139,8 @@ Minx.PanelManager = function() {
         }
         
         var t = this.dims;      // just to save typing
-        this.dims.touch = t.iphone || t.ipad || t.ipad || t.android || t.blackberry;
+        this.dims.touch = t.iphone || t.ipod || t.ipad || t.android || t.blackberry;
+        this.dims.phone = t.iphone || t.ipod || t.android || t.blackberry;
 
         this.ver = 0;
         
@@ -190,11 +191,20 @@ Minx.PanelManager = function() {
         if(auto) {
             main = Minx.pm.add(_root_node, 'simple');
             main.addClass('main-panel');
+            if(Minx.pm.dims.phone) {
+                main.addClass('phone');
+                main.setStyle('overflow', 'hidden');                    // stop phone keyboard scrolling the viewport
+            }
+            else {
+                main.setStyle('overflow', 'visible');                   //  for ipad - show more cntent cos we elegantly animate scroll to zero - otherwise safari pings it to zero
+            }
+
             main.setAnimate(false);                                     // TODO - try it both ways
 
             main.getNode().innerHTML = '<div id="back-top"></div>';
 
             main.setSize(this.dims.w, this.dims.h);         
+            main.render();
 
             touchMove = function(event) {
                 // Prevent scrolling on this element
@@ -223,7 +233,9 @@ Minx.PanelManager = function() {
                     main.layout();
                     main.drawKids();
 
-                    //main.render();            // rendering the main section can cause flicker
+                    if(Minx.pm.dims.phone) {
+                        main.render();            // rendering the main section can cause flicker - but got to do it on phone to stop keyboard moving viewport
+                    }
                     changing = false;
                 }
             }

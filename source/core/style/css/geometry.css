@@ -23,11 +23,6 @@ body {
     text-shadow: 0px 1px 0px white;
 }
 
-/* main panel */
-#pn0 {
-    overflow: visible !important;  /*allowing overflow allows the viewport to stay stable*/
-}
-
 
 .panel {
     overflow: hidden;
@@ -41,16 +36,30 @@ body {
 .round-bottom {
     -webkit-border-bottom-left-radius: 9px;
     -webkit-border-bottom-right-radius: 9px;
+
+    -moz-border-radius-bottomleft: 9px; 
+    -moz-border-radius-bottomright: 9px; 
 }
 
 .round-top {
     -webkit-border-top-left-radius: 9px;
     -webkit-border-top-right-radius: 9px;
+
+    -moz-border-radius-topleft: 9px; 
+    -moz-border-radius-topright: 9px; 
 }
 
 .title-panel {
     -webkit-border-top-left-radius: 12px;
     -webkit-border-top-right-radius: 12px;
+
+    -moz-border-radius-topleft: 12px; 
+    -moz-border-radius-topright: 12px; 
+}
+
+.phone .title-panel {
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-top-right-radius: 0px;
 }
 
 
@@ -59,11 +68,11 @@ body {
     border-color: black;
     z-index: 20;
 
-    -webkit-border-bottom-left-radius: 9px;
-    -webkit-border-bottom-right-radius: 9px;
+    -webkit-border-bottom-left-radius: 12px;
+    -webkit-border-bottom-right-radius: 12px;
 
-    -moz-border-radius: 9px; 
-    border-radius: 9px;
+    -moz-border-radius: 12px; 
+    border-radius: 12px;
 
     -webkit-box-shadow: 0px 0px 20px rgba(0,0,0,.8);
     -moz-box-shadow: 0px 0px 20px rgba(0,0,0,.8);

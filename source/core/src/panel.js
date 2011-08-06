@@ -75,8 +75,22 @@ Minx.anim = {
 };
 
 
-//TODO Add firefox -moz version
 
+// FireFox accelerated animations
+/*
+Minx.anim = {
+    trans: '-moz-transform',
+    transpeed: '-moz-transition-duration',
+    setpos: function(pan, x, y) {
+        pan.setStyle(Minx.anim.trans, 'translate(' + x + 'px,' + y + 'px)');   // TODO - investigate hwaccell for mozilla
+
+        
+    },
+    settime: function(pan, speed) {
+        pan.setStyle(Minx.anim.transpeed, speed + 'ms');
+    }
+};
+*/
 
 
 // None accelerated animations - left and right
@@ -589,6 +603,10 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     // should padding and shit be set here - NO that should be a external style thing
     _setDefaultStyle: function(panel) {
         panel.addClass('panel');
+        if(Minx.pm.dims.phone) {
+            panel.addClass('phone');
+        }
+        
         this.addClass(this.getClassName());                  // overridden to apply specific class
         panel.setStyle('visibility', 'inherited');
         panel.setStyle('position', 'absolute');

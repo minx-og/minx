@@ -15,6 +15,8 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
         this.fillParent(1);
 
+        this._fields = {};
+
     },
 
     eventParse: function(event) {
@@ -25,28 +27,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         return {id: event.currentTarget.id, e: event};
     },
 
-    // iScroll can only attach properly when the dic it is in is layed out - so create my scroller on first drawing
-    //@override
-    draw: function() {
-        Minx.FieldListPanel.Super.prototype.draw.call(this);
-    },
 
-/*
-    setKeyField : function(key) {
-        this._keyField = key;
-    },
-
-    // a callback to return the row content
-    setRowRenderer: function(fn) {
-        this._rowRenderer = fn;
-    },
-
-    // munge my model intomy view 
-    munge: function() {
-
-    },
-*/
-    
     getRowMarkup: function(parentId, row, li) {
         var div = document.createElement('div');
         div.setAttribute('class', 'mx-row');
@@ -100,6 +81,8 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             var ip = document.createElement(ipType);
             ip.setAttribute('id', 'f-'+ this.getId() + '-' + row.name);
 
+            this._fields[row.name] = ip;
+
             for( var lb in row ) {
                 if(lb != 'label' && lb !='options') {
                     ip.setAttribute(lb, row[lb]);    
@@ -131,24 +114,21 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
         }
 
-// no end box needed now
-/*
-        if(row.type == 'text') {
-            var idiv = document.createElement('div');
-            idiv.setAttribute('class', 'mx-input-end');
-
-            // some internal appendings - idiv.appendChild(ip);
-
-            div.appendChild(idiv);
-            
-        }
- */       
-        //{name:'name', label: 'Name', type: 'text',   value: '', placeholder: 'name'},
-        //{name:'type', label: 'Class', type: 'select', value: '', options:[{value:'upper', disp:'Better'}, {value:'middle', disp:'Worse and Better'},{value: 'lower', disp:'Worse'}]}
-        
-        
-
         return div;
+    },
+
+    getAnswers: function() {
+        var answers = {};
+        for(fld in this._fields) {
+            answers[fld] = this._fields[fld].value;
+        }
+
+        return answers;
+    },
+
+
+    getField: function(fld) {
+        return this._fields[fld];
     },
 
 

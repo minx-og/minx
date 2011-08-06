@@ -29,6 +29,10 @@ Minx.InputPopup = my.Class(Minx.Popup, {
 
     },
 
+    getMainPanel: function() {
+        return this._mainPanel;  
+    },
+
     //getFootBar - for clients to add buttons.
     getFootBar: function() {
         return this._footBar;

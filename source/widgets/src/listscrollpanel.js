@@ -76,8 +76,8 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
     // munge my model into my view called by client manually - likely to be set to an event when the data model changes
     munge: function() {
 
-        // as our munge function completely recreates the ul and all lis in it we may as well recreate the scroller.
-        // if we simply call refresh the scroller expects the ul to be the same on that was in place when we created the scroller in the first place
+        // as our munge function completely recreates the ul and all li's in it we may as well recreate the scroller.
+        // if we simply call refresh the scroller expects the ul to be the same one that was in place when we created the scroller in the first place
 
         // this may be sub-optimal - but given the total recreation i doubt it...
         var list = this.getModel();
@@ -85,6 +85,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             throw "munge called, but no model set";
         }
 
+        // if we are dealing with touch scrolls
         if(this._touch && this._scroller != null) {
             this._scroller.destroy();
             this._scroller = null;

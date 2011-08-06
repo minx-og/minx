@@ -96,16 +96,17 @@ select {
 
 .mx-label {
     height: 100%;
-    width: 30%;
+    width: 40%;
     float: left;
 
     background: #F3F3F3;
 }
 
+
 .mx-input {
  
     height: 100%;
-    width: 65%;
+    width: 55%;
     padding-left: 5px;
     float: left;
     position: relative;
