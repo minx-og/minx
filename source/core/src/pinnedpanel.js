@@ -23,8 +23,6 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
 
     constructor: function(parent, id) {
 
-        Minx.PinnedPanel.Super.call(this, parent, id);
-
         this._pinned = {};               // my map of any panels pinned to me
         
         // parent pin - pinning to parent -1 = no pinning, 0 = pin with no offset, > 0 pin with offsets 
@@ -32,6 +30,10 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         
         // sibling pin - pin to a referenced panel + offset
         this._sPin = {'l': null, 't': null, 'r': null, 'b': null};   // where to pin me to my parent - no where by default, left, top, right, bottom
+
+
+        // base constructor now - in case any post creation stuff needs to access the _pPin and s_Pin members
+        Minx.PinnedPanel.Super.call(this, parent, id);
         
     },
 

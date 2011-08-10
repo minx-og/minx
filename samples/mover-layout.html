@@ -1,0 +1,184 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <!-- meta data, as in data about data where data is this file -->
+        <meta charset="utf-8">
+        <meta name="description" content="Minx a simple mobile optimised widget library">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="author" content="MoneyToolkit">
+        <!--- must have width set to device height - otherwise ipads snap back to zero on resize and it looks ugly -->
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no ">
+
+        <!-- title -->
+        <title>Minx split-layout and scroll list widget</title> 
+        <!-- styles -->
+        <!-- core structural css -->
+        <link rel="stylesheet" href="../source/core/style/css/geometry.css?v=1.6">
+
+        <!-- theme css -->
+        <link rel="stylesheet" href="../source/themes/css/sencha.css?v=1.1">
+
+        <!-- core lib code -->
+        <script src="../source/extern/my.class.js"></script>
+        
+        <!-- my code -->
+        <!-- core panels -->
+        <script src="../source/core/src/panelmanager.js"></script>
+        <script src="../source/core/src/panel.js"></script>
+        <script src="../source/core/src/pinnedpanel.js"></script>
+        <script src="../source/core/src/popup.js"></script>
+        <script src="../source/core/src/widgetpanel.js"></script>
+        
+        <!-- more panels -->
+        <script src="../source/more/src/button.js"></script>
+        <link rel="stylesheet" href="../source/more/style/css/button.css?v=1.1">
+
+        <script src="../source/more/src/toolbar.js"></script>
+        
+        <script src="../source/more/src/titlepanel.js"></script>        
+
+        <script src="../source/more/src/inputpop.js"></script>
+
+        <script src="../source/more/src/moverpanel.js"></script>
+        
+        <!-- custom widgets -->
+        <script src="../source/extern/iscroll.js"></script>
+        <script src="../source/widgets/src/listscrollpanel.js"></script>
+        <link rel="stylesheet" href="../source/widgets/style/css/scroll.css?v=1.1">
+
+        <!-- layouts -->
+        
+        
+
+
+        <!-- our main entry -->
+        <script type="text/javascript" charset="utf-8">
+
+            /* When this function is called, PhoneGap has been initialized and is ready to roll */
+            function onDeviceReady() {
+                console.log('onDeviceReady');
+
+                var touch = true;
+
+                // true to create the first main panel and set it to auto size
+
+                var main = Minx.pm.init(true);       
+
+                
+                console.log(Minx.pm.agent());
+
+                console.log(Minx.pm.agent().ipad);      
+
+                
+
+                var layout = Minx.pm.add('main', 'mover-panel');
+
+
+                var panel1 = Minx.pm.add(layout, 'title-panel');
+
+                var p1Node = document.createTextNode("panel1                     P1       panel1              - - - - - - - - - - -  x x x x x x x x x x x");
+                panel1.getContentPanel().getNode().appendChild(p1Node);
+                
+
+                var panel2 = Minx.pm.add(layout, 'title-panel');
+
+                var p2Node = document.createTextNode("panel2              = ===                 = = = = = = = = =======              = = = = = = = = panel2");
+                panel2.getContentPanel().getNode().appendChild(p2Node);
+                
+
+                //panel2.hide();
+
+                layout.show();
+
+
+                setTimeout(function() {
+                  
+                  layout.setActivePanel(panel2, 'slide-left');
+                  
+                  setTimeout(function() {
+                  
+                      layout.setActivePanel(panel1, 'slide-left');
+
+
+                    }, 3000);
+
+
+
+                }, 3000);
+
+                /*
+                
+                
+                // add my specific button
+                var rbutton = layout.getMainPanel().getTitle().addButton('r', 20, 'Pop');
+
+                rbutton.onClick(function(panel,e){
+                    popup();
+                });
+
+                
+                var nav = layout.getNavPanel().getContentPanel();
+
+
+
+                // make a new pinned holder - for our scroller
+                var navList = Minx.pm.add(nav, 'list-scroll-panel');
+
+                // i know my list will be used in a popup so give it a botom offset of 5
+                navList.setParentPin('b', 5);
+
+
+                navList.onEvents(function(panel, par){
+                   alert(par.id); 
+                });
+
+                
+                // combine the view and model
+                navList.munge();
+                
+                // nowshow the main window
+                //main.show();
+
+                layout.show();
+
+
+                //navList.show();
+
+
+                function popup(){
+                    // test the nav width percentage change
+                    layout.setNavLandWidth(400);
+
+                    var pop = Minx.pm.add('main', 'input-pop-up');
+                    pop.setSize(400, 300);
+                    pop.setStyle('z-index', '10');
+                   
+                    var cancelBtn = pop.getFootBar().addButton('l', 10, 'Cancel');
+                    
+                    cancelBtn.onClick(function(panel,e){
+                        pop.hide();
+                    });
+                    
+                    var okBtn = pop.getFootBar().addButton('r', 10, 'Logon');
+                    
+                    okBtn.onClick(function(panel,e){
+                        layout.setNavPortWidth(500);
+                        alert('OK');
+                    });                    
+
+                    pop.show();
+                    
+                }
+                // remove all but one panel after 2 seconds    
+                */ 
+                
+
+            }
+
+        </script>
+
+    </head>
+    <body onload="onDeviceReady()">
+        
+    </body>
+</html>

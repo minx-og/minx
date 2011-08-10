@@ -19,9 +19,8 @@ if (typeof Minx.Layout === "undefined") {
 
 
 Minx.Layout.SplitLayout = my.Class({
-
+    // main is simply the containing panel
     constructor: function(main, lnw, pnw) {
-
 
 
         this._navSlideTimer = null;        // clearable timeout so can cancel delayed hides
