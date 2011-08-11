@@ -224,7 +224,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         // or sibling pin?? - so my right is my siblings left  minus offset
         if(sp.r != null) {
             var rd = sp.r.panel.getNewDims(); 
-            right = sd.l - sp.r.off;
+            right = rd.l - sp.r.off;
         }
 
         // get my width = right - left

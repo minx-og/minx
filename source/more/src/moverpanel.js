@@ -42,6 +42,12 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
     },
 
 
+
+    setMoverAnimate: function(anim) {
+        this._moverAnimate = anim; 
+    },
+
+
     // one would expect this panel to be a child of the mover panel - but we are not checking odd things would happen if it was not a child
     setActivePanel: function(panel, transition) {
 
@@ -88,6 +94,56 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
         }
 
+        else if(transition == 'slide-right') {
+            
+            // unhook both panels from anything
+            panel.unPin();
+            this._active.unPin();
+
+            // set it to the same dimensions as the active panel
+            var parDims = this.getParent().getNewDims();
+
+            panel.setSize(parDims.w, parDims.h);
+
+            // left pin it to the active panel and parent top
+            // position it off to the left
+            panel.setPos(0-parDims.w, 0);
+
+            panel.setParentPin('t');
+            
+            // put the new panel in its new position without animation
+            panel.setAnimate(0);
+            // unhide the new panel - in its new off screnn position
+            panel.show();
+
+            // reanimate it
+            panel.setAnimate(this._moverAnimate);
+
+            var me = this;
+            setTimeout(function() {
+
+                // pin the active panel to the new panel so the new panel will push it out of the way
+                me._active.setSiblingPin(panel, 'l');
+ 
+                // set the new panel position to be 0 pushing old one off to the right
+                panel.setPos(0, 0);
+
+                // then show the old new panel which triggers the 'pushing'
+                panel.show();    
+
+                // set the new panel as active
+                me._active = panel;
+
+                //and make sure it is fully pinned to momma s it resizes on next resize
+                me._active.fillParent();    
+
+            }, 0);  //delay zero trick to let dom fully redraw
+
+        }
+
+        else {
+           
+        }
         
     },
     

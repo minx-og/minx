@@ -16,11 +16,11 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
         this.fillParent();
 
         // add a title-bar
-        this._titleBar = Minx.pm.add(this,'tool-bar');
+        this._titleBar = Minx.pm.add(this, 'tool-bar');
         this._titleBar.dock('t');
 
         // add a plain pinned panel
-        this._mainPanel = Minx.pm.add(this,'pinned');
+        this._mainPanel = Minx.pm.add(this, 'mover-panel');
 
         // and round the bottom off - in case asked to pop up
         this._mainPanel.addClass('round-bottom');
