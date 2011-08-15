@@ -216,7 +216,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         // get my right from any pinned
         var right = l + w;              // temp value of a 'right' coord - used to wor out width
 
-        // inned to my parents right - so my right is my parents left and width minus offset
+        // pinned to my parents right - so my right is my parents left and width minus offset
         if(pp.r >= 0) {
             right = pd.w - pp.r;
         }

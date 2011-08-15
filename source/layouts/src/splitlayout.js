@@ -140,6 +140,14 @@ Minx.Layout.SplitLayout = my.Class({
         this._stuff.show();
     },
 
+
+    showMain: function() {
+
+        this._stuff.show();
+
+    },
+
+
     _setLandscape: function(initial) {
         var me = this;
         var nw = Minx.pm.dims.w;

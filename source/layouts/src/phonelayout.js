@@ -41,11 +41,11 @@ Minx.Layout.PhoneLayout = my.Class({
 
         
         // --- right hand  panel of stuff
-        this._stuff = Minx.pm.add(main,'title-panel');
-        this._stuff.setAnimate(200);
-        this._stuff.setSiblingPin(this._navPanel, 'l');
-        
+        this._activeMain = null;                // the panel that is in the active "main" manel
 
+
+        
+/*
         var stuffBack = this._stuff.getTitle().addButton('l', 20, 'Pop');
         stuffBack.setType('back');
         
@@ -60,7 +60,7 @@ Minx.Layout.PhoneLayout = my.Class({
             me._navPanel.show();
         });
 
-
+*/
         
         // orientation
         this._isPort = 'doit';
@@ -75,15 +75,20 @@ Minx.Layout.PhoneLayout = my.Class({
 
     },
 
-    showMain: function() {
+
+    showMain: function(how) {
 
         // if phone slide it into place - and show a new back button
+        if (typeof how == "undefined") {
+            how = "slide-left";
+        }
+        else if( how == "") {
+            how = "slide-left";
+        }
         
-        var d = this._navPanel.getDims();
-        this._navPanel.setPos(0 - d.w, 0);
-        this._navPanel.show();
-        
+        this._navPanel.getContentPanel().setActivePanel(this._activeMain, how);
     },
+
 
     _resizeEvent: function(e) {
         if(!this.inChange) {
@@ -93,6 +98,7 @@ Minx.Layout.PhoneLayout = my.Class({
             this.inChange = false;
         }
     },
+
 
     reOrient: function(initial) {
         
@@ -112,8 +118,14 @@ Minx.Layout.PhoneLayout = my.Class({
     },
 
 
+    setMainPanelContent: function(panel, how) {
+        this._activeMain = panel;
+        this._navPanel.getContentPanel().setActivePanel(panel, how)
+    },
+
+
     getMainPanel: function() {
-        return this._stuff;
+        return this._navPanel;
     },
 
 
@@ -123,8 +135,10 @@ Minx.Layout.PhoneLayout = my.Class({
 
 
     show: function() {
+        
+        console.log("Showing mainLayout navpanel: " + this._navPanel.getId());
+
         this._navPanel.show();
-        this._stuff.show();
     },
 
 
@@ -134,14 +148,9 @@ Minx.Layout.PhoneLayout = my.Class({
         var nh = Minx.pm.dims.h;
         
         window.scrollTo(0, 0);
-
-        // pin it to the nav panel
-        this._stuff.setSiblingPin(this._navPanel, 'l');
-                    
-        me._stuff.setSize(nw, nh);
+        
         this._navPanel.setSize(nw, nh);
-
-        me._stuff.render();
+        
         this._navPanel.render();        
     },
 
@@ -176,13 +185,8 @@ Minx.Layout.PhoneLayout = my.Class({
         }
 
 
-
-        
-        
-        this._stuff.setSize(nw, nh);
         me._navPanel.setSize(nw, nh);
 
-        me._stuff.render();
         this._navPanel.render();
 
 

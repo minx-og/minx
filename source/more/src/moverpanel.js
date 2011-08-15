@@ -48,8 +48,23 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
     },
 
 
+    unPinAllKids: function() {
+        for(var kid in this._kidies) {
+            this._kidies[kid].unPin();
+        }    
+    },
+
+
     // one would expect this panel to be a child of the mover panel - but we are not checking odd things would happen if it was not a child
     setActivePanel: function(panel, transition) {
+
+        // make sure we are not just activating the same panel
+        if(panel.getId() == this._active.getId()) {
+            return;
+        }
+
+        // unpin all the other kids so they dont slide with us
+        this.unPinAllKids();
 
         if(transition == 'slide-left') {
             
