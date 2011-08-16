@@ -26,6 +26,8 @@ Minx.Layout.SplitLayout = my.Class({
         this._navSlideTimer = null;        // clearable timeout so can cancel delayed hides
         this._stuffSlideTimer = null;        // clearable timeout so can cancel delayed hides
 
+        this._hidden = true;
+
         if( typeof lnw == 'undefined') {
             lnw = 300;             // 30% by default - in landscape mode
         }
@@ -33,6 +35,8 @@ Minx.Layout.SplitLayout = my.Class({
         if( typeof pnw == 'undefined') {
             pnw = 300;            // 300 px by default
         }
+
+        var whichWay = "";                  // explicit value of whach way this layout thinks it is
 
         this.setNavLandWidth(lnw);
         this.setNavPortWidth(pnw);
@@ -85,6 +89,7 @@ Minx.Layout.SplitLayout = my.Class({
 
     },
 
+
     _resizeEvent: function(e) {
         if(!this.inChange) {
             this.inChange = true;
@@ -94,10 +99,11 @@ Minx.Layout.SplitLayout = my.Class({
         }
     },
 
+
     reOrient: function(initial) {
         
         var nisPort = (Minx.pm.dims.or === 'p');
-        console.log('or = ' + Minx.pm.dims.or);
+        console.log('orientation = ' + Minx.pm.dims.or);
 
         if(nisPort !== this._isPort){
             
@@ -111,13 +117,16 @@ Minx.Layout.SplitLayout = my.Class({
         }
     },
 
+
     getMainPanel: function() {
         return this._stuff;
     },
 
+
     getNavPanel: function() {
         return this._navPanel;  
     },
+
 
     // set nav width in landscape - only takes effect on next orientation change
     setNavLandWidth: function(width) {
@@ -127,6 +136,7 @@ Minx.Layout.SplitLayout = my.Class({
         }
     },
 
+
     // set nav width in portrait - only takes effect on next orientation change
     setNavPortWidth: function(width) {
         this._navPortWidth = width;            // nav width in portrait
@@ -135,16 +145,45 @@ Minx.Layout.SplitLayout = my.Class({
         }
     },
 
+
     show: function() {
+        this._hidden = false;
+        
+        var navDims = this._navPanel.getNewDims();
+
         this._navPanel.show();
         this._stuff.show();
     },
 
 
+    hide: function(now) {
+        this._hidden = true;
+        this._navPanel.hide(now);
+        this._stuff.hide(now);
+    },
+
+
     showMain: function() {
+        if(this._hidden) {
+            this._stuff.render(now);
+        }
+        else {
+            this._stuff.show();
+        }
+    },
 
-        this._stuff.show();
 
+    setMainPanelContent: function(panel, how) {
+        this._stuff.getContentPanel().setActivePanel(panel, how);
+    },
+
+
+    // called when a navigation action has occured
+    navAction: function() {
+        // if we are in portrait then make sure we hide the nav panel
+        if( this.whichWay == "p") {
+            this._navPanel.hide();
+        }
     },
 
 
@@ -154,53 +193,61 @@ Minx.Layout.SplitLayout = my.Class({
         var nh = Minx.pm.dims.h;
         var touch = Minx.pm.isTouch();
 
+        this.whichWay = "l";
+
         window.scrollTo(0, 0);
 
         // pin it to the nav panel
         this._stuff.setSiblingPin(this._navPanel, 'l');
 
         this._navPanel.unPin();
+        if(this._hidden) {
+            this._navPanel.render();        // IMPORTANT not to show as this can unhide it
+        }
+        else {
+            this._navPanel.show();
+        }
+
 
         if(!touch) {
             // set the nav panel to docked in width    
             
-
             // and dock it left
-            this._navPanel.pinParent({'l': 0, 't': 0, 'r': -1, 'b': 0});
+            me._navPanel.pinParent({'l': 0, 't': 0, 'r': -1, 'b': 0});
 
             
         }
         
-            //setTimeout(function() {
-                me._stuff.setSize(nw - this._navLandWidth, nh);        
-            //    me._stuff.show();    
-            //}, 300);
+        //setTimeout(function() {
+            me._stuff.setSize(nw - me._navLandWidth, nh);        
+        //    me._stuff.show();    
+        //}, 300);
 
-            this._navPanel.setSize(this._navLandWidth, nh);
+        me._navPanel.setSize(me._navLandWidth, nh);
 
-            this._navPanel.setPos(0, 0);
+        me._navPanel.setPos(0, 0);
 
-        
+        console.log("Put navpanel in its place");
     
 
-        // TODO: handle this in the panel manager
-        this._navPanel.setStyle('z-index', '1');
+        // TODO: handle me in the panel manager
+        me._navPanel.setStyle('z-index', '1');
 
         // stop it being rendered like a popup
-        this._navPanel.removeClass('pop-up');
+        me._navPanel.removeClass('pop-up');
 
         
 
         // want to lay it all out and dump it onscreen with no geometry animation
         if(!initial) {
-            this._navPanel.render();
+            me._navPanel.render();
 
             me._stuff.render();    
         }
 
         // have to hide instantly else it can finish the hide transition after the show
         me._navPopButton.hide(true); // instant = true
-        
+
     },
 
     _setPortrait: function(initial) {
@@ -217,6 +264,8 @@ Minx.Layout.SplitLayout = my.Class({
         var startTime = undefined;
         var time = undefined;
         var startPos = 0;
+
+        this.whichWay = "p";
         
 
         function render(time) {
@@ -288,16 +337,6 @@ Minx.Layout.SplitLayout = my.Class({
 
         }
 
-        
-/*
-
-        if(!initial) {
-
-            this._stuff.show();
-
-            this._navPanel.show();                
-        }
-*/
         me._navPopButton.show(); 
         
     },
@@ -325,15 +364,14 @@ Minx.Layout.SplitLayout = my.Class({
             this._navPanel.unPin();
 
             // repin it with offsets
-            this._navPanel.setParentPin('l', 20);
-            this._navPanel.setParentPin('t', 50);
+            this._navPanel.setPos(20, 50);
+            
 
             // force it on top - but this will be managed by the panel manger eventually
             this._navPanel.setStyle('z-index', '10');
 
             // give it the pop-up style
             this._navPanel.addClass('pop-up');
-
             
             // fade only animation - on pop
             this._navPanel.addClass('anim-fade-only');

@@ -105,7 +105,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 //and make sure it is fully pinned to momma s it resizes on next resize
                 me._active.fillParent();    
 
-            }, 0);  //delay zero trick to let dom fully redraw
+            }, 1);  //delay trick to let dom fully redraw
 
         }
 
@@ -152,7 +152,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 //and make sure it is fully pinned to momma s it resizes on next resize
                 me._active.fillParent();    
 
-            }, 0);  //delay zero trick to let dom fully redraw
+            }, 1);  //delay zero trick to let dom fully redraw
 
         }
 

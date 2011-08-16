@@ -124,6 +124,11 @@ Minx.Layout.PhoneLayout = my.Class({
     },
 
 
+    // called when a navigation action has occured
+    navAction: function() {
+        // phone layout does nowt
+    },
+
     getMainPanel: function() {
         return this._navPanel;
     },
