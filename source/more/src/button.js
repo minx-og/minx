@@ -56,7 +56,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
     // this is what gets called by the event 
     eventFired: function(ev) {
-        console.log(ev);
+        console.log("event fired: " + ev);
 
         // call my behaviour
         if(ev.type == 'mousedown') this.buttonPressed(ev);

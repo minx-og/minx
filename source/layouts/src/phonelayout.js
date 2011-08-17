@@ -65,12 +65,13 @@ Minx.Layout.PhoneLayout = my.Class({
         // orientation
         this._isPort = 'doit';
         this.inChange = false;
-        this.reOrient(true);            // initial = true so dont do timers and dont call show
+        
+        // this.reOrient(true);            // initial = true so dont do timers and dont call show
         
         // hook into window resize 
         Minx.eq.subscribe(this, window, 'resize', '_resizeEvent');
 
-        Minx.eq.subscribe(this, window, 'orientationchange', '_resizeEvent');
+        //Minx.eq.subscribe(this, window, 'orientationchange', '_resizeEvent');
         
 
     },
@@ -91,10 +92,21 @@ Minx.Layout.PhoneLayout = my.Class({
 
 
     _resizeEvent: function(e) {
+        console.log("phoneLayout - resize");
+
+
+
+                            var orientation = window.orientation;
+
+                    console.log("PL - " +  orientation);
+
+
+
         if(!this.inChange) {
             this.inChange = true;
-            Minx.pm.calcDims();
-            this.reOrient(false);           // true ro draw it all
+            console.log("phoneLayout - change");
+            //Minx.pm.calcDims();
+            //this.reOrient(false);           // true ro draw it all
             this.inChange = false;
         }
     },
@@ -103,7 +115,6 @@ Minx.Layout.PhoneLayout = my.Class({
     reOrient: function(initial) {
         
         var nisPort = (Minx.pm.dims.or === 'p');
-        console.log('or = ' + Minx.pm.dims.or);
 
         if(nisPort !== this._isPort){
             
@@ -140,10 +151,12 @@ Minx.Layout.PhoneLayout = my.Class({
 
 
     show: function() {
-        
-        console.log("Showing mainLayout navpanel: " + this._navPanel.getId());
-
         this._navPanel.show();
+    },
+
+
+    hide: function() {
+        this._navPanel.hide();
     },
 
 
@@ -183,6 +196,8 @@ Minx.Layout.PhoneLayout = my.Class({
           if(npos < 0) {
               npos = 0;
           }
+          
+          var qwock = qkang;
 
           window.scrollTo(npos, 0);
 

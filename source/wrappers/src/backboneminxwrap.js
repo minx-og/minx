@@ -20,8 +20,6 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
     },
 
     allWidgetFired: function(panel, thing) {
-        console.log(panel);  
-        console.log(thing);
         // call a registered listener
         if(this._eventListener) {
             this._eventListener(panel, thing);

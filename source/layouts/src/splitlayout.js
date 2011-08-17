@@ -57,7 +57,6 @@ Minx.Layout.SplitLayout = my.Class({
         this._navPanel.getContentPanel().addClass('round-bottom');
 
         
-        
         // --- right hand  panel of stuff
         this._stuff = Minx.pm.add(main,'title-panel');
         this._stuff.setAnimate(200);
@@ -82,7 +81,7 @@ Minx.Layout.SplitLayout = my.Class({
         this.inChange = false;
         this.reOrient(true);            // initial = true so dont do timers and dont call show
         
-        // hook into window resize 
+        // hook into window resize for web apps
         Minx.eq.subscribe(this, window, 'resize', '_resizeEvent');
 
         Minx.eq.subscribe(this, window, 'orientationchange', '_resizeEvent');
@@ -91,19 +90,23 @@ Minx.Layout.SplitLayout = my.Class({
 
 
     _resizeEvent: function(e) {
+
+        console.log("split resize");
+        
         if(!this.inChange) {
             this.inChange = true;
+            console.log("splitlayout - calcDims");
             Minx.pm.calcDims();
             this.reOrient(false);           // true ro draw it all
             this.inChange = false;
         }
+        
     },
 
 
     reOrient: function(initial) {
         
         var nisPort = (Minx.pm.dims.or === 'p');
-        console.log('orientation = ' + Minx.pm.dims.or);
 
         if(nisPort !== this._isPort){
             
@@ -227,15 +230,11 @@ Minx.Layout.SplitLayout = my.Class({
 
         me._navPanel.setPos(0, 0);
 
-        console.log("Put navpanel in its place");
-    
-
         // TODO: handle me in the panel manager
         me._navPanel.setStyle('z-index', '1');
 
         // stop it being rendered like a popup
         me._navPanel.removeClass('pop-up');
-
         
 
         // want to lay it all out and dump it onscreen with no geometry animation

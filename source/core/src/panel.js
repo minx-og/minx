@@ -66,9 +66,33 @@ Minx.anim = {
     transpeed: '-webkit-transition-duration',
     setpos: function(pan, x, y) {
         pan.setStyle(Minx.anim.trans, 'translate3d(' + x + 'px,' + y + 'px, 0px)');
-
         
+        /* use this event if we add animations
+        pan.getNode().addEventListener( 'webkitAnimationEnd', function( event ) {
+            console.log("anim finished " + event);
+        } );
+        */
+
+        pan.getNode().addEventListener( 'webkitTransitionEnd', function( event ) {
+            
+            pan.getNode().removeEventListener( 'webkitTransitionEnd', this);   // this is this function i hope
+
+            Minx.anim.fixpos(pan, x, y);
+
+        } );        
     },
+
+    fixpos: function(pan, x, y) {
+        pan.removeStyle(Minx.anim.trans);
+        pan.removeStyle(Minx.anim.transpeed);
+
+        pan.setStyle('left', x + 'px');
+        pan.setStyle('top' , y + 'px');
+        
+        // now blast this update now
+        pan._blastStyles();
+    },
+
     settime: function(pan, speed) {
         pan.setStyle(Minx.anim.transpeed, speed + 'ms');
     }
@@ -449,7 +473,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         }
         else {
 
-            // must hide as well but only after enough time for the animation - got a reference on this timer to cancel if show called before transition finished
+            // must hide as well but only after enough time for the opacity animation - got a reference on this timer to cancel if show called before transition finished
             // otherwise we could have the situation where we hide and show within .3s and this timer still fires the hide!
             this._hideTimer = setTimeout(function(det) {
                 me.setStyle('visibility', 'hidden');    
@@ -558,8 +582,28 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     
     // default coordinate and animation function
     
-    _setXY: Minx.anim.setpos,
-    _setTime: Minx.anim.settime,
+    _setXY: function(pan, x, y){ 
+         
+        var dim = pan.getDims();
+
+        if( dim.l != x || dim.t != y) {
+            
+            // call the specific browser functions
+            if( pan._animate == 0) {
+                Minx.anim.fixpos(pan, x, y);
+            }
+            else {
+                Minx.anim.setpos(pan, x, y);
+            }
+         }
+    },
+
+
+    _setTime: function(pan, speed) {
+        if( pan._animate != 0) {
+            Minx.anim.settime(pan, speed)
+        }
+    },
     
 
     // private - make the style string from my map of styles - and set it on the node
@@ -635,7 +679,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         this._newG = new Minx.Geom();    // my geometry to be
 
         this._dirty = false;             // has anything changed that requires me to update my style attributes in th dom
-
+        
         this._animate = 500;             // transition time in ms - enabe full animation by default with duration 500
         
         this._instantFirstDraw = true;   // pesky once off flag to say if this is the first drawing and we want it to be blasted with no animation

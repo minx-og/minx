@@ -59,8 +59,12 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
     setActivePanel: function(panel, transition) {
 
         // make sure we are not just activating the same panel
-        if(panel.getId() == this._active.getId()) {
-            return;
+        if(this._active != null) {
+            if(panel.getId() == this._active.getId()) {
+                // make sure it is visible at least
+                panel.show();
+                return;
+            }
         }
 
         // unpin all the other kids so they dont slide with us
@@ -97,13 +101,19 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 me._active.setPos(0-parDims.w, 0);
 
                 // then show the old panel in its new position off div - which pulls the left pinned new panel in
-                me._active.show();    
+                me._active.show();
+
+                // remove the old one from the dom
+                me._active.hide(false, true);
+
+                //and make sure it is fully pinned to momma s it resizes on next resize
+                panel.fillParent();    
+
 
                 // set the new panel as active
                 me._active = panel;
 
-                //and make sure it is fully pinned to momma s it resizes on next resize
-                me._active.fillParent();    
+                
 
             }, 1);  //delay trick to let dom fully redraw
 
@@ -146,11 +156,16 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 // then show the old new panel which triggers the 'pushing'
                 panel.show();    
 
+                // hide the old one
+                me._active.hide(false, true);
+
+                //and make sure it is fully pinned to momma s it resizes on next resize
+                panel.fillParent();    
+
                 // set the new panel as active
                 me._active = panel;
 
-                //and make sure it is fully pinned to momma s it resizes on next resize
-                me._active.fillParent();    
+                
 
             }, 1);  //delay zero trick to let dom fully redraw
 

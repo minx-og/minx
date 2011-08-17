@@ -37,7 +37,6 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
     eventParse: function(event) {
         // augement with explicit id
         // e must be in the param object
-        console.log(event);
         // currentTarget - the element that recieved the event
         return {id: event.currentTarget.id, e: event};
     },

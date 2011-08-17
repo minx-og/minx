@@ -66,7 +66,7 @@ Minx.PanelManager = function() {
     this.dims = {};              // public object wit device dimensions
     
     this.calcDims = function() {
-        
+        console.log("---------->cd");
         var nw = document.documentElement.clientWidth;
         var nh = document.documentElement.clientHeight
         var orn = -1;
@@ -84,17 +84,24 @@ Minx.PanelManager = function() {
             this.dims.or = 'p';
         }
 
+        console.log("orn = " + orn);
+        console.log("nh = " + nh);
+        console.log("nw = " + nw);
+
         // need to detect real evice width because the client width has been fixed to allow smooth repositioning
         // if it is set to auto size then the snap to 0,0 is ugly
         // ipad tells us the height nicely
         if(this.dims.ipad) {
+            console.log("ipad dim check");
             if(nh > 768 || orn == 0 || orn == 180) {  // must be portrait
                 this.dims.or = 'p';
                 // TODO - get te ipad2 dimensions!!
                 this.dims.w = 768;
+                console.log("ipad -> port");
             }
             else {
                 this.dims.or = 'l';
+                console.log("ipad -> land");
             }
         }
 
@@ -106,11 +113,13 @@ Minx.PanelManager = function() {
                 // TODO - get the iphone 4 dimensions - and be cleverer for Android if we ever support it!!
                 this.dims.w = 320;
                 this.dims.h = 460;
+                console.log("phone + ipod port")
             }
             else {
                 this.dims.or = 'l';
                 this.dims.w = 480;
                 this.dims.h = 300;
+                console.log("phone + ipod land")
             }
         }
 
@@ -170,6 +179,7 @@ Minx.PanelManager = function() {
             }
         }
 
+        console.log("calcDevice - calcDims");
         this.calcDims();
 
     };
@@ -213,19 +223,17 @@ Minx.PanelManager = function() {
 
             main.getNode().ontouchmove = touchMove
             
-            
-            
-       
-
 
             var changing = false;
             function oChange(){
-
+                console.log("oChange");
                 if(!changing) {
                     changing = true;
+                    console.log("oChange - calcDims");
                     me.calcDims();
 
-                    console.log("w="+me.dims.w + " h="+ me.dims.h);
+                    console.log("ochange w=" + me.dims.w + " h="+ me.dims.h);
+
                     main.setSize(me.dims.w, me.dims.h);
                     
                     // this constructs main panel geometry and updates kids - redraws all kidies if thier geometry has changed
@@ -233,13 +241,14 @@ Minx.PanelManager = function() {
                     main.layout();
                     main.drawKids();
 
-                    if(Minx.pm.dims.phone) {
+                    //if(Minx.pm.dims.phone) {
                         main.render();            // rendering the main section can cause flicker - but got to do it on phone to stop keyboard moving viewport
-                    }
+                    //}
+
                     changing = false;
                 }
             }
-        
+
             if(this.isTouch() && !this.localMobileTest) {
                 window.addEventListener('orientationchange', function(){
                     var orientation = window.orientation;
@@ -248,15 +257,14 @@ Minx.PanelManager = function() {
                     oChange();
 
                 }, true);
-            } else {
-
-                // this pretty much deals with any orientation change
+            }
+            else {
                 window.addEventListener('resize', oChange, true);
             }
 
         }
         else {
-            
+            console.log("WARNING - YOU will hae to manage orientation changes yourself and add a root panel");
         }
 
         this._main = main;
