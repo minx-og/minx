@@ -47,6 +47,7 @@ Minx.Layout.SplitLayout = my.Class({
 
         // ---   navigation panel
         this._navPanel = Minx.pm.add(main,'title-panel');
+        this._navPanel.addClass("left-nav");
         this._navPanel.setAnimate(200);
 
         // make it lighter
@@ -200,6 +201,17 @@ Minx.Layout.SplitLayout = my.Class({
 
         window.scrollTo(0, 0);
 
+
+
+        this._stuff.getContentPanel().setAnimate(100);
+        this._stuff.getContentPanel().hide();
+        this._stuff.getContentPanel().render();
+        this._stuff.getContentPanel().setAnimate(200);        
+
+
+
+        this._stuff.unPin();
+
         // pin it to the nav panel
         this._stuff.setSiblingPin(this._navPanel, 'l');
 
@@ -214,17 +226,22 @@ Minx.Layout.SplitLayout = my.Class({
 
         if(!touch) {
             // set the nav panel to docked in width    
-            
             // and dock it left
             me._navPanel.pinParent({'l': 0, 't': 0, 'r': -1, 'b': 0});
-
             
         }
         
-        //setTimeout(function() {
+        setTimeout(function() {
             me._stuff.setSize(nw - me._navLandWidth, nh);        
-        //    me._stuff.show();    
-        //}, 300);
+
+            me._stuff.addClass('thin-border');
+            
+            me._stuff.getContentPanel().setAnimate(200); 
+            me._stuff.getContentPanel().show();
+            
+            
+            me._stuff.show();    
+        }, 300);
 
         me._navPanel.setSize(me._navLandWidth, nh);
 
@@ -284,21 +301,19 @@ Minx.Layout.SplitLayout = my.Class({
         // slide the nav panel out to left
         this._navPanel.unsetParentPin('l');
 
+
+        // try unsetting borders
+        this._navPanel.removeClass('thin-border');
+        this._stuff.removeClass('thin-border');
         
+        this._stuff.getContentPanel().setAnimate(100);
+        this._stuff.getContentPanel().hide();
+        this._stuff.getContentPanel().render();
+        this._stuff.getContentPanel().setAnimate(200);        
 
-        // make stuff full size off dom
-
-        //this._stuff.domReCreate();
 
         this._stuff.setSize(nw, nh);
         this._stuff.render();
-
-        //this._stuff.domReAttach();
-
-/*
-        setTimeout(function() {    
-        }, 1000);
-*/
 
 
         if(!touch) {
@@ -308,8 +323,6 @@ Minx.Layout.SplitLayout = my.Class({
         }
         else {
 
-
-            //TODO scroll theview
 
 
             setTimeout(function() {
@@ -332,9 +345,16 @@ Minx.Layout.SplitLayout = my.Class({
                 me._navPanel.setPos((0 - me._navLandWidth) - 1 , 0);
                 me._navPanel.render();
 
+
             }, 100);
 
         }
+
+        setTimeout(function() {
+                    me._stuff.getContentPanel().setAnimate(200);
+                    me._stuff.getContentPanel().show();
+                    
+            }, 300);
 
         me._navPopButton.show(); 
         

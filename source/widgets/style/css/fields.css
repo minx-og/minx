@@ -32,6 +32,8 @@ ul.field-list li {
     background-clip: border-box;
 
     background: white;
+
+    overflow: hidden;
 }
 
 ul.field-list li.first {
@@ -52,6 +54,21 @@ ul.field-list li.break {
     background: transparent;
 }
 
+ul.field-list li.fl-button {
+    text-align: center;
+    font-weight: bold;
+}
+
+ul.field-list li.fl-button:active {
+    /* background-color: #008afd; */
+
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#008afd), to(#005def));
+    background-image: -moz-linear-gradient(#008afd 0%,  #005def 100%);
+
+    text-shadow: none;
+    color: white;
+    font-weight: bold;
+}
 
 label {
     font-size: 15px;
@@ -85,10 +102,13 @@ input, select {
  
 }
 
+
 select {
     padding-left: 10px;
 }
 
+
+/* the div in the li for fieldlists */
 .mx-row {
     height: 45px;
     width: 100%;
@@ -129,3 +149,141 @@ select {
 .last .mx-label {
     -webkit-border-bottom-left-radius: 7px;
 }
+
+
+
+/* Better iOS Sliders
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.toggle-button-wrap {
+
+    width: 100px;
+    height: 30px;
+    
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 2px 3px #888 inset, 0 1px 1px #fff;
+    -moz-box-shadow: 0 2px 3px #888 inset, 0 1px 1px #fff;
+    box-shadow: 0 2px 3px #888 inset, 0 1px 1px #fff;
+    border: 1px solid #999;
+    background: rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-top: 7px;
+    float: right;
+    position: relative;
+    z-index: 0;
+
+    line-height: 18px;
+}
+
+.toggle-holder {
+    width: 150px;
+    height: 30px;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+}
+    
+.toggle-holder.on{
+    -webkit-transition-timing-function: linear;
+    -webkit-transition-duration: .1s; 
+    -webkit-transform: translate3d(0px, 0px, 0px);
+}
+
+.toggle-holder.off{
+    -webkit-transition-timing-function: linear;
+    -webkit-transition-duration: .1s; 
+    -webkit-transform: translate3d(-50px, 0px, 0px);
+}
+
+
+.toggle-label {
+    
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #444;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+    font-size: 100%;
+    position: absolute;
+
+    width: 50px;
+    height: 29px;
+    
+    top: 0px;
+}
+
+
+.toggle-label.on {
+    
+    left: 0px;
+    position: absolute;
+
+    text-align: left;
+    float: left;
+    
+    padding: 6px 0 9px 13px;
+    background: #f09933;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 2px 3px #ad6c20 inset;
+    -moz-box-shadow: 0 2px 3px #ad6c20 inset;
+    box-shadow: 0 2px 3px #ad6c20 inset;
+    text-shadow: 0 1px 1px #f4ca99;
+
+}
+
+.toggle-label.off {
+    
+    left: 100px;
+    position: absolute;
+
+    width: 50px;
+    height: 30px;
+
+    text-align: right;
+    float: right;
+    
+    padding: 6px 10px 8px 0;
+}
+
+.toggle-button {
+
+    top: 0px;
+    left: 50px;
+    position: absolute;
+
+    width: 50px;
+    height: 30px;
+    
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    -webkit-box-shadow: 0 1px 1px #fff inset, 0 0 10px #d7d7d7 inset, 0 0 10px #888;
+    -moz-box-shadow: 0 1px 1px #fff inset, 0 0 10px #d7d7d7 inset, 0 0 10px #888;
+    box-shadow: 0 1px 1px #fff inset, 0 0 10px #d7d7d7 inset, 0 0 10px #888;
+    
+    background-color: #444444;
+    background-image: -moz-linear-gradient(top, #c2c2c2, #efefef); /* FF3.6 */
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #c2c2c2),color-stop(1, #efefef)); /* Saf4+, Chrome */
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#c2c2c2', EndColorStr='#efefef'); /* IE6,IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#c2c2c2', EndColorStr='#efefef')"; /* IE8 do I really fucking care!*/
+    
+    border: 1px solid #999;
+    
+    margin: -1px 0 0 -1px;
+    padding: 5px 0 0 0;
+    
+    text-align: center;
+    cursor: pointer;
+    clear: both;
+    position: relative;
+    
+    z-index: 10;
+
+}
+
+
+

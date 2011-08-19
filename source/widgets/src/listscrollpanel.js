@@ -5,6 +5,9 @@ ListScrollPanel - registered as list-scroll-panel
 one event 'click' on a list item
 */
 
+
+
+
 Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
     constructor: function(parent, id) {
@@ -38,6 +41,8 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         // augement with explicit id
         // e must be in the param object
         // currentTarget - the element that recieved the event
+        console.log("lsp event");
+
         return {id: event.currentTarget.id, e: event};
     },
 
@@ -92,7 +97,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
         var view = this.getView();
 
-        // trash any stuff in my node....
+        // trash any stuff in my node (hope this cleans it out of the dom nicely)....
         if(this._widgetRoot) {
             view.removeChild(this._widgetRoot); 
         }
@@ -102,6 +107,11 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         this._widgetRoot = document.createElement('ul');
         this._widgetRoot.setAttribute('class', this.getClassName());
         
+
+        // fast clicks on all clicks below the ul
+        new NoClickDelay(this._widgetRoot);
+
+
         view.appendChild(this._widgetRoot);  
 
         var pId = this.getId();
@@ -110,6 +120,8 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         var liNode;     // the node to attach to the li
         
         var row;        // each row
+
+        var prevli = null      // previous li = used for setting last on rows prior to breaks
         
         for(var h in list) {
             row = list[h];
@@ -117,7 +129,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             li = document.createElement('li');
             li.setAttribute('id', row[this._keyField]);       // set element attribute to my id
             if(h == 0) {
-                li.setAttribute('class', 'first');       
+                li.setAttribute('class', 'first');
             }
             if(h == list.length-1) {
                 li.setAttribute('class', 'last');
@@ -127,12 +139,14 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             Minx.eq.subscribe(this, li, 'click');
 
             // call potentially a callback that will return my row content as a node
-            liNode = this._rowRenderer(pId, row, li);
+            liNode = this._rowRenderer(pId, row, li, prevli);
             if(liNode != null) {
                 li.appendChild(liNode);
             }
 
             this._widgetRoot.appendChild(li);
+
+            prevli = li;
         }
         // create the new scroller
         if(this._touch && this._scroller == null) {   

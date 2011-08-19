@@ -73,15 +73,19 @@ Minx.anim = {
         } );
         */
 
+/* FIXPOS
         pan.getNode().addEventListener( 'webkitTransitionEnd', function( event ) {
             
             pan.getNode().removeEventListener( 'webkitTransitionEnd', this);   // this is this function i hope
 
             Minx.anim.fixpos(pan, x, y);
 
-        } );        
-    },
+        } );
+*/
 
+
+    },
+/* FIXPOS
     fixpos: function(pan, x, y) {
         pan.removeStyle(Minx.anim.trans);
         pan.removeStyle(Minx.anim.transpeed);
@@ -92,6 +96,7 @@ Minx.anim = {
         // now blast this update now
         pan._blastStyles();
     },
+*/
 
     settime: function(pan, speed) {
         pan.setStyle(Minx.anim.transpeed, speed + 'ms');
@@ -588,6 +593,11 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
 
         if( dim.l != x || dim.t != y) {
             
+
+              Minx.anim.setpos(pan, x, y);
+              
+
+/* FIXPOS
             // call the specific browser functions
             if( pan._animate == 0) {
                 Minx.anim.fixpos(pan, x, y);
@@ -595,6 +605,9 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
             else {
                 Minx.anim.setpos(pan, x, y);
             }
+*/
+
+
          }
     },
 

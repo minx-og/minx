@@ -4,13 +4,13 @@ body {
     /* default font for this theme*/
     font-family: "Helvetica Neue", HelveticaNeue, "Helvetica-Neue", Helvetica, "BBAlpha Sans", sans-serif;
     /* some artifacts when this not a dark colour */
-    background-color: #000;
+    background-color: #E5E5E7;
 }
 
 
 .panel {
     /* default panel colour */
-    background-color: #EEE;
+    background-color: #E5E5E7;
 }
 
 #back-top {

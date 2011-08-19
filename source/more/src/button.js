@@ -32,14 +32,27 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         
         this.addClass('button-up');
 
-        // register my events in Minx.eq wrapper 
-        Minx.eq.subscribe(this, null, 'mousedown'); // null means whatever node I get made
-        Minx.eq.subscribe(this, null, 'mouseup');
+        
+        if (Minx.pm.isTouch()) {
+            Minx.eq.subscribe(this, null, 'touchstart');
+            Minx.eq.subscribe(this, null, 'touchend');
+        }
+        else {
+            // register my events in Minx.eq wrapper 
+            Minx.eq.subscribe(this, null, 'mousedown'); // null means whatever node I get made
+            Minx.eq.subscribe(this, null, 'mouseup');    
+        }
+
+        
 
         this._type = 'none';
 
         // must give me a default type to create the label node
         this.setType('normal');
+
+
+        // fast clicks
+        // new NoClickDelay(this.getNode());
 
     },
     
@@ -51,6 +64,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
     // special one for buttons
     onClick: function(fn) {
+        console.log("oneclick");
         this._clickEvent  = fn; 
     },
 
@@ -61,6 +75,9 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         // call my behaviour
         if(ev.type == 'mousedown') this.buttonPressed(ev);
         if(ev.type == 'mouseup') this.buttonReleased(ev);
+
+        if(ev.type == 'touchstart') this.buttonPressed(ev);
+        if(ev.type == 'touchend') this.buttonReleased(ev);
 
         // then call super to trigger any external listener
         Minx.Button.Super.prototype.eventFired(this, ev);

@@ -10,15 +10,19 @@
     -webkit-user-select: none;
 
     -webkit-box-sizing: border-box;
+
+    -webkit-tap-highlight-color: transparent;
+
 }
 
 /* remove default safari style */
-input, textarea {outline-style:none;}
+input, textarea {
+  outline-style:none;
+}
 
 body {
     overflow: hidden;
 
-    background: #000;
     /* perf?? */
     text-shadow: 0px 1px 0px white;
 }
@@ -135,7 +139,7 @@ body {
     -o-transition: z-index, opacity;
     transition: z-index, opacity;
 
-    -webkit-transition-duration: 1s; 
+    -webkit-transition-duration: .5s; 
     
 
     -moz-transition-duration: 0.3s; 

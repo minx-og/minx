@@ -27,6 +27,9 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
         if(this._active == null) { // no active panel yet so use this one and keep defaults
             this._active = panel
+            panel.setPos(0, 0);
+            panel.fillParent();
+            panel.render();         // make sure it is in the right place
         }
         else {
             // got our active panel allready so hide all others - consider removing from DOM?
@@ -61,7 +64,10 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
         // make sure we are not just activating the same panel
         if(this._active != null) {
             if(panel.getId() == this._active.getId()) {
-                // make sure it is visible at least
+                // make sure it is visible at least and in the panel
+                panel.unPin();
+                panel.setPos(0, 0);
+                panel.fillParent();
                 panel.show();
                 return;
             }
