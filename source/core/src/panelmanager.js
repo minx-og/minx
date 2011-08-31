@@ -20,24 +20,45 @@ Minx.Events = function(){
         // any global list?
 
         //panel a reference - ev the event we want, callback = the name of the 
-        this.subscribe = function(panel, node, ev, callback) {
+        this.subscribe = function(panel, node, ev, callback, capture) {
             if (typeof callback == "undefined") {
                 callback = 'eventFired';
+            }
+
+            if (typeof capture == "undefined") {
+                capture = false;
             }
             
             // wrapper to call the event on the panel
             var mEv = new Minx.Event(panel, callback);
 
-            // now add it back to the object that subscribed
+            // the default node is the panels node
             if(node == null) {
                 node = panel.getNode();
             }
 
+            // let the panel know it has ths event 
             if (typeof panel.addEvent !== "undefined") {
                 panel.addEvent({node: node, ev: ev, mEv: mEv});
             }
 
-            node.addEventListener(ev, mEv.trigger, true);   // let it bubble around
+            // then add it to the dom - passing in closure (of panel and callback)
+            node.addEventListener(ev, mEv.trigger, capture);
+
+            return mEv;
+        }
+
+        this.unsubscribe = function(panel, node, ev, mEv) {
+            // the default node is the panels node
+            if(node == null) {
+                node = panel.getNode();
+            }
+            
+            node.removeEventListener(ev, mEv.trigger);
+
+            if (typeof panel.removeEvent !== "undefined") {
+                panel.removeEvent({node: node, ev: ev, mEv: mEv});
+            }
         }
 };
 
@@ -219,9 +240,10 @@ Minx.PanelManager = function() {
             touchMove = function(event) {
                 // Prevent scrolling on this element
                 event.preventDefault();
+                event.stopPropagation();
             }
 
-            main.getNode().ontouchmove = touchMove
+            main.getNode().ontouchmove = touchMove;
             
 
             var changing = false;
@@ -385,7 +407,8 @@ Minx.pm = new Minx.PanelManager();
 
 // fast click - put in its own file.....
 
-function NoClickDelay(el) {
+function NoClickDelay(el) { };
+/*
     this.element = el;
     if( window.Touch ) this.element.addEventListener('touchstart', this, false);
 }
@@ -427,6 +450,4 @@ NoClickDelay.prototype = {
         }
     }
 };
-
-
-
+*/

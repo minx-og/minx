@@ -27,15 +27,44 @@ Minx.InputPopup = my.Class(Minx.Popup, {
         // pin bottom to top of title bar
         this._mainPanel.setSiblingPin(this._footBar, 'b', 5);      // 1 pixel offset for bottom border
 
+
+        Minx.eq.subscribe(this, this.getNode(), 'keypress');    // register for keypresses
+
+        this._defaultButton = null;                             // send enter presses to this button
+
     },
+
+
+    eventParse: function(event) {
+        var thing = {id: this._defaultButton.getId(), e: event};
+
+        // pass event to default button - dont check for type as only one registered at the moment - review if more subscribes
+        this._defaultButton.eventFired(event);
+
+        return thing;
+    },
+
+
+    setDefault: function(panel) {
+        this._defaultButton = panel;
+        // tell this panel to draw and 'default' class stuff 
+        panel.addClass("default");
+    },
+
 
     getMainPanel: function() {
         return this._mainPanel;  
     },
 
+
     //getFootBar - for clients to add buttons.
     getFootBar: function() {
         return this._footBar;
+    },
+
+
+    getMyElement: function() {
+        return 'form';
     },
 
 });

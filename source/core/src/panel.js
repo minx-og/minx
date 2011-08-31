@@ -73,7 +73,7 @@ Minx.anim = {
         } );
         */
 
-/* FIXPOS
+/* FIXPOS 
         pan.getNode().addEventListener( 'webkitTransitionEnd', function( event ) {
             
             pan.getNode().removeEventListener( 'webkitTransitionEnd', this);   // this is this function i hope
@@ -85,7 +85,7 @@ Minx.anim = {
 
 
     },
-/* FIXPOS
+/* FIXPOS 
     fixpos: function(pan, x, y) {
         pan.removeStyle(Minx.anim.trans);
         pan.removeStyle(Minx.anim.transpeed);
@@ -96,6 +96,7 @@ Minx.anim = {
         // now blast this update now
         pan._blastStyles();
     },
+
 */
 
     settime: function(pan, speed) {
@@ -311,6 +312,12 @@ Minx.Panel = my.Class({
     },
 
 
+    // This gets called when my node gets added back to the dom
+    reattached: function() {
+        // pass
+    },
+
+
     // register a handler for all my default events
     // the function passed in here gets passed the parsed event 
     onEvents: function(fn) {
@@ -337,6 +344,16 @@ Minx.Panel = my.Class({
     //         - which by default is the reserved function  
     addEvent: function(eventTripple) {
         this._events.push(eventTripple);
+    },
+    
+
+    removeEvent: function(eventTripple) {
+        for (mev in this._events) {
+            var ev = this._events[mev];
+            if ((ev.node == eventTripple.node) && (ev.ev == eventTripple.ev) && (ev.mEv == eventTripple.mEv)) {
+                this._events.splice(mev, 1);        
+            }
+        }
     },
 
 
@@ -406,13 +423,15 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         //DEBUG - remove opacity for hw accell
         this.setStyle('opacity', '1');
 
-        
         // make sure it is rendered and 
         this.render();
 
+        // add it to the dom first - so iscroll can layout properly
         if(this._detached) {
             this._parent._addToDom(this);
             this._detached = false;
+
+            this.reattached();
         }        
     },
 
@@ -470,14 +489,12 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         if(instant){
             me.setStyle('visibility', 'hidden');
 
-            if(detach && !this._detached) {
+            if(detach && !me._detached) {
                 me._parent._node.removeChild(me._node);
                 me._detached = true;
             }
-
         }
         else {
-
             // must hide as well but only after enough time for the opacity animation - got a reference on this timer to cancel if show called before transition finished
             // otherwise we could have the situation where we hide and show within .3s and this timer still fires the hide!
             this._hideTimer = setTimeout(function(det) {
@@ -597,7 +614,7 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
               Minx.anim.setpos(pan, x, y);
               
 
-/* FIXPOS
+/* FIXPOS 
             // call the specific browser functions
             if( pan._animate == 0) {
                 Minx.anim.fixpos(pan, x, y);
@@ -605,10 +622,10 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
             else {
                 Minx.anim.setpos(pan, x, y);
             }
-*/
-
+ENDFIXPOS */
 
          }
+
     },
 
 

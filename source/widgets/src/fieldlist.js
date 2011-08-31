@@ -16,11 +16,35 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         this.fillParent(1);
 
         this._fields = {};
+        this._titles = {};
+        this._toggles = {};
 
         this._afterBreak = false;       // set if we had a break - so then must set this row a first row
 
         this._eventHandler = function(thing) {};    // empty
 
+        this._focussed = null;                  // focussed
+        this._defaultButton = null;
+
+        var me = this;
+        
+        // does this replace the base function ??
+        this.onScrollStart = function(scroller, ev) {
+            console.log("scroller start");
+            if (me._focussed) {
+                me._focussed.blur();
+                me._focussed = null;
+            }
+        }
+
+        Minx.eq.subscribe(this, this.getNode(), 'keyup');    // register for keypresses
+    },
+
+
+    setDefault: function(panel) {                               // can override field list default with an external button
+        this._defaultButton = panel;
+        // tell this panel to draw and 'default' class stuff 
+        panel.addClass("default");
     },
 
 
@@ -29,9 +53,20 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         // augement with explicit id
         // e must be in the param object
         // currentTarget - the element that recieved the event
-        console.log("fl event");
         var thing = {id: event.currentTarget.id, e: event};
-        this._eventHandler(thing);
+
+        // if it is an enter press - then use the id of the defualt button
+        // there may not be a defult button if the enclosing form has one - e.g. inputpopup
+        if (event.type == "keyup") {
+            if((this._defaultButton != null ) && (event.keyCode == 13)) {
+                thing = {id: this._defaultButton.id, e: event};
+                this._eventHandler(thing);
+            }
+            // swallow keyups if its not a return and there is no default button
+        }
+        else {
+            this._eventHandler(thing);
+        }
 
         return thing;
     },
@@ -39,6 +74,33 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
     setListener: function(cb) {
         this._eventHandler = cb;
+    },
+
+
+    updateTitle: function(id, value) {
+        var disp = document.createTextNode(value);
+        var tit = this._titles[id];
+        
+        // only one child
+        tit.removeChild( tit.firstChild );
+
+        tit.appendChild(disp);
+    },
+
+
+    updateToggle: function(id, value) {
+        var fld = this._fields[id];
+        fld.value = value;
+
+        var tog = this._toggles[id];
+        if (value == 'on') {
+            tog.bh.setAttribute('class', 'toggle-holder on');
+            tog.bc.setAttribute('class', 'toggle-back');
+        }
+        else {
+            tog.bh.setAttribute('class', 'toggle-holder off');
+            tog.bc.setAttribute('class', 'toggle-back off');
+        }
     },
 
 
@@ -54,8 +116,6 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             liClass = "";
         }
 
-        console.log("passing in this row class : " + liClass);
-
         var div = document.createElement('div');
         div.setAttribute('class', 'mx-row');
 
@@ -66,16 +126,11 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             delete row['type'];
         }
 
-        console.log("after break = " + this._afterBreak);
-
         if ( this._afterBreak && (row.type != 'break') && (row.type != 'title')) {
             // this row ends a break so set class first
-
-            console.log("got a na fter break");
             liClass = liClass + " first";
             this._afterBreak = false;
         }
-
 
         if (row.type == 'break') {
             
@@ -87,7 +142,6 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                     atts = "";
                 }
                 atts = atts + " last";
-                console.log("prevli class ---> " + atts);
                 prevli.setAttribute('class', atts);   
             }
             this._afterBreak = true;
@@ -102,6 +156,8 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             tit.appendChild(disp);
             div.appendChild(tit);
 
+            this._titles[row.name] = tit;
+            this._afterBreak = true;
         }
         else if(row.type == 'button') {
 
@@ -112,7 +168,13 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
                 div.appendChild(disp);
 
+                // if this is the default button then store it so we can use this id when enter pressed
+                if (row.isdefault) {
+                    this._defaultButton = li;
+                    liClass = liClass + " fl-default";  // give it summink so we can draw it as defult if we want
+                }
 
+                
 // handle mousedown stlyes ourselves ?
 /*
                 div.addEventListener("mousedown", function(){
@@ -174,10 +236,14 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 ip.setAttribute('class', 'toggle-button-wrap');
 
 
+                var bc = document.createElement('div');
+                bc.setAttribute('class', 'toggle-back');
+                ip.appendChild(bc);
+
+
                 var bh = document.createElement('div');
                 bh.setAttribute('class', 'toggle-holder');
-                ip.appendChild(bh);
-
+                bc.appendChild(bh);
 
                 var iii = document.createElement('div');
                 iii.setAttribute('class', 'toggle-label on');
@@ -186,14 +252,9 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 tt = document.createTextNode("On");
                 iii.appendChild(tt);
 
-
-
                 var bb = document.createElement('div');
                 bb.setAttribute('class', 'toggle-button');
                 bh.appendChild(bb);
-
-                
-                
 
                 var iii = document.createElement('div');
                 iii.setAttribute('class', 'toggle-label off');
@@ -204,56 +265,38 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
                 this._fields[row.name].value = 'off';
 
-                /*
-                ip.innerHTML = '\
-                    <div class="buttontrack-better">\
-                
-                        <div class="button-better"></div>\
-                        <div class="label-better">\
-                            <div class="on">On</div>\
-                            <div class="off">Off</div>\
-                        </div>\
-                    </div>'
-                */
-
                 if(row.value != 'on') {
                     bh.setAttribute('class', 'toggle-holder off');
                 }
-            
-                div.addEventListener("click", function(){
-                    
+
+                this._toggles[row.name] = {bh:bh, bc:bc};
+
+                function drawOnOrOff() {
+                    me.updateToggle(row.name, me._fields[row.name].value);
+                }
+                
+                function toggleOnOrOff() {
                     if (me._fields[row.name].value == 'off') {
-                        //li.setAttribute("style", "background-color: blue;");        
-                        bh.setAttribute('class', 'toggle-holder on');
                         me._fields[row.name].value = 'on';
                     }
                     else {
-                        bh.setAttribute('class', 'toggle-holder off');
                         me._fields[row.name].value = 'off';
                     }
-
-                }, true);   // let it bubble around
-
-/*
-                ip.addEventListener("mouseup", function(){
-                    li.setAttribute("style", "");    
-                }, true);   // let it bubble around
-*/
+                    drawOnOrOff();
+                } 
             
-
-
+                div.addEventListener("click", toggleOnOrOff, false);
+                
+                // and set it in the correct state
+                drawOnOrOff();
             }
             else {
 
-                console.log("field type " + ipType);
-                
                 for( var lb in row ) {
                     if(lb != 'label' && lb !='options') {
                         ip.setAttribute(lb, row[lb]);    
                     }
                 }
-
-                
 
                 if(ipType == 'select') {
                     for(var op in row.options) {
@@ -268,11 +311,15 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                     }
                 }
                 else {
-                    // iphone only??
-                    console.log("turn off auto shit");
+                    // turn off all the clever field shit
                     ip.setAttribute("autocorrect", "off");
                     ip.setAttribute("autocomplete", "off");
                     ip.setAttribute("autocapitalize", "off");
+
+
+                    ip.addEventListener('focus', function(e){
+                        me._focussed = ip;
+                    }, false);
                 }
             }
 
@@ -286,7 +333,6 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         }
 
         if( liClass != "" ) {
-            console.log("Setting row li class ---> " + liClass);
             li.setAttribute('class', liClass);
         }
 
@@ -306,6 +352,12 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
     getField: function(fld) {
         return this._fields[fld];
+    },
+
+
+    // this has to be a form to capture keypresses
+    getMyElement: function() {
+        return 'form';
     },
 
 

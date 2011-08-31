@@ -112,12 +112,17 @@ select {
 .mx-row {
     height: 45px;
     width: 100%;
+    overflow: hidden;
 }
+
 
 .mx-label {
     height: 100%;
     width: 40%;
     float: left;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     background: #F3F3F3;
 }
@@ -176,6 +181,43 @@ select {
     line-height: 18px;
 }
 
+
+.toggle-back {
+
+    
+    width: 60px;
+    height: 30px;
+    
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    -webkit-border-top-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    border-top-left-radius: 5px;
+
+
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-left-radius: 5px;
+
+    /*background-image: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#008afd), color-stop(.5, #008afd), color-stop(.51,rgba(0, 0, 0, 0.05)), to(rgba(0, 0, 0, 0.05))); */
+    
+
+    background: #f09933;
+    
+    -webkit-box-shadow: 0 2px 3px #ad6c20 inset;
+    -moz-box-shadow: 0 2px 3px #ad6c20 inset;
+    box-shadow: 0 2px 3px #ad6c20 inset;
+    text-shadow: 0 1px 1px #f4ca99;
+
+
+}
+
+.toggle-back.off {
+    width: 40px;
+} 
+
 .toggle-holder {
     width: 150px;
     height: 30px;
@@ -223,24 +265,14 @@ select {
     float: left;
     
     padding: 6px 0 9px 13px;
-    background: #f09933;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    -webkit-box-shadow: 0 2px 3px #ad6c20 inset;
-    -moz-box-shadow: 0 2px 3px #ad6c20 inset;
-    box-shadow: 0 2px 3px #ad6c20 inset;
-    text-shadow: 0 1px 1px #f4ca99;
 
+    
 }
 
 .toggle-label.off {
     
     left: 100px;
     position: absolute;
-
-    width: 50px;
-    height: 30px;
 
     text-align: right;
     float: right;

@@ -60,6 +60,8 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
         but.setPos(0, 7)
         but.setParentPin(where, off);
         but.setText(text);
+
+        but.addToGroup(this.getParent());
         return but;  
     },
 

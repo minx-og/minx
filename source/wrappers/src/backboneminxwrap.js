@@ -38,7 +38,7 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
             this._widget.setModel(model.toJSON);
         }
         else {
-            this._widget.setModel(this._collection.toJSON());
+            this._widget.setModel(this._collection.toJSON());   // toJSON actiually creates a pojso
         }
 
         // and render the widget
@@ -85,7 +85,7 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
 
     // bind all model events to the WidgetView
     this.bindModel = function(model) {
-        model.bind('all', view.allModelFired);
+        model.bind('all', view.allModelFired);          // this really does the glue between the view and the collection
 
         // and make sure we draw it 
         view.updateWidgetModel();

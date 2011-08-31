@@ -23,38 +23,39 @@ each button contains the following html....
 */
 
 Minx.Button = my.Class(Minx.PinnedPanel, {
-    
     constructor: function(parent, id) {
         Minx.Button.Super.call(this, parent, id);
+
+        this.buttonEvent = null;                                 // stored event for default button
 
         this.setSize(70, 30);
         this.setPos(10, 10);
         
         this.addClass('button-up');
 
-        
         if (Minx.pm.isTouch()) {
             Minx.eq.subscribe(this, null, 'touchstart');
             Minx.eq.subscribe(this, null, 'touchend');
         }
         else {
+
             // register my events in Minx.eq wrapper 
             Minx.eq.subscribe(this, null, 'mousedown'); // null means whatever node I get made
             Minx.eq.subscribe(this, null, 'mouseup');    
         }
 
-        
-
         this._type = 'none';
+        this._group = null;                             // the group is the form that can get keypresses
 
         // must give me a default type to create the label node
         this.setType('normal');
-
-
-        // fast clicks
-        // new NoClickDelay(this.getNode());
-
     },
+
+
+    addToGroup: function(panel) {
+        this._group = panel;
+    },
+
     
     // last thing called in the construction - so overrides stuff
     _onCreation: function() {
@@ -62,11 +63,12 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         this.setAnimate(false);
     },
 
-    // special one for buttons
+
+    // set a click handler - special one for buttons
     onClick: function(fn) {
-        console.log("oneclick");
         this._clickEvent  = fn; 
     },
+
 
     // this is what gets called by the event 
     eventFired: function(ev) {
@@ -79,15 +81,19 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         if(ev.type == 'touchstart') this.buttonPressed(ev);
         if(ev.type == 'touchend') this.buttonReleased(ev);
 
+        if(ev.type == 'keypress') this.keyPressed(ev);
+
         // then call super to trigger any external listener
         Minx.Button.Super.prototype.eventFired(this, ev);
     },
+
 
     buttonPressed: function(e) {
         this.removeClass('button-up');
         this.addClass('button-down');
         this.show();
     },
+
 
     buttonReleased: function(e) {
         this.removeClass('button-down');
@@ -98,9 +104,23 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         }
     },
 
+
+    // only a defualt key should be bound to the keypress event
+    keyPressed: function(e) {
+        console.log("keypressed ");
+        console.log(e);
+        if (e.charCode == 13) {
+            if(this._clickEvent) {
+                this._clickEvent(this, e);
+            }
+        }
+    },
+
+
     setText: function(text) {
         this._textNode.data = text;
     },
+    
 
     setType: function(type) {
         var me  = this;
@@ -208,10 +228,12 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         }
     },
 
+
     getClassName: function() {
         return 'button';
     },
     
+
     getMyElement: function() {
         return 'div';
     },
