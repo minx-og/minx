@@ -13,11 +13,13 @@ derived classes
 Minx.Popup = my.Class(Minx.PinnedPanel, {
 
     constructor: function(parent, id) {
+
         // check that my parent is the main panel
-        if(parent.getId() != 'pn0') {
+/*        if(parent.getId() != 'pn0') {
             throw 'popup parent should be the main panel, use "main" as parent Minx.add()- pn0 with -' +  id;
         }
-
+*/
+        this._centre = true;            // centred by default
         // call super
         Minx.Popup.Super.call(this, parent, id);
 
@@ -25,26 +27,37 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         this.addClass('anim-fade-only');
     },
 
+
     _onCreation: function() {
         //dont call base
+    
         // default size
         this.setAnimate(300);
-        this.hide(true);            // hide instantly
+        this.hide({now:true});            // hide instantly
         
         this.setSize(300, 200);
-        this._centre = true;            // centred by default
         this._reCentre();
     },
 
+    
     // if a specific position is set then unpin from the centre
     setPos: function(left, top) {
-        this._centre = false;
-        Minx.Popup.Super.prototype.setPos.call(this, left, top);
+        if (this._centre == false) {
+            Minx.Popup.Super.prototype.setPos.call(this, left, top);
+        }
+        else {
+            console.log("Warning - Setting a position on a centred panel");
+        }
     },
 
+
     // re-pin to the centre - (should probably render again)
-    setCentred: function() {
-        this._centre = true;
+    setCentred: function(centred) {
+        if (typeof centred === "undefined") {
+            centred = true;
+        }
+        
+        this._centre = centred;
     },
 
 
@@ -58,6 +71,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         }, this._animate);
     },
 
+
     // override layout to check if we should re-centre
     layout: function() {
 
@@ -69,24 +83,29 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         Minx.Popup.Super.prototype.layout.call(this);
     },
 
+
     show: function() {
         // override to allow initial animation
         this._instantFirstDraw = false;
         Minx.Popup.Super.prototype.show.call(this);
     },
 
+
     // private - center to the viewport - should make these dimensions available in the panel manager
     _reCentre: function(){
 
-        var dw = document.documentElement.clientWidth;
-        var dh = document.documentElement.clientHeight;
+        var parDim = this.getParent().getNewDims();
+        var dw = parDim.w; //document.documentElement.clientWidth;
+        var dh = parDim.h; //document.documentElement.clientHeight;
 
         // use the new unaplied dimensions
         var d = this.getNewDims();
 
         // call the base setPos directly
-        Minx.Popup.Super.prototype.setPos.call(this, (dw - d.w) / 2, (dh - d.h) / 2);
+        this._newG.l = (dw - d.w) / 2;
+        this._newG.t = (dh - d.h) / 2;
     },
+
 
     getClassName: function() {
         return 'pop-up';

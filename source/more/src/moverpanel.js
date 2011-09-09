@@ -33,7 +33,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
         }
         else {
             // got our active panel allready so hide all others - consider removing from DOM?
-            panel.hide(true, false);            // true = instant, false = detache
+            panel.hide({now:true, detach:false});            // true = instant, false = detache
         }
 
         panel.setAnimate(this._moverAnimate);
@@ -110,7 +110,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 me._active.show();
 
                 // remove the old one from the dom
-                me._active.hide(false, true);
+                me._active.hide({now:false, detach:true});
 
                 //and make sure it is fully pinned to momma s it resizes on next resize
                 panel.fillParent();    
@@ -163,7 +163,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 panel.show();    
 
                 // hide the old one
-                me._active.hide(false, true);
+                me._active.hide({now:false, detach:true});
 
                 //and make sure it is fully pinned to momma s it resizes on next resize
                 panel.fillParent();    
@@ -177,8 +177,34 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
         }
 
-        else {
-           
+        else {      // just plonk it on
+            var me = this;
+           // unhook both panels from anything
+            panel.unPin();
+            this._active.unPin();
+            // set the new panel position to be 0 pushing old one off to the right
+            panel.setPos(0, 0);
+
+            // set it to the same dimensions as the active panel
+            var parDims = this.getParent().getNewDims();
+
+            panel.setSize(parDims.w, parDims.h);
+
+
+            // then show the old new panel which triggers the 'pushing'
+            panel.show();    
+
+
+            //and make sure it is fully pinned to momma s it resizes on next resize
+            panel.fillParent();    
+
+            // hide the old one
+            me._active.hide({now:false, detach:true});
+
+            // set the new panel as active
+            me._active = panel;
+
+
         }
         
     },

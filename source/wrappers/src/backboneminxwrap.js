@@ -3,7 +3,7 @@ if (typeof BackboneMinxWrap === "undefined") {
 } 
 
 
-// general backbone widgetpanel wrapper
+// general backbone dataBoundPanel wrapper
 BackboneMinxWrap.WidgetView = Backbone.View.extend({ 
     
     initialize: function() {
@@ -82,6 +82,14 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
         view.setCollection(collection);    
         this.bindModel(collection);
     };
+
+    
+    this.unbindCollection = function() {
+        if(view._collection) {
+            view._collection.unbind();
+        }
+    };
+
 
     // bind all model events to the WidgetView
     this.bindModel = function(model) {

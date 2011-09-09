@@ -33,7 +33,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         
         this.addClass('button-up');
 
-        if (Minx.pm.isTouch()) {
+        if (Minx.pm.isTouch() && !Minx.pm.localMobileTest) {    // DEBUG flag - remove?
             Minx.eq.subscribe(this, null, 'touchstart');
             Minx.eq.subscribe(this, null, 'touchend');
         }
@@ -72,8 +72,6 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
     // this is what gets called by the event 
     eventFired: function(ev) {
-        console.log("event fired: " + ev);
-
         // call my behaviour
         if(ev.type == 'mousedown') this.buttonPressed(ev);
         if(ev.type == 'mouseup') this.buttonReleased(ev);
@@ -81,7 +79,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         if(ev.type == 'touchstart') this.buttonPressed(ev);
         if(ev.type == 'touchend') this.buttonReleased(ev);
 
-        if(ev.type == 'keypress') this.keyPressed(ev);
+        if(ev.type == 'keypress') this.keyPressed(ev);          //TODO check this isnt bound for the button - the panel has it
 
         // then call super to trigger any external listener
         Minx.Button.Super.prototype.eventFired(this, ev);
@@ -107,8 +105,6 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
     // only a defualt key should be bound to the keypress event
     keyPressed: function(e) {
-        console.log("keypressed ");
-        console.log(e);
         if (e.charCode == 13) {
             if(this._clickEvent) {
                 this._clickEvent(this, e);

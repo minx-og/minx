@@ -25,12 +25,12 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
         this._focussed = null;                  // focussed
         this._defaultButton = null;
+        this._animate = 0;
 
         var me = this;
         
         // does this replace the base function ??
         this.onScrollStart = function(scroller, ev) {
-            console.log("scroller start");
             if (me._focussed) {
                 me._focussed.blur();
                 me._focussed = null;
@@ -89,7 +89,17 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
 
     updateToggle: function(id, value) {
+
         var fld = this._fields[id];
+                
+        if ((value == 'false') || (value == false)) {
+            value = 'off';    
+        }
+
+        if ((value == 'true') || (value == true)) {
+            value = 'on';    
+        }
+
         fld.value = value;
 
         var tog = this._toggles[id];
@@ -276,12 +286,16 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 }
                 
                 function toggleOnOrOff() {
+
                     if (me._fields[row.name].value == 'off') {
+
                         me._fields[row.name].value = 'on';
                     }
                     else {
+
                         me._fields[row.name].value = 'off';
                     }
+
                     drawOnOrOff();
                 } 
             
@@ -294,7 +308,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
                 for( var lb in row ) {
                     if(lb != 'label' && lb !='options') {
-                        ip.setAttribute(lb, row[lb]);    
+                        ip.setAttribute(lb, row[lb]);
                     }
                 }
 

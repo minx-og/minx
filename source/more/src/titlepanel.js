@@ -21,7 +21,8 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
 
         // add a plain pinned panel
         this._mainPanel = Minx.pm.add(this, 'mover-panel');
-
+        this._mainPanel.setAnimate(0);
+        
         // and round the bottom off - in case asked to pop up
         this._mainPanel.addClass('round-bottom');
         //this._mainPanel.setAnimate(false);

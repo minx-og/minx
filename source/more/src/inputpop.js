@@ -14,6 +14,8 @@ Minx.InputPopup = my.Class(Minx.Popup, {
         // the main content panel - for fields etc
         this._mainPanel = Minx.pm.add(this,'pinned');
         this._mainPanel.addClass('round-top');
+        this._mainPanel.setAnimate(0);                      // dont want the content animating - it stays pinned
+
 
         // the footBar - pins itself to the bottom of things - can add buttons in this
         this._footBar = Minx.pm.add(this,'tool-bar');

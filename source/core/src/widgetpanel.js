@@ -1,18 +1,18 @@
 /*
-WidgetPanel - registered as widget-panel
-========================================
+DataBoundPanel - registered as data-bound-panel
+===============================================
 
-This is a pinned panel with its own little message queue - that ay contained widgets should hook into
+This is a pinned panel with its own little message queue - that any contained widgets should hook into
 these are basically when the geometry has changed
 
 One of these should be inhetited for your widget
 */
 
-Minx.WidgetPanel = my.Class(Minx.PinnedPanel, {
+Minx.DataBoundPanel = my.Class(Minx.PinnedPanel, {
 
     constructor: function(parent, id) {
     	// call my base constructor
-        Minx.WidgetPanel.Super.call(this, parent, id);
+        Minx.DataBoundPanel.Super.call(this, parent, id);
 		
 		this._model = null;			 // some object containing the data that the view wants
 
@@ -71,7 +71,7 @@ Minx.WidgetPanel = my.Class(Minx.PinnedPanel, {
 });
 
 // register for the panelmanager factory
-Minx.pm.register('widget-panel', Minx.WidgetPanel);
+Minx.pm.register('data-bound-panel', Minx.DataBoundPanel);
 
 
     

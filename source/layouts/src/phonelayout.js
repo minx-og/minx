@@ -5,24 +5,11 @@ if (typeof Minx.Layout === "undefined") {
     Minx.Layout = {};
 }
 
-// shim layer with setTimeout fallback
-          window.requestAnimFrame = (function(){
-            return  window.requestAnimationFrame || 
-                    window.webkitRequestAnimationFrame || 
-                    window.mozRequestAnimationFrame || 
-                    window.oRequestAnimationFrame || 
-                    window.msRequestAnimationFrame || 
-                    function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element){
-                      window.setTimeout(callback, 1000 / 60);
-                    };
-          })();
 
 
 Minx.Layout.PhoneLayout = my.Class({
 
     constructor: function(main) {
-
-
         this._navSlideTimer = null;        // clearable timeout so can cancel delayed hides
         this._stuffSlideTimer = null;        // clearable timeout so can cancel delayed hides
         
@@ -42,25 +29,6 @@ Minx.Layout.PhoneLayout = my.Class({
         
         // --- right hand  panel of stuff
         this._activeMain = null;                // the panel that is in the active "main" manel
-
-
-        
-/*
-        var stuffBack = this._stuff.getTitle().addButton('l', 20, 'Pop');
-        stuffBack.setType('back');
-        
-        stuffBack.show();
-
-        // navigation back button handler - only one level so east to know what to do..
-        stuffBack.onClick(function(panel,e){
-            // slide the main nav into place
-            
-            me._navPanel.setPos(0, 0);
-            
-            me._navPanel.show();
-        });
-
-*/
         
         // orientation
         this._isPort = 'doit';
@@ -70,41 +38,13 @@ Minx.Layout.PhoneLayout = my.Class({
         
         // hook into window resize 
         Minx.eq.subscribe(this, window, 'resize', '_resizeEvent');
-
-        //Minx.eq.subscribe(this, window, 'orientationchange', '_resizeEvent');
-        
-
-    },
-
-
-    showMain: function(how) {
-
-        // if phone slide it into place - and show a new back button
-        if (typeof how == "undefined") {
-            how = "slide-left";
-        }
-        else if( how == "") {
-            how = "slide-left";
-        }
-        
-        this._navPanel.getContentPanel().setActivePanel(this._activeMain, how);
     },
 
 
     _resizeEvent: function(e) {
-        console.log("phoneLayout - resize");
-
-
-
-                            var orientation = window.orientation;
-
-                    console.log("PL - " +  orientation);
-
-
 
         if(!this.inChange) {
             this.inChange = true;
-            console.log("phoneLayout - change");
             //Minx.pm.calcDims();
             //this.reOrient(false);           // true ro draw it all
             this.inChange = false;
@@ -139,6 +79,7 @@ Minx.Layout.PhoneLayout = my.Class({
     navAction: function() {
         // phone layout does nowt
     },
+
 
     getMainPanel: function() {
         return this._navPanel;
@@ -197,8 +138,6 @@ Minx.Layout.PhoneLayout = my.Class({
               npos = 0;
           }
           
-          var qwock = qkang;
-
           window.scrollTo(npos, 0);
 
           return npos > 0;
@@ -210,19 +149,18 @@ Minx.Layout.PhoneLayout = my.Class({
         this._navPanel.render();
 
 
-            setTimeout(function() {
-            //    window.scrollTo(0, 0);    
-                startPos = window.scrollX;
-                startTime = Date.now();
-                
-                (function animloop(){
-                    if(render()) {
-                      requestAnimFrame(animloop);
-                    }
-                })();
+        setTimeout(function() {
+      
+            startPos = window.scrollX;
+            startTime = Date.now();
+            
+            (function animloop(){
+                if(render()) {
+                  requestAnimFrame(animloop);
+                }
+            })();
 
-            }, 90);
-
+        }, 90);
     },
-
 });
+

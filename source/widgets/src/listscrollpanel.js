@@ -6,7 +6,7 @@ one event 'click' on a list item
 */
 
 
-Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
+Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
     constructor: function(parent, id) {
         // call my base constructor
@@ -25,7 +25,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         this.addClass('scroll-content');
         
         // add scrollbars if not touch
-        if(!this._touch) {
+        if (!this._touch) {
             // if not touch device then add this...
             this.addClass('scroll-overflow');
         }
@@ -37,7 +37,6 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         this.setView(this.getNode());
 
         this._dataByKey = {};           // pointers to each data object
-
     },
 
 
@@ -47,7 +46,6 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         // e must be in the param object
         // currentTarget - the element that recieved the event
 
-        console.log("event.currentTarget.id " + event.currentTarget.id);
         return {id: event.currentTarget.id, e: event};
     },
 
@@ -67,7 +65,7 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         var me = this;
 
         // if touch and we need a fresh one and we are not hidden and we have a long enough list
-        if(this._touch && this._need_new_scroller && !this.isHidden() && (this._listLength > 2)) {
+        if (this._touch && this._need_new_scroller && !this.isHidden() && (this._listLength > 2)) {
             // scroller needs t know about div size changes - give it time for animations to take effect
             // timer to give other sht a go                
             setTimeout(function() {
@@ -81,7 +79,6 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
                 me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
                 
             }, 310);
-        
         }
 
         // clear my flag
@@ -90,48 +87,56 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
 
     setKeyField : function(key) {
+
         this._keyField = key;
     },
 
 
     // a callback to return the row content
     setRowRenderer: function(fn) {
+
         this._rowRenderer = fn;
     },
 
 
     getData: function(key) {
-        console.log(this._dataByKey);
+
         return this._dataByKey[key];
     },
 
+
     setFilter: function(filtFunc) {
+
         this._filter = filtFunc;
     },
 
+
     // munge my model into my view called by client manually - likely to be set to an event when the data model changes
     munge: function() {
-
         // as our munge function completely recreates the ul and all li's in it we may as well recreate the scroller.
         // if we simply call refresh the scroller expects the ul to be the same one that was in place when we created the scroller in the first place
 
         // this may be sub-optimal - but given the total recreation i doubt it...
         var rawList = this.getModel();
+        
         if (rawList == null) {
+
             throw "munge called, but no model set";
         }
 
         var list = rawList;
 
         // do we have a filter
-        if(this._filter != null) {
+        if (this._filter != null) {
+
             list = _.select(rawList, this._filter); 
         }
 
         var view = this.getView();
 
         // trash any stuff in my node (hope this cleans it out of the dom nicely)....
-        if(this._widgetRoot) {
+        if (this._widgetRoot) {
+
             view.removeChild(this._widgetRoot); 
         }
 
@@ -140,10 +145,8 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         this._widgetRoot = document.createElement('ul');
         this._widgetRoot.setAttribute('class', this.getClassName());
         
-
         // fast clicks on all clicks below the ul
         new NoClickDelay(this._widgetRoot);
-
 
         view.appendChild(this._widgetRoot);  
 
@@ -156,7 +159,8 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
         var prevli = null      // previous li = used for setting last on rows prior to breaks
         
-        for(var h in list) {
+        for (var h in list) {
+
             row = list[h];
 
             this._dataByKey[row[this._keyField]] = row;
@@ -164,10 +168,14 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
             // make a new li for this row
             li = document.createElement('li');
             li.setAttribute('id', row[this._keyField]);       // set element attribute to my id
-            if(h == 0) {
+            
+            if (h == 0) {
+
                 li.setAttribute('class', 'first');
             }
-            if(h == list.length-1) {
+            
+            if (h == list.length-1) {
+
                 li.setAttribute('class', 'last');
             }
 
@@ -176,7 +184,9 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
 
             // call potentially a callback that will return my row content as a node
             liNode = this._rowRenderer(pId, row, li, prevli);
-            if(liNode != null) {
+            
+            if (liNode != null) {
+
                 li.appendChild(liNode);
             }
 
@@ -187,7 +197,9 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         
         this._listLength = list.length;
         
+        this._need_new_scroller = true;
     },
+
 
     // default function assigned to the _rowRenderer callback
     getRowMarkup: function(parentId, row) {
@@ -195,11 +207,14 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         var div = document.createElement('div');
         var text = document.createTextNode(row.name);
         div.appendChild(text);
+
         return div;  
     },
 
+
     // override this which is called when the panel resizes
     resized: function() {
+
         var me = this;
         // super to call any callback
         Minx.ListScrollPanel.Super.prototype.resized.call(this);
@@ -208,8 +223,10 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         this._need_new_scroller = true;
     },
 
+
     // override this which is called when the panel is reattached
     reattached: function() {
+
         var me = this;
         // super to call any callback
         Minx.ListScrollPanel.Super.prototype.reattached.call(this);
@@ -217,17 +234,21 @@ Minx.ListScrollPanel = my.Class(Minx.WidgetPanel, {
         // capture that we did resize so that we know to refresh the scroller after drawing parent
         this._need_new_scroller = true;
     },
+
     
     // private override to decide what html element my node will be
     getMyElement: function() {
+
         return 'div';
     },
 
+
     getClassName: function() {
+
         return 'scroll-list';
     }
-
 });
+
 
 // register for the panelmanager factory
 Minx.pm.register('list-scroll-panel', Minx.ListScrollPanel);

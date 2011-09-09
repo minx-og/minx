@@ -5,18 +5,6 @@ if (typeof Minx.Layout === "undefined") {
     Minx.Layout = {};
 }
 
-// shim layer with setTimeout fallback
-          window.requestAnimFrame = (function(){
-            return  window.requestAnimationFrame || 
-                    window.webkitRequestAnimationFrame || 
-                    window.mozRequestAnimationFrame || 
-                    window.oRequestAnimationFrame || 
-                    window.msRequestAnimationFrame || 
-                    function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element){
-                      window.setTimeout(callback, 1000 / 60);
-                    };
-          })();
-
 
 Minx.Layout.SplitLayout = my.Class({
     // main is simply the containing panel
@@ -55,12 +43,12 @@ Minx.Layout.SplitLayout = my.Class({
         this._navPanel.getTitle().addClass('light-bar');
 
         // and give the panel a rouncded bum
-        this._navPanel.getContentPanel().addClass('round-bottom');
+        // TODO - check this is already done        this._navPanel.getContentPanel().addClass('round-bottom');
 
         
         // --- right hand  panel of stuff
         this._stuff = Minx.pm.add(main,'title-panel');
-        this._stuff.setAnimate(200);
+        this._stuff.setAnimate(0);
 
 
         if(!touch) {
@@ -86,22 +74,17 @@ Minx.Layout.SplitLayout = my.Class({
         Minx.eq.subscribe(this, window, 'resize', '_resizeEvent');
 
         Minx.eq.subscribe(this, window, 'orientationchange', '_resizeEvent');
-
     },
 
 
     _resizeEvent: function(e) {
 
-        console.log("split resize");
-        
         if(!this.inChange) {
             this.inChange = true;
-            console.log("splitlayout - calcDims");
             Minx.pm.calcDims();
             this.reOrient(false);           // true ro draw it all
             this.inChange = false;
-        }
-        
+        }        
     },
 
 
@@ -167,6 +150,7 @@ Minx.Layout.SplitLayout = my.Class({
     },
 
 
+/*  TODO - delete ? and it _hidden used
     showMain: function() {
         if(this._hidden) {
             this._stuff.render(now);
@@ -175,7 +159,7 @@ Minx.Layout.SplitLayout = my.Class({
             this._stuff.show();
         }
     },
-
+*/
 
     setMainPanelContent: function(panel, how) {
         this._stuff.getContentPanel().setActivePanel(panel, how);
@@ -262,7 +246,7 @@ Minx.Layout.SplitLayout = my.Class({
         }
 
         // have to hide instantly else it can finish the hide transition after the show
-        me._navPopButton.hide(true); // instant = true
+        me._navPopButton.hide({now:true}); // instant = true
 
     },
 
@@ -301,60 +285,81 @@ Minx.Layout.SplitLayout = my.Class({
         // slide the nav panel out to left
         this._navPanel.unsetParentPin('l');
 
-
-        // try unsetting borders
-        this._navPanel.removeClass('thin-border');
-        this._stuff.removeClass('thin-border');
         
-        this._stuff.getContentPanel().setAnimate(100);
-        this._stuff.getContentPanel().hide();
-        this._stuff.getContentPanel().render();
-        this._stuff.getContentPanel().setAnimate(200);        
-
-
-        this._stuff.setSize(nw, nh);
-        this._stuff.render();
-
-
-        if(!touch) {
+        // just show it if its the first time
+        if (initial) {
             
+            this._stuff.unPin();
+            this._stuff.setPos(0,0);
+            this._stuff.setSize(nw, nh);            
+
+            this._stuff.getContentPanel().show();
+            
+
+            this._stuff.show();
+            
+            //this._stuff.getContentPanel().show();
+
             me._navPanel.setPos((0 - this._navLandWidth) - 1 , 0);
             me._navPanel.render();
-        }
-        else {
+            
+
+        } else {
+
+            // try unsetting borders
+            this._navPanel.removeClass('thin-border');
+            this._stuff.removeClass('thin-border');
 
 
+            this._stuff.getContentPanel().setAnimate(100);
+            this._stuff.getContentPanel().hide();
+            this._stuff.getContentPanel().render();
+            this._stuff.getContentPanel().setAnimate(200);
 
-            setTimeout(function() {
-            //    window.scrollTo(0, 0);    
-                startPos = window.scrollX;
-                startTime = Date.now();
+            this._stuff.setSize(nw, nh);
+            this._stuff.render();
+
+
+            if(!touch) {
                 
-                (function animloop(){
-                    if(render()) {
-                      requestAnimFrame(animloop);
-                    }
-                })();
+                me._navPanel.setPos((0 - this._navLandWidth) - 1 , 0);
+                me._navPanel.render();
+            }
+            else {
 
-            }, 90);
 
-          
-            // 390  400 and 1.5 - for 300 
+
+                setTimeout(function() {
+                //    window.scrollTo(0, 0);    
+                    startPos = window.scrollX;
+                    startTime = Date.now();
+                    
+                    (function animloop(){
+                        if(render()) {
+                          requestAnimFrame(animloop);
+                        }
+                    })();
+
+                }, 90);
+
+              
+                // 390  400 and 1.5 - for 300 
+
+                setTimeout(function() {
+                    me._navPanel.setPos((0 - me._navLandWidth) - 1 , 0);
+                    me._navPanel.render();
+
+
+                }, 100);
+
+            }
 
             setTimeout(function() {
-                me._navPanel.setPos((0 - me._navLandWidth) - 1 , 0);
-                me._navPanel.render();
-
-
-            }, 100);
-
+                        me._stuff.getContentPanel().setAnimate(200);
+                        me._stuff.getContentPanel().show();
+                        
+                }, 300);
         }
-
-        setTimeout(function() {
-                    me._stuff.getContentPanel().setAnimate(200);
-                    me._stuff.getContentPanel().show();
-                    
-            }, 300);
 
         me._navPopButton.show(); 
         

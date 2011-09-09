@@ -87,7 +87,6 @@ Minx.PanelManager = function() {
     this.dims = {};              // public object wit device dimensions
     
     this.calcDims = function() {
-        console.log("---------->cd");
         var nw = document.documentElement.clientWidth;
         var nh = document.documentElement.clientHeight
         var orn = -1;
@@ -105,9 +104,9 @@ Minx.PanelManager = function() {
             this.dims.or = 'p';
         }
 
-        console.log("orn = " + orn);
-        console.log("nh = " + nh);
-        console.log("nw = " + nw);
+        // console.log("orn = " + orn);
+        // console.log("nh = " + nh);
+        // console.log("nw = " + nw);
 
         // need to detect real evice width because the client width has been fixed to allow smooth repositioning
         // if it is set to auto size then the snap to 0,0 is ugly
@@ -200,9 +199,7 @@ Minx.PanelManager = function() {
             }
         }
 
-        console.log("calcDevice - calcDims");
         this.calcDims();
-
     };
 
 
@@ -251,7 +248,7 @@ Minx.PanelManager = function() {
                 console.log("oChange");
                 if(!changing) {
                     changing = true;
-                    console.log("oChange - calcDims");
+
                     me.calcDims();
 
                     console.log("ochange w=" + me.dims.w + " h="+ me.dims.h);
@@ -286,7 +283,7 @@ Minx.PanelManager = function() {
 
         }
         else {
-            console.log("WARNING - YOU will hae to manage orientation changes yourself and add a root panel");
+            console.log("WARNING - YOU will have to manage orientation changes yourself and add a root panel");
         }
 
         this._main = main;
@@ -367,6 +364,10 @@ Minx.PanelManager = function() {
     // remove a panel and all children from our dom and managed lists
     // equivalent to delete 
     this.remove = function(panel) {
+        if (panel == null) {
+            return;
+        }
+
         // if pnel is an id - find it in our managed list of _panels
         if(typeof panel == 'string') {
             panel = _panels[panel];
@@ -385,9 +386,9 @@ Minx.PanelManager = function() {
                 // delete al the removed panels from our managed list
                 for(key in list) {
                     delete _panels[list[key]];
-                }    
+                }
 
-            },300);
+            },300);         // TODO - get the panel animate time 
         }
     };
 
@@ -402,6 +403,20 @@ Minx.PanelManager = function() {
 
 // singleton panel manager - instantiating 2 or more of these will get us multiples of the same element id's
 Minx.pm = new Minx.PanelManager();
+
+
+
+// shim layer with setTimeout fallback
+          window.requestAnimFrame = (function(){
+            return  window.requestAnimationFrame || 
+                    window.webkitRequestAnimationFrame || 
+                    window.mozRequestAnimationFrame || 
+                    window.oRequestAnimationFrame || 
+                    window.msRequestAnimationFrame || 
+                    function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element){
+                      window.setTimeout(callback, 1000 / 60);
+                    };
+          })();
 
 
 
@@ -439,7 +454,6 @@ NoClickDelay.prototype = {
         this.element.removeEventListener('touchend', this, false);
 
         if( !this.moved ) {
-            console.log("fastClick");
             // Place your code here or use the click simulation below
             var theTarget = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
             if(theTarget.nodeType == 3) theTarget = theTarget.parentNode;
