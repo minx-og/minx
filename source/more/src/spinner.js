@@ -14,25 +14,80 @@ Minx.SpinnerPopup = my.Class(Minx.Popup, {
         this.addClass("spinner");
 
         this.setMaxOpacity('0.4');
+
+        this._spinner = null;
+
     },
 
 
     // replace popups onCreation entirely 
     _onCreation: function() {
+        
+        this._textDiv = null;
 
         this.setText("Refreshing...");
 
         this.setAnimate(300);
         this.hide({now:true});            // hide instantly
         
-        this.setSize(250, 180);
+        this.setSize(160, 120);
         this._reCentre();
+
     },
 
-    
+
+    show: function(color) {
+
+        Minx.SpinnerPopup.Super.prototype.show.call(this);
+
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 4, // The line thickness
+            radius: 12, // The radius of the inner circle
+            color: color || '#DDE', // #rbg or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 100, // Afterglow percentage
+            shadow: false // Whether to render a shadow
+        };
+
+        if (this._spinner == null) {
+
+            this._spinner = new Spinner(opts).spin(this.getNode());    
+
+        } else {
+
+            this._spinner.spin(this.getNode());
+        }
+    },
+
+
+    hide: function(opts) {
+
+        if (this._spinner) {
+
+            this._spinner.stop();
+        }
+
+        Minx.SpinnerPopup.Super.prototype.hide.call(this, opts);
+    },
+
+
     setText: function(text) {
+
+        if (this._textDiv != null) {
+
+            this.getNode().removeChild(this._textDiv);
+        }
+
+        var textDiv = document.createElement('div');
+        textDiv.setAttribute('class','spinner-text');
         var tn = document.createTextNode(text);
-        this.getNode().appendChild(tn);
+        textDiv.appendChild(tn);
+        this.getNode().appendChild(textDiv);
+
+        this._textDiv = textDiv;
+
     },
 
 

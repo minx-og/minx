@@ -37,6 +37,11 @@ body {
 }
 
 
+.panel .transparent{
+    background: transparent;
+}
+
+
 .round-bottom {
     -webkit-border-bottom-left-radius: 9px;
     -webkit-border-bottom-right-radius: 9px;

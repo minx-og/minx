@@ -70,6 +70,10 @@ ul.field-list li.fl-button:active {
     font-weight: bold;
 }
 
+li.selected {
+    background-color: #eeeeff;
+}
+
 label {
     font-size: 15px;
     font-weight: bold;

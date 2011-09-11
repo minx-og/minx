@@ -3,3 +3,10 @@
     opacity: .2;
     background-color: black;
 }
+
+.spinner-text {
+	text-shadow: none;
+	text-align: center;
+	padding-top: 10px;
+	padding-left: 10px;
+}

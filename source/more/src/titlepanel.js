@@ -45,6 +45,12 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
     },
 
 
+    // synonym for above
+    getTitlePanel: function() {
+        return this.getTitle();
+    },
+
+
     // the main content so clients can draw in it
     getContentPanel: function() {
         return this._mainPanel;

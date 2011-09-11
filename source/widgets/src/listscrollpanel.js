@@ -21,6 +21,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         this._listLength = 0;           // set by munge used to decide if we really need a scroller
         this._filter = null;            // filter function
 
+        this._lastSelect = null;        // whicj li was last clicked
+
         // my defauly stylee
         this.addClass('scroll-content');
         
@@ -45,6 +47,15 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // augement with explicit id
         // e must be in the param object
         // currentTarget - the element that recieved the event
+
+        // WARNING - zepto Library dependancy 
+        // remove selected class from last li
+        $(this._lastSelect).removeClass("selected");
+        
+        // add a selected class to the current thing
+        $(event.currentTarget).addClass("selected");
+        
+        this._lastSelect = event.currentTarget;
 
         return {id: event.currentTarget.id, e: event};
     },
