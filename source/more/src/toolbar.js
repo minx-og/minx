@@ -11,10 +11,14 @@ witha little helper to add a pinned button
 Minx.ToolBar = my.Class(Minx.PinnedPanel, {
 
     constructor: function(parent, id) {
+
+        this._docked = 'f';      // flase - otherwise 't', 'l', 'b', 'r'
+        
         // call base constructor
         Minx.ToolBar.Super.call(this, parent, id);
-
+        
         this.addClass('dark-bar');
+
     },
 
     // with animation set the bar gets transitioned down from the top - looks odd
@@ -22,11 +26,29 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
     _onCreation: function() {
         //dont call base
         // this.setAnimate(0);
-        this.setSize(0,45);
+        this.setSize(0, 45);                                                         // TODO - set toolbar size as a theme property
     },
+
+
+    layout: function() {
+
+        // check for any docking - to provide helpfull warning - and dock to top 
+        if (this._docked == 'f') {
+            console.log("Warning - Toolbar no dock specified, docking to top");
+            this.dock('t', 0);    
+        }
+        
+
+        // now i have new geometry call the base panel layout
+        Minx.ToolBar.Super.prototype.layout.call(this);
+    },
+
 
     // doc to my parent where = 't' for top or 'b' for bollocks?
     dock: function(where, offset) {
+
+        this._docked = where;
+
         // do the dock man
         Minx.ToolBar.Super.prototype.dock.call(this, where);
 

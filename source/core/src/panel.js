@@ -698,7 +698,7 @@ ENDFIXPOS */
             if (hasClass) {
 
                 //- then trust the css and remove any styly stuff
-                this.removeStyle('background-color');
+                // this.removeStyle('background-color');
                 // add the class attributes
                 this._node.setAttribute('class', cText);
             }
@@ -735,7 +735,7 @@ ENDFIXPOS */
         this.addClass(this.getClassName());                  // overridden to apply specific class
         panel.setStyle('visibility', 'inherited');
         panel.setStyle('position', 'absolute');
-        panel.setStyle('background-color','#eeeeee');
+        // panel.setStyle('background-color','#eeeeee');
     },
 
 

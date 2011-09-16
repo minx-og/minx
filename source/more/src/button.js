@@ -36,12 +36,14 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         if (Minx.pm.isTouch() && !Minx.pm.localMobileTest) {    // DEBUG flag - remove?
             Minx.eq.subscribe(this, null, 'touchstart');
             Minx.eq.subscribe(this, null, 'touchend');
+            Minx.eq.subscribe(this, null, 'click');             // need click so we can swallow it to stop other stuff
         }
         else {
 
             // register my events in Minx.eq wrapper 
-            Minx.eq.subscribe(this, null, 'mousedown'); // null means whatever node I get made
-            Minx.eq.subscribe(this, null, 'mouseup');    
+            Minx.eq.subscribe(this, null, 'mousedown');         // null means whatever node I get made
+            Minx.eq.subscribe(this, null, 'mouseup');
+            Minx.eq.subscribe(this, null, 'click');             // swallow clicks
         }
 
         this._type = 'none';

@@ -15,8 +15,9 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
         this.fillParent(1);
 
-        this._fields = {};
-        this._titles = {};
+        // state based on the model
+        this._fields = {};              // these three are dependant on the model - so should be trashed on any new model or model munge
+        this._titles = {};              
         this._toggles = {};
 
         this._afterBreak = false;       // set if we had a break - so then must set this row a first row
@@ -49,6 +50,9 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
 
     // this is called by the default event handler - and returned so you can add other stuff
+    // only subscribed 
+    //    - keyup
+    //    - click - (from base class)
     eventParse: function(event) {
         // augement with explicit id
         // e must be in the param object
@@ -58,6 +62,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         // if it is an enter press - then use the id of the defualt button
         // there may not be a defult button if the enclosing form has one - e.g. inputpopup
         if (event.type == "keyup") {
+
             if((this._defaultButton != null ) && (event.keyCode == 13)) {
                 thing = {id: this._defaultButton.id, e: event};
                 this._eventHandler(thing);
@@ -65,6 +70,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             // swallow keyups if its not a return and there is no default button
         }
         else {
+            // this would only be a click last time I looked - check what the base listscrollpanel subscribes to
             this._eventHandler(thing);
         }
 
@@ -353,6 +359,17 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         return div;
     },
 
+
+    munge: function() {
+
+        // these three lists are dependant on the model - so munge is normaly fired when the model changes so trash them now
+        this._fields = {};              
+        this._titles = {};              
+        this._toggles = {};
+
+        Minx.FieldListPanel.Super.prototype.munge.call(this);  
+    },
+    
 
     getAnswers: function() {
         var answers = {};

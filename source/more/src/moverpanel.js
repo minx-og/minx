@@ -18,27 +18,48 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
         this._active = null;
 
         this._moverAnimate = 300;       // default mover animation speed
+
+        this._tit = null;
     },
 
 
     // hook into all my kids being added by defualt first kid added is the active one
     _addKid: function(panel) {
+
         Minx.MoverPanel.Super.prototype._addKid.call(this, panel);
+        
+        if (!panel._docked) {
 
-        if(this._active == null) { // no active panel yet so use this one and keep defaults
-            this._active = panel
-            panel.setPos(0, 0);
-            panel.fillParent();
-            panel.render();         // make sure it is in the right place
-        }
-        else {
-            // got our active panel allready so hide all others - consider removing from DOM?
-            panel.hide({now:true, detach:false});            // true = instant, false = detache
-        }
+            if(this._active == null) { // no active panel yet so use this one and keep defaults
+                this._active = panel
+                panel.setPos(0, 0);
+                panel.fillParent();
+                panel.render();         // make sure it is in the right place
+            }
+            else {
+                // got our active panel allready so hide all others - consider removing from DOM?
+                panel.hide({now:true, detach:false});            // true = instant, false = detache
+            }
 
-        panel.setAnimate(this._moverAnimate);
+            panel.setAnimate(this._moverAnimate);
+        }
     },
 
+
+    // add a static title as a background for the transparent titles of the kids
+    addTitle: function() {
+        
+        this._tit =  new Minx.ToolBar(this, this.getId() + '-dumbTool');
+
+        this.addClass('title-panel');
+
+        this._tit.dock('t');
+    },
+
+
+    getTitle: function() {
+        return this._tit;  
+    },
     
     getActivePanel: function() {
         return this._active;
@@ -52,8 +73,15 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
 
     unPinAllKids: function() {
+        // except any docked kids
+        var panel;
         for(var kid in this._kidies) {
-            this._kidies[kid].unPin();
+
+            panel = this._kidies[kid];
+
+            if (!panel._docked) {           //TODO accessor
+                panel.unPin();    
+            }
         }    
     },
 
@@ -76,15 +104,16 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
         // unpin all the other kids so they dont slide with us
         this.unPinAllKids();
 
+        // unhook both panels from anything
+        panel.unPin();
+        this._active.unPin();
+
+        // set it to the same dimensions as the active panel
+        var parDims = this.getNewDims();
+
         if(transition == 'slide-left') {
-            
-            // unhook both panels from anything
-            panel.unPin();
-            this._active.unPin();
 
-            // set it to the same dimensions as the active panel
-            var parDims = this.getParent().getNewDims();
-
+            console.log("SETTING Slidy panel with - " + parDims.w);
             panel.setSize(parDims.w, parDims.h);
 
             // left pin it to the active panel and parent top
@@ -126,13 +155,6 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
         }
 
         else if(transition == 'slide-right') {
-            
-            // unhook both panels from anything
-            panel.unPin();
-            this._active.unPin();
-
-            // set it to the same dimensions as the active panel
-            var parDims = this.getParent().getNewDims();
 
             panel.setSize(parDims.w, parDims.h);
 
@@ -179,17 +201,11 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
         else {      // just plonk it on
             var me = this;
-           // unhook both panels from anything
-            panel.unPin();
-            this._active.unPin();
+        
             // set the new panel position to be 0 pushing old one off to the right
             panel.setPos(0, 0);
-
-            // set it to the same dimensions as the active panel
-            var parDims = this.getParent().getNewDims();
-
+        
             panel.setSize(parDims.w, parDims.h);
-
 
             // then show the old new panel which triggers the 'pushing'
             panel.show();    

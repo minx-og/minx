@@ -34,7 +34,7 @@ Minx.Layout.SplitLayout = my.Class({
         var touch = Minx.pm.isTouch();
 
         // ---   navigation panel
-        this._navPanel = Minx.pm.add(main,'title-panel');
+        this._navPanel = Minx.pm.add(main, 'title-panel');
         this._navPanel.addClass("left-nav");
         this._navPanel.setAnimate(200);
 
@@ -47,7 +47,10 @@ Minx.Layout.SplitLayout = my.Class({
 
         
         // --- right hand  panel of stuff
-        this._stuff = Minx.pm.add(main,'title-panel');
+        this._stuff = Minx.pm.add(main,'mover-panel');
+        this._stuff.addClass('round-top');
+        this._stuff.addClass('thin-border');
+        this._stuff.addTitle();
         this._stuff.setAnimate(0);
 
 
@@ -162,7 +165,7 @@ Minx.Layout.SplitLayout = my.Class({
 */
 
     setMainPanelContent: function(panel, how) {
-        this._stuff.getContentPanel().setActivePanel(panel, how);
+        this._stuff.setActivePanel(panel, how);
     },
 
 
@@ -186,12 +189,13 @@ Minx.Layout.SplitLayout = my.Class({
         window.scrollTo(0, 0);
 
 
+/* Hiding code - if still want this functionality - the get content of active panel
 
         this._stuff.getContentPanel().setAnimate(100);
         this._stuff.getContentPanel().hide();
         this._stuff.getContentPanel().render();
         this._stuff.getContentPanel().setAnimate(200);        
-
+*/
 
 
         this._stuff.unPin();
@@ -220,9 +224,11 @@ Minx.Layout.SplitLayout = my.Class({
 
             me._stuff.addClass('thin-border');
             
+/* Hiding code - if still want this functionality - the get content of active panel
+
             me._stuff.getContentPanel().setAnimate(200); 
             me._stuff.getContentPanel().show();
-            
+*/            
             
             me._stuff.show();    
         }, 300);
@@ -293,12 +299,12 @@ Minx.Layout.SplitLayout = my.Class({
             this._stuff.setPos(0,0);
             this._stuff.setSize(nw, nh);            
 
-            this._stuff.getContentPanel().show();
+            // this._stuff.getContentPanel().show();
             
 
             this._stuff.show();
             
-            //this._stuff.getContentPanel().show();
+            
 
             me._navPanel.setPos((0 - this._navLandWidth) - 1 , 0);
             me._navPanel.render();
@@ -311,10 +317,12 @@ Minx.Layout.SplitLayout = my.Class({
             this._stuff.removeClass('thin-border');
 
 
+/* Hiding code - if still want this functionality - the get content of active panel
             this._stuff.getContentPanel().setAnimate(100);
             this._stuff.getContentPanel().hide();
             this._stuff.getContentPanel().render();
             this._stuff.getContentPanel().setAnimate(200);
+*/
 
             this._stuff.setSize(nw, nh);
             this._stuff.render();
@@ -354,11 +362,14 @@ Minx.Layout.SplitLayout = my.Class({
 
             }
 
+/* Hiding code - if still want this functionality - the get content of active panel
+
             setTimeout(function() {
                         me._stuff.getContentPanel().setAnimate(200);
                         me._stuff.getContentPanel().show();
                         
                 }, 300);
+*/
         }
 
         me._navPopButton.show(); 

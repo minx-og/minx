@@ -135,19 +135,22 @@
     });
   },
   proto = Spinner.prototype = {
-    spin: function(target) {
+    spin: function(target, width, height) {
       var self = this,
           el = self.el = css(createEl(), {position: 'relative'}),
           ep, // element position
           tp; // target position
 
+      var wid = width || target.offsetWidth;              // DANMUX - hackery
+      var hig = height || target.offsetHeight;
+
       if (target) {
         tp = pos(app(target, el, target.firstChild));
         ep = pos(el);
         css(el, {
-          left: (target.offsetWidth >> 1) - ep.x+tp.x + 'px',
-          top: (target.offsetHeight >> 1) - ep.y+tp.y + 'px',
-          width: (target.offsetHeight >> 1) - 10 + 'px'
+          left: (wid >> 1) - ep.x+tp.x + 'px',
+          top: (hig >> 1) - ep.y+tp.y + 'px',
+          width: (hig >> 1) - 10 + 'px'
         });
       }
       el.setAttribute('aria-role', 'progressbar');

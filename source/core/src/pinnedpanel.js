@@ -31,7 +31,6 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         // sibling pin - pin to a referenced panel + offset
         this._sPin = {'l': null, 't': null, 'r': null, 'b': null};   // where to pin me to my parent - no where by default, left, top, right, bottom
 
-
         // base constructor now - in case any post creation stuff needs to access the _pPin and s_Pin members
         Minx.PinnedPanel.Super.call(this, parent, id);
         
@@ -41,18 +40,25 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     
     // are you my mummy! pin 'l' = left edge of my parent 
     setParentPin: function(which, offset) {
+
         if (typeof offset == "undefined") {
+
             offset = 0;
         }
+
         this._pPin[which] = offset;
     },
 
+
     unsetParentPin: function(which) {
+
         this._pPin[which] = -1;
     },
 
+
     // all in one go
     pinParent: function(wot) {
+
         this._pPin.l = wot.l;
         this._pPin.t = wot.t;
         this._pPin.r = wot.r;
@@ -63,7 +69,9 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     // sibling - the pannel to pin (said peter piper) 
     // which - 'l'eft, 't'op, 'r'ight or 'b'ottom
     setSiblingPin: function(sibling, which, offset) {
+
         if (typeof offset == "undefined") {
+
             offset = 0;
         }
 
@@ -82,9 +90,12 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     // unpin me from my bro
     // which - 'l'eft, 't'op, 'r'ight or 'b'ottom
     unsetSiblingPin: function(which) {
+
         if(this._sPin[which] != null) {                               // got a bro im pinned to 
+
             this._sPin[which].panel._removeSiblingPinned(this);       // so remove me from my bro's pinned sibling list
         }
+
         this._sPin[which] = null;
     },
 
@@ -99,6 +110,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         this.unsetSiblingPin('b');
     },
 
+
     // like a greedy spoilt child taking up all that its parent can offer
     fillParent: function(off) {
         if (typeof off == "undefined") {
@@ -107,6 +119,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         this.unPin();
         this.pinParent({'l': off, 't': off, 'r': off, 'b': off});
     },
+
 
     // dock to my parent
     // which - 'l'eft, 't'op, 'r'ight or 'b'um
@@ -156,6 +169,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         // now i have new geometry call the base panel layout
         Minx.PinnedPanel.Super.prototype.layout.call(this);
     },
+    
 
     // standard panel draw only checks children - but I might need to draw any siblings pinned to me
     draw: function() {
@@ -254,7 +268,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         }
 
 
-        // bottom sibling pin
+        // bottom sibling pin - my botom is pinned to his top
         if(sp.b != null) {
             var sd = sp.b.panel.getNewDims(); 
             b = sd.t- sp.b.off;

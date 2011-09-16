@@ -8,7 +8,10 @@ if (typeof Minx === "undefined") {
 // an event wrapper linking the panel with the event e and the function to call
 // by setting upp this little wrapper with the trigger function - i can explicitly call the panel callback - so this is correct in the panael callback
 Minx.Event = function(panel, callback) {
+
         this.trigger = function (e) {
+                
+                //e.stopPropagation();            // stop nearby html getting the event as well
                 panel[callback](e);
         }
 }

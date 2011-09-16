@@ -52,8 +52,11 @@ Minx.SpinnerPopup = my.Class(Minx.Popup, {
         };
 
         if (this._spinner == null) {
-
-            this._spinner = new Spinner(opts).spin(this.getNode());    
+            
+            // force correct dimensions
+            var dims = this.getNewDims();
+            
+            this._spinner = new Spinner(opts).spin(this.getNode(), dims.w, dims.h);
 
         } else {
 

@@ -50,7 +50,9 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         // WARNING - zepto Library dependancy 
         // remove selected class from last li
-        $(this._lastSelect).removeClass("selected");
+        if (this._lastSelect != null) {
+            $(this._lastSelect).removeClass("selected");
+        }
         
         // add a selected class to the current thing
         $(event.currentTarget).addClass("selected");
@@ -58,6 +60,14 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         this._lastSelect = event.currentTarget;
 
         return {id: event.currentTarget.id, e: event};
+    },
+
+
+    clearSelection: function() {
+
+        if (this._lastSelect != null) {
+            $(this._lastSelect).removeClass("selected");    
+        }
     },
 
 
@@ -89,11 +99,11 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                 // create the new scroller
                 me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
                 
+                // clear my flag
+                this._need_new_scroller = false;
+                
             }, 310);
         }
-
-        // clear my flag
-        this._need_new_scroller = false;
     },
 
 
@@ -140,7 +150,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // do we have a filter
         if (this._filter != null) {
 
-            list = _.select(rawList, this._filter); 
+            list = rawList.filter(this._filter);
         }
 
         var view = this.getView();

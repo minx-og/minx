@@ -53,6 +53,10 @@ body {
     background-image: -moz-linear-gradient(#5A81AF 0%, #304864 2%, #192533 100%);  
 }
 
+.TESTING {
+    background-color: red;  
+}
+
 .light-bar {
     
     background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#7C9BC0), color-stop(0.02, #416086), to(#293E56));

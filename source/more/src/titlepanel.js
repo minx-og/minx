@@ -4,6 +4,8 @@ TitlePanel - registered as title-panel
 
 This is a pinned panel with a title-bar and a main content area pinned below the title bar
 
+The title is really for rendering because any content will be slid in with any panels contained in the mainPanel
+
 */
 
 Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
@@ -38,6 +40,27 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
         this._mainPanel.setParentPin('b', 0);
     },
 
+    setTitleInvisible: function(menuButtonGap) {
+        
+        if (menuButtonGap != undefined) {
+            // make room for a menuButton
+            this._titleBar.setParentPin('l', menuButtonGap);
+        }
+                
+        this._titleBar.removeClass('panel');            // removes borders
+        this._titleBar.removeClass('dark-bar');
+        this._titleBar.removeClass('bottom-bar');
+        this._titleBar.removeClass('top-bar');
+        this._titleBar.removeClass('round-top');
+
+        this._titleBar.addClass('transparent');
+
+        this.removeClass('panel');            // removes borders
+        this.removeClass('thin-border');
+        
+        this.addClass('transparent');
+
+    },
 
     // getTitle - so that clients know where to add buttons
     getTitle: function() {
