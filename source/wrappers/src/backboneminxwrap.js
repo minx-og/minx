@@ -26,7 +26,7 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
         }
     },
 
-    // render hands off to our widget which munges the model and view
+    // override render hands off to our widget which munges the model and view
     render: function(){
         // combine the view and model
         this._widget.munge();
