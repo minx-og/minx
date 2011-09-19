@@ -137,7 +137,6 @@
   proto = Spinner.prototype = {
     spin: function(target, width, height) {
 
-      console.log("SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN SPIN " + target);
       var self = this,
           el = self.el = css(createEl(), {position: 'relative'}),
           ep, // element position
@@ -154,20 +153,8 @@
           top: (hig >> 1) - ep.y+tp.y + 'px',
           width: (hig >> 1) - 10 + 'px'
         });
-        
-        
-        console.log("sping w, h, l, t - ");
-
-        console.log(wid);
-        console.log(hig);
-
       }
-      else {
-
-        console.log("NOOOOOO Target");
-
-      }
-
+      
       el.setAttribute('aria-role', 'progressbar');
       
       self.lines(el, self.opts);

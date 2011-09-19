@@ -94,7 +94,9 @@ var m = Math,
 			onBeforeScrollEnd: null,
 			onScrollEnd: null,
 			onTouchEnd: null,
-			onDestroy: null
+			onDestroy: null,
+			height: 0,							// DANX - adding explicit length and width in the constructor
+			width: 0
 		};
 
 		// User defined options
@@ -748,6 +750,9 @@ iScroll.prototype = {
 			page = 0;
 
 		if (that.scale < that.options.zoomMin) that.scale = that.options.zoomMin;
+		that.wrapperW = that.options.width == 0 ? that.wrapper.clientWidth : that.options.width;
+		that.wrapperH = that.options.height == 0 ? that.wrapper.clientHeight : that.options.height;
+
 		that.wrapperW = that.wrapper.clientWidth;
 		that.wrapperH = that.wrapper.clientHeight;
 

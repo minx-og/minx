@@ -80,6 +80,8 @@ Minx.eq = new Minx.Events();
 Minx.PanelManager = function() {
 
     this.localMobileTest = false;
+    this.localiPhoneTest = false;
+    this.localiPadTest = false;
 
     var _panels = {};           // hash of all panels by id
     var _idCounter = 0;         // internal id counter
@@ -115,23 +117,25 @@ Minx.PanelManager = function() {
         // if it is set to auto size then the snap to 0,0 is ugly
         // ipad tells us the height nicely
         if(this.dims.ipad) {
-            console.log("ipad dim check");
+            
             if(nh > 768 || orn == 0 || orn == 180) {  // must be portrait
+
                 this.dims.or = 'p';
                 // TODO - get te ipad2 dimensions!!
                 this.dims.w = 768;
                 console.log("ipad -> port");
             }
             else {
+
                 this.dims.or = 'l';
                 console.log("ipad -> land");
             }
         }
-
         
         if(this.dims.ipod || this.dims.iphone) {
 
             if(nh > 320 || orn == 0 || orn == 180) {  // must be portrait
+
                 this.dims.or = 'p';
                 // TODO - get the iphone 4 dimensions - and be cleverer for Android if we ever support it!!
                 this.dims.w = 320;
@@ -139,6 +143,7 @@ Minx.PanelManager = function() {
                 console.log("phone + ipod port")
             }
             else {
+
                 this.dims.or = 'l';
                 this.dims.w = 480;
                 this.dims.h = 300;
@@ -166,8 +171,14 @@ Minx.PanelManager = function() {
         this.dims.blackberry   = this.agent().blackberry; 
 
         //DEV - simulate touch
-        if(this.localMobileTest){
+        if (this.localiPhoneTest) {
+            this.localMobileTest = true;
             this.dims.iphone = true;
+        }
+
+        if (this.localiPadTest) {
+            this.localMobileTest = true;
+            this.dims.ipad = true;
         }
         
         var t = this.dims;      // just to save typing
@@ -247,9 +258,10 @@ Minx.PanelManager = function() {
             
 
             var changing = false;
-            function oChange(){
-                console.log("oChange");
-                if(!changing) {
+            function oChange() {
+                
+                if (!changing) {
+
                     changing = true;
 
                     me.calcDims();

@@ -153,7 +153,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
 
     // show() calls render() which calls these two layout(), then draw()
     // override of default laying out to do my parent and sibling pinning geometry
-    layout: function() {
+    layout: function(force) {
 
         // work out my postion if pinned to my parent
         this._doParentPinning();
@@ -163,23 +163,23 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
 
         // if any geometry changed with me then ask any sibling panels pinned to me to lay themselves out as well
         for(var pin in this._pinned) {
-            this._pinned[pin].layout();
+            this._pinned[pin].layout(force);
         }
 
         // now i have new geometry call the base panel layout
-        Minx.PinnedPanel.Super.prototype.layout.call(this);
+        Minx.PinnedPanel.Super.prototype.layout.call(this, force);
     },
     
 
     // standard panel draw only checks children - but I might need to draw any siblings pinned to me
-    draw: function() {
+    draw: function(force) {
         // any of our style or position changed
-        if(this.isDirty()) {
-            Minx.PinnedPanel.Super.prototype.draw.call(this);
+        if (this.isDirty() || force) {
+            Minx.PinnedPanel.Super.prototype.draw.call(this, force);
 
             // now ask my pinned pals to do the same
             for(var pin in this._pinned) {
-                this._pinned[pin].draw();
+                this._pinned[pin].draw(force);
             }
         }
     },

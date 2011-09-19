@@ -78,14 +78,16 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
 
     // iScroll can only attach properly when the div it is in is layed out - so create my scroller on first drawing
-    draw: function() {
+    draw: function(force) {
 
         var wasdirty = this.isDirty();
-        Minx.ListScrollPanel.Super.prototype.draw.call(this);
+        Minx.ListScrollPanel.Super.prototype.draw.call(this, force);
 
         var me = this;
 
         // if touch and we need a fresh one and we are not hidden and we have a long enough list
+        // have not added force in here, but might have to. It is assumed that the force redraw is after any list content change
+        // so multiple forced redraws wont force multiple iscroll recreations
         if (this._touch && this._need_new_scroller && !this.isHidden() && (this._listLength > 2)) {
             // scroller needs t know about div size changes - give it time for animations to take effect
             // timer to give other sht a go                
@@ -102,7 +104,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                 // clear my flag
                 this._need_new_scroller = false;
                 
-            }, 310);
+            }, 310);            // TODO - as long as the panel is reattached (and as we are not animating dimensions - this timer could be 10ms probably
         }
     },
 
@@ -217,6 +219,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         }
         
         this._listLength = list.length;
+
+        this.render(true);
         
         this._need_new_scroller = true;
     },

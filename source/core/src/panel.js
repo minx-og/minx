@@ -452,8 +452,11 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         //DEBUG - remove opacity for hw accell
         this.setStyle('opacity', this._maxOpacity);
 
-        // make sure it is rendered and 
-        this.render();
+        // TODO - optimise this - we need to force a redraw on any reattaching panels incase there is a iscroll component which needs to be completely rendered 
+        // before it can get its own dimensions so if it has dynamic content then the new content needs to be available and it needs to be in the dom so each 
+        // element can be rendered corectly befor the iscroll does its thing
+        var force = this._detached;
+
 
         // add it to the dom first - so iscroll can layout properly
         if (this._detached) {
@@ -462,18 +465,23 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
             this._detached = false;
 
             this.reattached();
-        }        
+        }
+                
+        // if it was detached then force a relayout of the children
+        // make sure it is rendered and 
+        this.render(force);        
+
     },
 
 
     // render lays it out and calls draw to draw it in the dom
-    render: function() {
+    render: function(force) {
         // apply my layout (if my dimensions have changed then my kids get layed out too)
         // dont fret - calling this is efficient, calls the small linnear pinning algorithms
-        this.layout();
+        this.layout(force);
 
         // draw to the browser - and tell it about my dirty kids, draw only does something iif there is a change
-        this.draw();        
+        this.draw(force);        
     },
 
 
@@ -481,22 +489,22 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     // first check how I am altered by my parent based on parent pinning
     // then if pinning changed anything
     // check if my size changed (newDims) 
-    layout: function() {
+    layout: function(force) {
 
         //check if geometary changed
-        if (!this._nowG.equal(this._newG)) {
-
+        if (!this._nowG.equal(this._newG) || force) {
+            
             this._mapAllStuff();
 
             // need to test to see if actual dimensions have changed
             var newDims = !this._nowG.dimsEqual(this._newG); 
 
             // if my dimensions have changed (as checked before the clone) - then ask my kids to lay themselves out
-            if (newDims) {
+            if (newDims || force) {
 
                 for (var kid in this._kidies) {
-
-                    this._kidies[kid].layout();
+                    
+                    this._kidies[kid].layout(force);
                 }  
                 
                 this.resized();
@@ -559,21 +567,21 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     // then make sure my kids do the same
     // because there is every chance some of them are pinned to me and since i changed so did they
     // if they aren't diry then no biggy - do nothing 
-    draw: function(kidsonly) {
+    draw: function(force) {
 
         // apply my styles to the dom - sets dirty if any have changed
-        this._applyStyles();
+        this._applyStyles(force);
         
         // now ask my kids  to do the same if they are dirty
-        this.drawKids();
+        this.drawKids(force);
     },
 
 
-    drawKids: function (){
+    drawKids: function (force){
 
         for (var kid in this._kidies) {
 
-            this._kidies[kid].draw();
+            this._kidies[kid].draw(force);
         }
     },
 
@@ -583,11 +591,11 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     // sets up new animation
     // sets up new geometry
     // and blasts it to the dom
-    _applyStyles: function() {
+    _applyStyles: function(force) {
         
         // if I have new Geometry...
         // add my new geometry to the style map to be applied when I get drawn
-        if (!this._nowG.equal(this._newG)) {
+        if (!this._nowG.equal(this._newG) || force) {
 
             this._mapAllStuff(); 
         }

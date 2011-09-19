@@ -172,11 +172,12 @@ Minx.Layout.SplitLayout = my.Class({
     show: function() {
         this._hidden = false;
         
+        this._navPanel.layout(true);
+
         this._navPanel.show();
         this._stuff.show();
 
-        this._navPanel.render();
-        this._stuff.render();
+
     },
 
 
@@ -199,13 +200,13 @@ Minx.Layout.SplitLayout = my.Class({
 */
 
     setMainPanelContent: function(panel, how) {
-        this._stuff.setActivePanel(panel, how);
+        this._stuff.setActivePanel(panel, how, true);
     },
 
 
     setMenuPanel: function(panel, how) {
         
-        this._navPanel.setActivePanel(panel, how);
+        this._navPanel.setActivePanel(panel, how, true);
     },
 
 

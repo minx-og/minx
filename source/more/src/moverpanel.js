@@ -87,7 +87,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
 
     // one would expect this panel to be a child of the mover panel - but we are not checking odd things would happen if it was not a child
-    setActivePanel: function(panel, transition) {
+    setActivePanel: function(panel, transition, force) {        
 
         // make sure we are not just activating the same panel
         if(this._active != null) {
@@ -113,7 +113,6 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
         if(transition == 'slide-left') {
 
-            console.log("SETTING Slidy panel with - " + parDims.w);
             panel.setSize(parDims.w, parDims.h);
 
             // left pin it to the active panel and parent top

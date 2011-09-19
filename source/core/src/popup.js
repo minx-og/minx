@@ -14,11 +14,6 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
 
     constructor: function(parent, id) {
 
-        // check that my parent is the main panel
-/*        if(parent.getId() != 'pn0') {
-            throw 'popup parent should be the main panel, use "main" as parent Minx.add()- pn0 with -' +  id;
-        }
-*/
         this._centre = true;            // centred by default
         // call super
         Minx.Popup.Super.call(this, parent, id);
@@ -42,10 +37,13 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
     
     // if a specific position is set then unpin from the centre
     setPos: function(left, top) {
+
         if (this._centre == false) {
+
             Minx.Popup.Super.prototype.setPos.call(this, left, top);
         }
         else {
+
             console.log("Warning - Setting a position on a centred panel");
         }
     },
@@ -53,7 +51,9 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
 
     // re-pin to the centre - (should probably render again)
     setCentred: function(centred) {
+
         if (typeof centred === "undefined") {
+
             centred = true;
         }
         
@@ -63,24 +63,29 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
 
     // override to hide first - so it fades
     removeMe: function() {
+
         this.hide();
         // wait animation time to trash it
         var me = this;
+        
         setTimeout(function() {
+        
            Minx.Popup.Super.prototype.removeMe.call(me);
+        
         }, this._animate);
     },
 
 
     // override layout to check if we should re-centre
-    layout: function() {
+    layout: function(force) {
 
         if(this._centre) {
+
             this._reCentre();
         }
 
         // now call the base panel layout - we shouldn't have pinning but we could i suppose
-        Minx.Popup.Super.prototype.layout.call(this);
+        Minx.Popup.Super.prototype.layout.call(this, force);
     },
 
 
@@ -116,6 +121,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         return 'div';
     },
 });
+
 
 Minx.pm.register('pop-up', Minx.Popup);
 

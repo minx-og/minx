@@ -134,6 +134,7 @@ Minx.Layout.PhoneLayout = my.Class({
 
 
     _setLandscape: function(initial) {
+        ffff
         var me = this;
         var nw = Minx.pm.dims.w;
         var nh = Minx.pm.dims.h;
