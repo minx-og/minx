@@ -34,7 +34,12 @@ Minx.Layout.SplitLayout = my.Class({
         var touch = Minx.pm.isTouch();
 
         // ---   navigation panel
-        this._navPanel = Minx.pm.add(main, 'title-panel');
+        //this._navPanel = Minx.pm.add(main, 'title-panel');
+        this._navPanel = Minx.pm.add(main,'mover-panel');
+        this._navPanel.addClass('round-top');
+        this._navPanel.addClass('thin-border');
+        this._navPanel.addTitle();
+        
         this._navPanel.addClass("left-nav");
         this._navPanel.setAnimate(200);
 
@@ -91,6 +96,34 @@ Minx.Layout.SplitLayout = my.Class({
     },
 
 
+    embelish: function(opts, handler) {
+        var panel = opts.panel;
+        var level = opts.level;
+        var content = opts.forcontent || false;
+        // make room for the menu button - only needed in portrait really 
+        if (content) {
+
+            panel.setTitleInvisible(100);;
+        }
+        else {
+
+            if (level > 1) {
+
+                // we manage the transitioning between menus so we add our own back button
+                var backButton = panel.getTitle().addButton();
+                backButton.setType('back');
+                backButton.pinParent({l: 25, t:7, r:-1, b:-1});
+                
+                backButton.show();   
+
+                backButton.onClick(handler);
+                
+                return backButton;
+            }
+        }
+    },
+
+
     reOrient: function(initial) {
         
         var nisPort = (Minx.pm.dims.or === 'p');
@@ -139,10 +172,11 @@ Minx.Layout.SplitLayout = my.Class({
     show: function() {
         this._hidden = false;
         
-        var navDims = this._navPanel.getNewDims();
-
         this._navPanel.show();
         this._stuff.show();
+
+        this._navPanel.render();
+        this._stuff.render();
     },
 
 
@@ -167,6 +201,14 @@ Minx.Layout.SplitLayout = my.Class({
     setMainPanelContent: function(panel, how) {
         this._stuff.setActivePanel(panel, how);
     },
+
+
+    setMenuPanel: function(panel, how) {
+        
+        this._navPanel.setActivePanel(panel, how);
+    },
+
+
 
 
     // called when a navigation action has occured

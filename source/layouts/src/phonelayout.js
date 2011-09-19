@@ -18,7 +18,14 @@ Minx.Layout.PhoneLayout = my.Class({
         //var touch = Minx.pm.isTouch();
 
         // ---   navigation panel
-        this._navPanel = Minx.pm.add(main,'title-panel');
+
+        this._navPanel = Minx.pm.add(main,'mover-panel');
+        this._navPanel.addClass('round-top');
+        this._navPanel.addClass('thin-border');
+        this._navPanel.addTitle();
+        
+
+        // this._navPanel = Minx.pm.add(main,'title-panel');
         this._navPanel.setAnimate(200);
         
 
@@ -51,6 +58,25 @@ Minx.Layout.PhoneLayout = my.Class({
         }
     },
 
+    
+    embelish: function(opts, handler) {
+        var panel = opts.panel;
+        var level = opts.level;
+        if (level > 1) {
+            // we manage the transitioning between menus so we add our own back button
+            var backButton = panel.getTitle().addButton();
+            backButton.setType('back');
+            backButton.pinParent({l: 25, t:7, r:-1, b:-1});
+            
+            backButton.show();   
+
+            backButton.onClick(handler);
+            
+            return backButton;
+        }
+        
+    },
+
 
     reOrient: function(initial) {
         
@@ -68,10 +94,16 @@ Minx.Layout.PhoneLayout = my.Class({
         }
     },
 
-
+    
     setMainPanelContent: function(panel, how) {
         this._activeMain = panel;
-        this._navPanel.getContentPanel().setActivePanel(panel, how)
+        this._navPanel.setActivePanel(panel, how);
+    },
+
+
+    setMenuPanel: function(panel, how) {
+        
+        this._navPanel.setActivePanel(panel, how);
     },
 
 
