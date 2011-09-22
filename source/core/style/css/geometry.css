@@ -151,3 +151,19 @@ body {
     -o-transition-duration: 0.3s; 
     transition-duration: 0.3s;
 }
+
+
+.title {
+    padding: 20px 10px 0px 10px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+.subtitle {
+    font-weight: normal;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+}
+

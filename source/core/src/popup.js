@@ -44,7 +44,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
         }
         else {
 
-            console.log("Warning - Setting a position on a centred panel");
+            console.warn("Warning - Setting a position on a centred panel");
         }
     },
 

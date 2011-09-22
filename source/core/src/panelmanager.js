@@ -184,6 +184,9 @@ Minx.PanelManager = function() {
         var t = this.dims;      // just to save typing
         this.dims.touch = t.iphone || t.ipod || t.ipad || t.android || t.blackberry;
         this.dims.phone = t.iphone || t.ipod || t.android || t.blackberry;
+        this.dims.small = t.iphone || t.ipod || t.android || t.blackberry;      // use dimensions in future - so cope with retina
+        this.dims.ios = t.iphone || t.ipod || t.ipad;
+        this.dims.phonegap = typeof PhoneGap !== "undefined";
 
         this.ver = 0;
         
