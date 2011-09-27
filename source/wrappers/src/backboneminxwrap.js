@@ -28,6 +28,11 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
 
     // override render hands off to our widget which munges the model and view
     render: function(){
+
+         //DEBUG
+            var danow = new Date();
+            if(Mtk.xactTimer) 
+                console.log("render triggered  - " + (danow - Mtk.xactTimer));
         // combine the view and model
         this._widget.munge();
     },

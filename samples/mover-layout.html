@@ -53,7 +53,34 @@
 
         <!-- our main entry -->
         <script type="text/javascript" charset="utf-8">
+            function makeLongList(node) {
+                var html = '\
+        <div class="bank-icon left">\
+            <img class="bank" src="img/lloyds-embos-small.png"></img>\
+        </div>\
+        <h2 class="left">Raw Diplay</h2>\
+        <div class="right">\
+            <div class="right star"><img src=""></img></div>\
+        </div>\
+        <div class="clear-r"></div>\
+        <div class="midbot">\
+            <h1 class="left"> 1010.234</h1>\
+        </div>\
+        <div class="right dblk">\
+          <p class="middle">Yesterday</p>\
+        </div>'
 
+                var linode
+                for (var n = 0; n < 100; n++) {
+                    linode = document.createElement('ul');
+
+                    linode.innerHTML = html;
+
+                    node.appendChild(linode);
+
+                }
+
+            }
             /* When this function is called, PhoneGap has been initialized and is ready to roll */
             function onDeviceReady() {
                 console.log('onDeviceReady');
@@ -76,20 +103,29 @@
 
                 var panel1 = Minx.pm.add(layout, 'title-panel');
 
-                var p1Node = document.createTextNode("panel1                     P1       panel1              - - - - - - - - - - -  x x x x x x x x x x x");
-                panel1.getContentPanel().getNode().appendChild(p1Node);
+
+                var ulnode = document.createElement('ul');
+
+                makeLongList(ulnode);
+
+                
+                panel1.getContentPanel().getNode().appendChild(ulnode);
                 
 
                 var panel2 = Minx.pm.add(layout, 'title-panel');
 
-                var p2Node = document.createTextNode("panel2              = ===                 = = = = = = = = =======              = = = = = = = = panel2");
-                panel2.getContentPanel().getNode().appendChild(p2Node);
+                var ulnode2 = document.createElement('ul');
+
+                makeLongList(ulnode2);
+
+                panel2.getContentPanel().getNode().appendChild(ulnode2);
                 
 
                 //panel2.hide();
 
                 layout.show();
 
+                
 
                 setTimeout(function() {
                   

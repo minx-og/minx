@@ -233,6 +233,11 @@ Minx.Panel = my.Class({
     },
 
 
+    setContentChanged: function(which) {
+        this._contentChanged = which;
+    },
+
+
     // Getters
     // =======
 
@@ -301,6 +306,22 @@ Minx.Panel = my.Class({
         return hidden;
     },
 
+    isOnScreen: function() {
+        // recurse up my chain to work out if im on screen (or at least rendrered on dom)
+        if(this.isHidden()) {
+
+            return false;
+        }
+        else if(this.getParent() != null) {
+
+            return this.getParent().isOnScreen();
+        }
+        else {
+
+            return true;        // run out of parents and no explicit hidden so must be on screen
+        }
+    },
+
     // utility to count any kiddies in the kiddie hash - a more optimal way??
     kiddieCount: function() {
         var count = 0;
@@ -308,6 +329,25 @@ Minx.Panel = my.Class({
             count++;
         }
         return count;
+    },
+
+
+    hasContentChanged: function() {
+
+        var hasit = this._contentChanged;
+
+        if (!hasit) {          // if ours hasnt then recurse to check all kids
+            
+            for (var kid in this._kidies) {
+                    
+                hasit = this._kidies[kid].hasContentChanged();
+                if (hasit) {
+                    break;          // stop if we find one
+                }
+            }
+        }
+
+        return hasit;
     },
 
 
@@ -452,11 +492,13 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
         //DEBUG - remove opacity for hw accell
         this.setStyle('opacity', this._maxOpacity);
 
-        // TODO - optimise this - we need to force a redraw on any reattaching panels incase there is a iscroll component which needs to be completely rendered 
+        // we need to force a redraw on any reattaching panels incase there is a iscroll component which needs to be completely rendered 
         // before it can get its own dimensions so if it has dynamic content then the new content needs to be available and it needs to be in the dom so each 
         // element can be rendered corectly befor the iscroll does its thing
-        var force = this._detached;
+        // so it is upto subclass panels to setContentChanged so we no to force a full redraw down to the iscroll containing child        
+        var force = this.hasContentChanged();
 
+        //var force = this._detached;
 
         // add it to the dom first - so iscroll can layout properly
         if (this._detached) {
@@ -569,6 +611,16 @@ _applyStyles()   - takes the style map as created from _mapMyGeometry, and any o
     // if they aren't diry then no biggy - do nothing 
     draw: function(force) {
 
+        
+        if(this._contentChanged) {
+            // mark our content as being clean - only if it is visible - therefore fully drawn
+                    
+            if (this.isOnScreen()) {
+
+                this.setContentChanged(false);
+            }
+        }
+        
         // apply my styles to the dom - sets dirty if any have changed
         this._applyStyles(force);
         
@@ -776,6 +828,8 @@ ENDFIXPOS */
         this._detached = true;           // initially all are detached
 
         this._maxOpacity = '1';            // opup spinner panel for example might not be solid
+
+        this._contentChanged = false;     // inherited panels and helpers set this particularly when the pane has content dependant on external data and that data has changed (listscrol for example)
 
 
         // SPECIAL - have we just made the root node - dont create nodes

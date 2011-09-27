@@ -10,8 +10,8 @@ if (typeof Minx === "undefined") {
 Minx.Event = function(panel, callback) {
 
         this.trigger = function (e) {
-                
                 //e.stopPropagation();            // stop nearby html getting the event as well
+                
                 panel[callback](e);
         }
 }
@@ -219,9 +219,43 @@ Minx.PanelManager = function() {
         this.calcDims();
     };
 
+    this.testPerf = function(cb) {
+        
+        this.dims.slow = false;
+        
+        var t = 0;
+        this.u = true;
+        var me = this;
+
+        function loop() {
+
+            if (me.u) {
+                setTimeout(loop, 1);
+                t++;
+                for (var v = 0; (v < 10) && me.u; v++) {
+
+                }
+            }                 
+        }
+
+        function stoploop() {
+            me.u = false;
+
+            if (t < 20) {
+
+                me.dims.slow = true;
+            }
+
+            cb(me.dims.slow);
+        }
+
+        setTimeout(stoploop, 300);
+        loop();
+    }
+
 
     // set up the root node and optionally add a single panel that resizes with the browser resizing
-    this.init = function(auto) {
+    this.init = function(auto, finished) {
 
         this.calcDevice();
 

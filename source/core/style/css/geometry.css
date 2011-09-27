@@ -15,6 +15,10 @@
 
 }
 
+h3, h4 {
+    font-weight: normal;
+}
+
 /* remove default safari style */
 input, textarea {
   outline-style:none;
@@ -164,6 +168,11 @@ body {
     font-weight: normal;
     padding: 20px;
     text-align: center;
+    width: 100%;
+}
+
+.xact {
+    height: 100%;
     width: 100%;
 }
 

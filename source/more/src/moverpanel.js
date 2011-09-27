@@ -143,11 +143,8 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 //and make sure it is fully pinned to momma s it resizes on next resize
                 panel.fillParent();    
 
-
                 // set the new panel as active
-                me._active = panel;
-
-                
+                me._active = panel;                
 
             }, 1);  //delay trick to let dom fully redraw
 

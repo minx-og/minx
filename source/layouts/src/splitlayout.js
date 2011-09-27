@@ -66,6 +66,7 @@ Minx.Layout.SplitLayout = my.Class({
 
         // add button to pop up the navigation when in portrait
         this._navPopButton = this._stuff.getTitle().addButton('l', 10, 'Menu');
+        this._navPopButton.setStyle("z-index", "100");
         
         //TODO Check this and a handler - client should do this
         this._navPopButton.onClick(function(panel,e){

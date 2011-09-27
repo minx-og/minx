@@ -35,6 +35,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // default renderer
         this._rowRenderer = this.getRowMarkup;
 
+        this._listMax = 0;              // wnat a maximum number in this list - set this.
+
         // for iscroll the view is the dom node of this widget container
         this.setView(this.getNode());
 
@@ -48,7 +50,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // e must be in the param object
         // currentTarget - the element that recieved the event
 
-        // WARNING - zepto Library dependancy 
+        // WARNING - zepto Library dependancy with $
         // remove selected class from last li
         if (this._lastSelect != null) {
             $(this._lastSelect).removeClass("selected");
@@ -60,6 +62,12 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         this._lastSelect = event.currentTarget;
 
         return {id: event.currentTarget.id, e: event};
+    },
+
+
+    setMaxListcount: function(count) {
+
+        this._listMax = count;              // wnat a maximum number in this list - set this.  
     },
 
 
@@ -88,7 +96,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // if touch and we need a fresh one and we are not hidden and we have a long enough list
         // have not added force in here, but might have to. It is assumed that the force redraw is after any list content change
         // so multiple forced redraws wont force multiple iscroll recreations
-        if (this._touch && this._need_new_scroller && !this.isHidden() && (this._listLength > 2)) {
+        // only bother drawing me if I am clearly visible on screen
+        if (this._touch && this._need_new_scroller && this.isOnScreen() && (this._listLength > 2)) {
             // scroller needs t know about div size changes - give it time for animations to take effect
             // timer to give other sht a go                
             setTimeout(function() {
@@ -98,11 +107,24 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                     me._scroller = null;
                 }
 
+                console.log("ISCROL - - - - - - > Making new scroller for  " + me.getId());
+                //DEBUG
+                var danow = new Date();
+                if(Mtk.xactTimer) 
+                    console.log("before Scroll - " + (danow - Mtk.xactTimer));
+
                 // create the new scroller
                 me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
                 
                 // clear my flag
                 this._need_new_scroller = false;
+
+                console.log("Scroller complete");
+
+                //DEBUG
+                var danow = new Date();
+                if(Mtk.xactTimer) 
+                    console.log("After Scroll - " + (danow - Mtk.xactTimer));
                 
             }, 310);            // TODO - as long as the panel is reattached (and as we are not animating dimensions - this timer could be 10ms probably
         }
@@ -138,6 +160,10 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
     munge: function() {
         // as our munge function completely recreates the ul and all li's in it we may as well recreate the scroller.
         // if we simply call refresh the scroller expects the ul to be the same one that was in place when we created the scroller in the first place
+
+        console.log("----------------------> MUNGING <---------------------")
+
+        this.setContentChanged(true);
 
         // this may be sub-optimal - but given the total recreation i doubt it...
         var rawList = this.getModel();
@@ -216,13 +242,36 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             this._widgetRoot.appendChild(li);
 
             prevli = li;
+
+            if (this._listMax > 0) {
+
+                if (h > this._listMax) {
+
+                    break;
+                }
+            } 
         }
         
         this._listLength = list.length;
+        
+        if (this._listMax > 0) {
+            list.length < this._listLength ? list.length : this._listLength;
+        }
+
+
+
+                 //DEBUG
+            var danow = new Date();
+            if(Mtk.xactTimer) 
+                console.log("munge done  - " + (danow - Mtk.xactTimer));
+
 
         this.render(true);
-        
+
+        // IMPORTANT  - dont move this before the render - why? i dont fucking know!
         this._need_new_scroller = true;
+
+        
     },
 
 
