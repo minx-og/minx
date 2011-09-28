@@ -1,6 +1,6 @@
 /*
 
-BottomBar registered as bottom-bar
+ToolBar registered as bottom-bar
 ==================================
 Simply a bar that pins itself to the botom of its parent
 
@@ -12,12 +12,12 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
 
     constructor: function(parent, id) {
 
-        this._docked = 'f';      // flase - otherwise 't', 'l', 'b', 'r'
+        this._docked = 'f';                                 // false - otherwise 't'op, 'l'eft, 'b'ottom, 'r'ight
         
         // call base constructor
         Minx.ToolBar.Super.call(this, parent, id);
         
-        this.addClass('dark-bar');
+        this.addClass('dark-bar');  
 
     },
 
@@ -26,7 +26,7 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
     _onCreation: function() {
         //dont call base
         // this.setAnimate(0);
-        this.setSize(0, 45);                                                         // TODO - set toolbar size as a theme property
+        this.setSize(0, 45);                                                         // TODO - consider toolbar size as a theme property
     },
 
 
@@ -34,7 +34,7 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
 
         // check for any docking - to provide helpfull warning - and dock to top 
         if (this._docked == 'f') {
-            console.log("Warning - Toolbar no dock specified, docking to top");
+            console.warn("Warning - Toolbar no dock specified, docking to top");
             this.dock('t', 0);    
         }
         

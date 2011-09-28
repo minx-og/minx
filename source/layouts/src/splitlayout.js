@@ -70,6 +70,8 @@ Minx.Layout.SplitLayout = my.Class({
         
         //TODO Check this and a handler - client should do this
         this._navPopButton.onClick(function(panel,e){
+
+            console.log("===========>navPopButton")
              me._popNavigation();
         });
 
@@ -416,6 +418,7 @@ Minx.Layout.SplitLayout = my.Class({
 */
         }
 
+        console.log("showing the nav Popup button");
         me._navPopButton.show(); 
         
     },
@@ -454,7 +457,7 @@ Minx.Layout.SplitLayout = my.Class({
             
             // fade only animation - on pop
             this._navPanel.addClass('anim-fade-only');
-            this._navPanel.removeClass('anim-geom');
+            this._navPanel.removeClass('anim-geom');                // TODO - use setAnim instead
             
             // does this move it into place 
             this._navPanel.render();
@@ -464,7 +467,7 @@ Minx.Layout.SplitLayout = my.Class({
 
             // slide animation back
             this._navPanel.removeClass('anim-fade-only');
-            this._navPanel.addClass('anim-geom');
+            this._navPanel.addClass('anim-geom');                   // TODO - use setAnim instead
         }
         else {
             this._navPanel.hide();

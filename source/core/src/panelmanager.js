@@ -278,7 +278,7 @@ Minx.PanelManager = function() {
                 main.setStyle('overflow', 'visible');                   //  for ipad - show more cntent cos we elegantly animate scroll to zero - otherwise safari pings it to zero
             }
 
-            main.setAnimate(false);                                     // TODO - try it both ways
+            main.setAnimate(0);                                     // TODO - try it both ways
 
             main.getNode().innerHTML = '<div id="back-top"></div>';
 
@@ -309,8 +309,9 @@ Minx.PanelManager = function() {
                     
                     // this constructs main panel geometry and updates kids - redraws all kidies if thier geometry has changed
                     // but doesnt redraw the main panel
-                    main.layout();
-                    main.drawKids();
+                    
+                    // main.layout();
+                    // main.drawKids();
 
                     //if(Minx.pm.dims.phone) {
                         main.render();            // rendering the main section can cause flicker - but got to do it on phone to stop keyboard moving viewport
@@ -335,7 +336,7 @@ Minx.PanelManager = function() {
 
         }
         else {
-            console.log("WARNING - YOU will have to manage orientation changes yourself and add a root panel");
+            console.warn("YOU will have to manage orientation changes yourself and add a root panel");
         }
 
         this._main = main;

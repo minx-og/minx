@@ -19,7 +19,7 @@ Minx.InputPopup = my.Class(Minx.Popup, {
 
         // the footBar - pins itself to the bottom of things - can add buttons in this
         this._footBar = Minx.pm.add(this,'tool-bar');
-        // dock it to the top
+        // dock it to the botom
         this._footBar.dock('b');
 
         // now pin the content  to left, right, bottom - to top of footbar - with padding for the rounded corners
@@ -38,6 +38,7 @@ Minx.InputPopup = my.Class(Minx.Popup, {
 
 
     eventParse: function(event) {
+
         var thing = {id: this._defaultButton.getId(), e: event};
 
         // pass event to default button - dont check for type as only one registered at the moment - review if more subscribes
@@ -48,6 +49,7 @@ Minx.InputPopup = my.Class(Minx.Popup, {
 
 
     setDefault: function(panel) {
+
         this._defaultButton = panel;
         // tell this panel to draw and 'default' class stuff 
         panel.addClass("default");
@@ -55,17 +57,20 @@ Minx.InputPopup = my.Class(Minx.Popup, {
 
 
     getMainPanel: function() {
+
         return this._mainPanel;  
     },
 
 
     //getFootBar - for clients to add buttons.
     getFootBar: function() {
+
         return this._footBar;
     },
 
 
     getMyElement: function() {
+        
         return 'form';
     },
 

@@ -91,7 +91,7 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
 
     show: function() {
         // override to allow initial animation
-        this._instantFirstDraw = false;
+        // this._instantFirstDraw = false;
         Minx.Popup.Super.prototype.show.call(this);
     },
 

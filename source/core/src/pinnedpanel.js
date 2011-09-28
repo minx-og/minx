@@ -3,6 +3,12 @@ Minx.PinnedPanel
 
 core class - a panel that knows how to relate to others geometrically
 
+you cant pin a panel outside of its parent - i.e. there can be no negative pin values - as overflow hidden is everywhere
+
+You can get interesting side effect behaviour when there are parent and sibling pins - you can easily get into pinning dependancy loops
+
+be carefull as these classes ae not that clever
+
 */
 
 
@@ -113,9 +119,12 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
 
     // like a greedy spoilt child taking up all that its parent can offer
     fillParent: function(off) {
+
         if (typeof off == "undefined") {
+
             off = 0;
         }
+
         this.unPin();
         this.pinParent({'l': off, 't': off, 'r': off, 'b': off});
     },
@@ -124,7 +133,9 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     // dock to my parent
     // which - 'l'eft, 't'op, 'r'ight or 'b'um
     dock: function(where, offset) {
+
         if (typeof offset == "undefined") {
+
             offset = 0;
         }
         // reset any existing dock
@@ -163,6 +174,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
 
         // if any geometry changed with me then ask any sibling panels pinned to me to lay themselves out as well
         for(var pin in this._pinned) {
+
             this._pinned[pin].layout(force);
         }
 
@@ -173,31 +185,39 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
 
     // standard panel draw only checks children - but I might need to draw any siblings pinned to me
     draw: function(force) {
+        
         // any of our style or position changed
-        if (this.isDirty() || force) {
-            Minx.PinnedPanel.Super.prototype.draw.call(this, force);
+        if (!this._nowG.equal(this._newG) || force) {
 
             // now ask my pinned pals to do the same
             for(var pin in this._pinned) {
+
                 this._pinned[pin].draw(force);
             }
         }
+
+        // call base after the above if simply because the _nowG equal _newG test will always be false so we wouldnt know to draw any pinned kids
+        Minx.PinnedPanel.Super.prototype.draw.call(this, force);
+
     },
 
     // ***** Oooh me privates!
 
     // add a panel to my pinned sibling lists
     _addSiblingPinned: function(panel) {
+
         this._pinned[panel.getId()] = panel;    
     },
 
     // extract this panel from your list of pinned sibling panels
     _removeSiblingPinned: function(panel) {
+
         delete this._pinned[panel.getId()];
     },
 
     // layout based on my siblings
     _doSiblingPinning: function() {
+
         var pd = this.getParent().getNewDims();
 
         // parent pin
@@ -289,6 +309,7 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     // pinning to parent is like docking - or stretching
     // dont pin to parent and a sibling
     _doParentPinning: function() {
+        
         var pp = this._pPin;
         // get my parents geometry
         var pG = this.getParent().getNewDims();
