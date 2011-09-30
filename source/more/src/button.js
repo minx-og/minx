@@ -68,7 +68,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
     // set a click handler - special one for buttons
     onClick: function(fn) {
-        this._clickEvent  = fn; 
+        this._clickHandler  = fn; 
     },
 
 
@@ -99,8 +99,8 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         this.removeClass('button-down');
         this.addClass('button-up');
         this.show();
-        if(this._clickEvent) {
-                this._clickEvent(this, e);
+        if(this._clickHandler) {
+                this._clickHandler(this, e);
         }
     },
 
@@ -108,8 +108,8 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
     // only a defualt key should be bound to the keypress event
     keyPressed: function(e) {
         if (e.charCode == 13) {
-            if(this._clickEvent) {
-                this._clickEvent(this, e);
+            if(this._clickHandler) {
+                this._clickHandler(this, e);
             }
         }
     },

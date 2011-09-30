@@ -46,6 +46,7 @@ Minx.Layout.SplitLayout = my.Class({
         // make it lighter
         this._navPanel.getTitle().removeClass('dark-bar');
         this._navPanel.getTitle().addClass('light-bar');
+        this._navPanel.hide();
 
         // and give the panel a rouncded bum
         // TODO - check this is already done        this._navPanel.getContentPanel().addClass('round-bottom');
@@ -74,6 +75,8 @@ Minx.Layout.SplitLayout = my.Class({
             console.log("===========>navPopButton")
              me._popNavigation();
         });
+
+        this._navPopButton.hide();
 
 
         // orientation
@@ -176,8 +179,12 @@ Minx.Layout.SplitLayout = my.Class({
         this._hidden = false;
         
         this._navPanel.layout(true);
+        
+        if(!this._isPort) {
 
-        this._navPanel.show();
+            this._navPanel.show();  //ddd
+        }
+        
         this._stuff.show();
 
 
