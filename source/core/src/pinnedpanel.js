@@ -37,6 +37,8 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         // sibling pin - pin to a referenced panel + offset
         this._sPin = {'l': null, 't': null, 'r': null, 'b': null};   // where to pin me to my parent - no where by default, left, top, right, bottom
 
+        this._centre = false;            // centred by default
+
         // base constructor now - in case any post creation stuff needs to access the _pPin and s_Pin members
         Minx.PinnedPanel.Super.call(this, parent, id);
         
@@ -129,6 +131,18 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
         this.pinParent({'l': off, 't': off, 'r': off, 'b': off});
     },
 
+    
+    // re-pin to the centre 
+    setCentred: function(centred) {
+
+        if (typeof centred === "undefined") {
+
+            centred = true;
+        }
+        
+        this._centre = centred;
+    },
+
 
     // dock to my parent
     // which - 'l'eft, 't'op, 'r'ight or 'b'um
@@ -166,11 +180,17 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     // override of default laying out to do my parent and sibling pinning geometry
     layout: function(force) {
 
-        // work out my postion if pinned to my parent
-        this._doParentPinning();
+        if(this._centre) {
 
-        // work out my position if pinned to any of my siblings
-        this._doSiblingPinning();
+            this._reCentre();
+        }
+        else {
+            // work out my postion if pinned to my parent
+            this._doParentPinning();
+
+            // work out my position if pinned to any of my siblings
+            this._doSiblingPinning();
+        }
 
         // if any geometry changed with me then ask any sibling panels pinned to me to lay themselves out as well
         for(var pin in this._pinned) {
@@ -202,6 +222,22 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
     },
 
     // ***** Oooh me privates!
+
+    // private - center to the viewport - should make these dimensions available in the panel manager
+    _reCentre: function(){
+
+        var parDim = this.getParent().getNewDims();
+        var dw = parDim.w; //document.documentElement.clientWidth;
+        var dh = parDim.h; //document.documentElement.clientHeight;
+
+        // use the new unaplied dimensions
+        var d = this.getNewDims();
+
+        // call the base setPos directly
+        this._newG.l = (dw - d.w) / 2;
+        this._newG.t = (dh - d.h) / 2;
+    },
+
 
     // add a panel to my pinned sibling lists
     _addSiblingPinned: function(panel) {
