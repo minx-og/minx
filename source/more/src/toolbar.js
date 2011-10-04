@@ -87,6 +87,22 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
         return but;  
     },
 
+    addText: function(text) {
+        if (typeof text === "undefined") {
+            text = 'title';
+        }
+
+        var textPanel = Minx.pm.add(this,'pinned');
+        textPanel.addClass('text');
+        textPanel.setSize(0, 45);     
+        textPanel.fillParent();
+        
+        var txt = document.createTextNode(text);
+        textPanel.getNode().appendChild(txt);
+        
+        return textPanel;  
+    },
+
     // override for dom element type
     getMyElement: function() {
         return 'div';

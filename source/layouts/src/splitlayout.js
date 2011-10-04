@@ -43,6 +43,7 @@ Minx.Layout.SplitLayout = my.Class({
         this._navPanel.addClass("left-nav");
         this._navPanel.setAnimate(200);
 
+
         // make it lighter
         this._navPanel.getTitle().removeClass('dark-bar');
         this._navPanel.getTitle().addClass('light-bar');
@@ -56,6 +57,7 @@ Minx.Layout.SplitLayout = my.Class({
         this._stuff = Minx.pm.add(main,'mover-panel');
         this._stuff.addClass('round-top');
         this._stuff.addClass('thin-border');
+        this._stuff.addClass('stuff');
         this._stuff.addTitle();
         this._stuff.setAnimate(0);
 

@@ -28,7 +28,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
         this.buttonEvent = null;                                 // stored event for default button
 
-        this.setSize(70, 30);
+        this.setSize(80, 34);
         this.setPos(10, 10);
         
         this.addClass('button-up');
@@ -43,6 +43,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
             // register my events in Minx.eq wrapper 
             Minx.eq.subscribe(this, null, 'mousedown');         // null means whatever node I get made
             Minx.eq.subscribe(this, null, 'mouseup');
+            Minx.eq.subscribe(this, null, 'mouseout');
             Minx.eq.subscribe(this, null, 'click');             // swallow clicks
         }
 
@@ -77,6 +78,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         // call my behaviour
         if(ev.type == 'mousedown') this.buttonPressed(ev);
         if(ev.type == 'mouseup') this.buttonReleased(ev);
+        if(ev.type == 'mouseout') this.buttonReleased(ev);
 
         if(ev.type == 'touchstart') this.buttonPressed(ev);
         if(ev.type == 'touchend') this.buttonReleased(ev);
@@ -99,8 +101,10 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         this.removeClass('button-down');
         this.addClass('button-up');
         this.show();
-        if(this._clickHandler) {
+        if(e.type != 'mouseout') {
+            if(this._clickHandler) {
                 this._clickHandler(this, e);
+            }
         }
     },
 
@@ -143,7 +147,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
             // create stuff for the button
             this.addClass('back');
-
+/*
             // create the pointer span
             var sp = document.createElement('span');
             sp.setAttribute('class', 'pointer');
@@ -176,7 +180,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
             offTop = off + .5;
             
             sp.style.cssText = 'width: ' + h + 'px; height: ' + h + 'px; -webkit-transform: rotate(45deg) translate3d(-'+offLeft+'px, '+ offTop +'px, 0px);'
-
+*/
 /*
             26
 
@@ -220,7 +224,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
             var h = me.getNewDims().h - 0.5;
 
-            me._label.style.cssText = "visibility: inherited; line-height: " + h + "px";
+// TODO - removed now using background in css            me._label.style.cssText = "visibility: inherited; line-height: " + h + "px";
 
 
         }

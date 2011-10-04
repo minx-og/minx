@@ -278,6 +278,8 @@ Minx.PanelManager = function() {
                 main.setStyle('overflow', 'visible');                   //  for ipad - show more cntent cos we elegantly animate scroll to zero - otherwise safari pings it to zero
             }
 
+            main.addClass('or-' + me.dims.or);
+
             main.setAnimate(0);                                     // TODO - try it both ways
 
             main.getNode().innerHTML = '<div id="back-top"></div>';
@@ -306,6 +308,10 @@ Minx.PanelManager = function() {
                     console.log("ochange w=" + me.dims.w + " h="+ me.dims.h);
 
                     main.setSize(me.dims.w, me.dims.h);
+
+                    main.removeClass('or-l');
+                    main.removeClass('or-p');
+                    main.addClass('or-' + me.dims.or);
                     
                     // this constructs main panel geometry and updates kids - redraws all kidies if thier geometry has changed
                     // but doesnt redraw the main panel

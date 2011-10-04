@@ -19,6 +19,7 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
 
         // add a title-bar
         this._titleBar = Minx.pm.add(this, 'tool-bar');
+        this._titleBar.setSize(100, 47);
         this._titleBar.dock('t');
 
         // add a plain pinned panel
@@ -27,6 +28,7 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
         
         // and round the bottom off - in case asked to pop up
         this._mainPanel.addClass('round-bottom');
+        this._mainPanel.addClass('content');
         //this._mainPanel.setAnimate(false);
     
         this.addClass('thin-border');
@@ -47,12 +49,9 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
             this._titleBar.setParentPin('l', menuButtonGap);
         }
                 
-        this._titleBar.removeClass('panel');            // removes borders
-        this._titleBar.removeClass('dark-bar');
-        this._titleBar.removeClass('bottom-bar');
-        this._titleBar.removeClass('top-bar');
-        this._titleBar.removeClass('round-top');
-
+        this._titleBar.removeClass('panel');            // removes default borders
+        this.clearTitleStyle();
+        
         this._titleBar.addClass('transparent');
 
         this.removeClass('panel');            // removes borders
@@ -60,6 +59,13 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
         
         this.addClass('transparent');
 
+    },
+
+    clearTitleStyle: function() {
+        this._titleBar.removeClass('dark-bar');
+        this._titleBar.removeClass('bottom-bar');
+        this._titleBar.removeClass('top-bar');
+        this._titleBar.removeClass('round-top');        
     },
 
     // getTitle - so that clients know where to add buttons

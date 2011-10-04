@@ -45,7 +45,7 @@ Minx.SpinnerPopup = my.Class(Minx.Popup, {
             length: 7, // The length of each line
             width: 4, // The line thickness
             radius: 12, // The radius of the inner circle
-            color: color || '#DDE', // #rbg or #rrggbb
+            color: color || '#40403f', // #rbg or #rrggbb
             speed: 1, // Rounds per second
             trail: 100, // Afterglow percentage
             shadow: false // Whether to render a shadow

@@ -22,6 +22,7 @@ Minx.Layout.PhoneLayout = my.Class({
         this._navPanel = Minx.pm.add(main,'mover-panel');
         this._navPanel.addClass('round-top');
         this._navPanel.addClass('thin-border');
+        this._navPanel.addClass('left-nav');
         this._navPanel.addTitle();
         
 
@@ -66,7 +67,7 @@ Minx.Layout.PhoneLayout = my.Class({
             // we manage the transitioning between menus so we add our own back button
             var backButton = panel.getTitle().addButton();
             backButton.setType('back');
-            backButton.pinParent({l: 25, t:7, r:-1, b:-1});
+            backButton.pinParent({l: 10, t:7, r:-1, b:-1});
             
             backButton.show();   
 
