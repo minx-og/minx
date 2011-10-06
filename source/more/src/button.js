@@ -211,11 +211,15 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         // utility nested functions 
         function addTextSpan(text) {  
             
+            me._ins = document.createElement('div');
+            me._ins.setAttribute('class', 'button-ins');
+
+            me._node.appendChild(me._ins);
             
             me._label = document.createElement('span');
             me._label.setAttribute('class', 'label');
             
-            me._node.appendChild(me._label);  
+            me._ins.appendChild(me._label);  
 
             me._textNode = document.createTextNode(text);
             me._label.appendChild(me._textNode);  

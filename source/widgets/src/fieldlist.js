@@ -148,10 +148,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             this._afterBreak = false;
         }
 
-        if (row.type == 'break') {
-            
-            liClass = liClass + " break";
-            
+        if (row.type == 'break' || row.type == 'title') {
             if (prevli != null) {                               // add on last to the previous rows class
                 var atts = prevli.getAttribute('class');
                 if (atts == null) {
@@ -160,6 +157,11 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 atts = atts + " last";
                 prevli.setAttribute('class', atts);   
             }
+        }
+        if (row.type == 'break') {
+            
+            liClass = liClass + " break";
+            
             this._afterBreak = true;
         }
         else if(row.type == 'title') {

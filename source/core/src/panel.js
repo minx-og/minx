@@ -173,8 +173,11 @@ Minx.Panel = my.Class({
     // specific size - but pinning overrides these values if we are an instance of a pinned panel
     setSize: function(width, height) {
 
-        this._newG.w = width;
-        this._newG.h = height;
+        if (width >= 0)
+            this._newG.w = width;
+        
+        if (height >= 0)
+            this._newG.h = height;
     },
 
 

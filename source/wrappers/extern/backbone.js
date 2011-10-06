@@ -538,7 +538,11 @@
       this._byId[model.id] = model;
       this._byCid[model.cid] = model;
       model.collection = this;
-      var index = this.comparator ? this.sortedIndex(model, this.comparator) : this.length;
+      var defaultIndex = this.length;
+      if (options.at != undefined) {
+        if (options.at >= 0 && options.at < this.length) defaultIndex = options.at;
+      }
+      var index = this.comparator ? this.sortedIndex(model, this.comparator) : defaultIndex;
       this.models.splice(index, 0, model);
       model.bind('all', this._boundOnModelEvent);
       this.length++;

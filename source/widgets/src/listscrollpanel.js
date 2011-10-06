@@ -226,6 +226,9 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             if (h == list.length-1) {
 
                 li.setAttribute('class', 'last');
+                if (h == 0) {
+                    li.setAttribute('class', 'first last');
+                }
             }
 
             // capture clicks

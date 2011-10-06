@@ -1,6 +1,6 @@
 /* core geometry */
 
-*, h1, h2, p {
+*, h1, h2, p span {
     padding:0;
     margin:0;
     font-size: 12pt;
@@ -29,6 +29,10 @@ body {
 
     /* perf?? */
     text-shadow: 0px 1px 0px white;
+}
+
+.mask {
+    background: rgba(0,0,0,.2);
 }
 
 .hidden {
@@ -80,6 +84,9 @@ body {
     -webkit-border-top-right-radius: 0px;
 }
 
+.clear-top-pad {
+    padding-top: 0;
+}
 
 .pop-up {
     border: 3px solid;

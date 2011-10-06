@@ -5,6 +5,14 @@ if (typeof Minx === "undefined") {
     Minx = {};
 }
 
+// Array Remove - By John Resig (MIT Licensed)
+// Array.prototype.remove = function(from, to) {
+//   var rest = this.slice((to || from) + 1 || this.length);
+//   this.length = from < 0 ? this.length + from : from;
+//   return this.push.apply(this, rest);
+// };
+
+
 // an event wrapper linking the panel with the event e and the function to call
 // by setting upp this little wrapper with the trigger function - i can explicitly call the panel callback - so this is correct in the panael callback
 Minx.Event = function(panel, callback) {
@@ -374,7 +382,7 @@ Minx.PanelManager = function() {
     }
     
     // default add is a pinned panel - all popups pass in the string 'main' to attach to the auto generated main
-    this.add = function(parent, type){
+    this.add = function(parent, type, mask){
         // default is a pinned panel
         if (typeof type == "undefined") {
             type = 'pinned';
@@ -395,7 +403,34 @@ Minx.PanelManager = function() {
             parent = _root_node;
         }
 
-        return this._addType(parent, type);
+        // modal mask needed??
+        var newMask = null;
+        if (mask) {
+            newMask = this._addType(this._main, 'pinned');
+            newMask.fillParent();
+            newMask.addClass('mask');
+            newMask.setStyle('z-index', '45');
+            newMask._instantFirstDraw = false;
+            newMask.hide({now: true});
+            // pause for dom
+            setTimeout(function() {
+                newMask.setAnimate(500);
+                newMask.show();    
+            }, 10);
+
+            parent = newMask;
+            
+        }
+        
+        var newPanel = this._addType(parent, type);
+    
+        if (newMask) {
+            newPanel.mask = newMask;
+            newPanel.setStyle('z-index', '46');
+        }
+    
+
+        return newPanel;
     }
 
     // add a new panel - to a parent or root, create a managed id, add to our flat managed list of all panels
@@ -425,6 +460,12 @@ Minx.PanelManager = function() {
     this.remove = function(panel) {
         if (panel == null) {
             return;
+        }
+
+        // did this panel get added a mackground mask?
+        if (panel.mask) {
+
+            this.remove(panel.mask);
         }
 
         // if pnel is an id - find it in our managed list of _panels
