@@ -18,6 +18,8 @@ Minx.DataBoundPanel = my.Class(Minx.PinnedPanel, {
 
 		this._view = null;			 // some object that knows how to draw the model 
 
+        this._firstModel = true;
+
 		// the resize event handler for my widget code to hook into
 		this._resizeCallback = null;
 
@@ -27,6 +29,11 @@ Minx.DataBoundPanel = my.Class(Minx.PinnedPanel, {
 
     // tell me what my model is - its upto the widget to know what to do with this
     setModel: function(model) {
+        
+        if (this._model) {
+            this._firstModel = false;
+        }
+
     	this._model = model;	
     },
 

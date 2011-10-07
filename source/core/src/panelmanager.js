@@ -18,7 +18,7 @@ if (typeof Minx === "undefined") {
 Minx.Event = function(panel, callback) {
 
         this.trigger = function (e) {
-                //e.stopPropagation();            // stop nearby html getting the event as well
+                e.stopPropagation();            // stop nearby html getting the event as well
                 
                 panel[callback](e);
         }

@@ -161,17 +161,23 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // as our munge function completely recreates the ul and all li's in it we may as well recreate the scroller.
         // if we simply call refresh the scroller expects the ul to be the same one that was in place when we created the scroller in the first place
 
-        console.log("----------------------> MUNGING <---------------------")
-
-        this.setContentChanged(true);
-
-        // this may be sub-optimal - but given the total recreation i doubt it...
         var rawList = this.getModel();
         
         if (rawList == null) {
 
             throw "munge called, but no model set";
         }
+
+        if (this._firstModel && rawList.length == 0)
+        {
+            console.log("first munge on empty list so doing nothing");
+            return;
+        }
+
+        console.log("----------------------> MUNGING <---------------------")
+
+        this.setContentChanged(true);
+        
 
         var list = rawList;
 
@@ -212,7 +218,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
             row = list[h];
 
-            this._dataByKey[row[this._keyField]] = row;
+            this._dataByKey[row[this._keyField]] = row;       // should purely be pointers to the raw data, which is normally wrapped in a backbone object
 
             // make a new li for this row
             li = document.createElement('li');

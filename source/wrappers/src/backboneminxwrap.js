@@ -16,7 +16,7 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
 
     // callback that binds to any event on the model
     allModelFired: function(event, model) {
-        this.updateWidgetModel(model);  
+        this.updateWidgetModel(model, true);  
     },
 
     allWidgetFired: function(panel, thing) {
@@ -37,17 +37,19 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
         this._widget.munge();
     },
 
-    updateWidgetModel: function(model) {
+    updateWidgetModel: function(model, draw) {
           // if we are not using the fixed model - for example a collection then pass the widget the raw model object
         if(!this._modelFixed) {
             this._widget.setModel(model.toJSON);
         }
         else {
-            this._widget.setModel(this._collection.toJSON());   // toJSON actiually creates a pojso
+            this._widget.setModel(this._collection.toJSON());   // toJSON actiually creates a pojso - but should check it isnt a copy - is it a reference to the backbone data?
         }
 
         // and render the widget
-        this.render();
+        if (draw) {
+            this.render();
+        }
     },
 
     // called to tell this Widget View it is viewing the whole collecion (Collection events only send the model in the collection i think?)
@@ -84,6 +86,11 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
 
     // if it is a list view bind to any event in teh whole collection  
     this.bindCollection = function(collection) {
+
+        if (view._collection === collection) {
+            return
+        }
+
         view.setCollection(collection);    
         this.bindModel(collection);
     };
@@ -98,10 +105,10 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
 
     // bind all model events to the WidgetView
     this.bindModel = function(model) {
-        model.bind('all', view.allModelFired);          // this really does the glue between the view and the collection
+        model.bind('all', view.allModelFired);          // this really does the glue between the view and the collection - is says any update event then call munge
 
         // and make sure we draw it 
-        view.updateWidgetModel();
+        view.updateWidgetModel(null, true);
     };
 
     // naughty private fidler but tells me when any clicks on our widget TODO - make a setter

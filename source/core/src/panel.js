@@ -606,6 +606,17 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
     // hiding does not affect the dom
     // instant  = hide at same time as opacity - so no transition on visibility so instant hide, no timing issues
     // detach - take it out of the dom
+
+    detach: function() {
+
+        if (!this._detached) {
+
+            this._parent._node.removeChild(this._node);
+            this._detached = true;
+        }
+    },
+
+
     hide: function(pars) {
 
         var instant = (pars && pars.now) ? pars.now : false;
@@ -624,10 +635,8 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
             me.setStyle('visibility', 'hidden');
 
             // want me off the dom too, and I'm not already
-            if (detach && !me._detached) {
-
-                me._parent._node.removeChild(me._node);
-                me._detached = true;
+            if (detach) {
+                me.detach();
             }
 
         }
@@ -641,10 +650,9 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
                 me._applyStyles();
 
                 // want to detach fully and is not allready detached
-                if (det[0] && !me._detached) {
+                if (det[0]) {
 
-                    me._parent._node.removeChild(me._node);
-                    me._detached = true;
+                    me.detach();
                 }
 
             }, this._animate, [detach]);        // fade after whatever the animation time is
@@ -971,7 +979,15 @@ ENDFIXPOS */
         var list = panel._removeKids();
 
         // now remove child from my node
-        this._node.removeChild(panel.getNode());
+        try {
+            panel.detach();
+            //this._node.removeChild(panel.getNode());
+        }
+        catch(e) {
+            console.error(e);
+            console.log(panel.getId());
+            console.log(panel.getNode().innerHTML); 
+        }
 
         // and delete from my panel list
         delete this._kidies[panel.getId()];
