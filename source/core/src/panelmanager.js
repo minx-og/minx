@@ -412,11 +412,14 @@ Minx.PanelManager = function() {
             newMask.setStyle('z-index', '45');
             newMask._instantFirstDraw = false;
             newMask.hide({now: true});
+
+            newMask.setAnimate(500);
+            
             // pause for dom
-            setTimeout(function() {
-                newMask.setAnimate(500);
-                newMask.show();    
-            }, 10);
+            // setTimeout(function() {
+                
+            //     newMask.show();    
+            // }, 100);                                // 100 ms to allow content to draw itself
 
             parent = newMask;
             

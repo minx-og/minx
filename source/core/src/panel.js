@@ -527,6 +527,11 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
     // set visible, apply geometry to style, and finally syle the node with it all
     show: function() {
 
+        // if we are masked show the mask 
+        if (this.mask) {
+           this.mask.show();
+        }
+
         // make sure the hide wont still be called
         clearTimeout(this._hideTimer);
 
