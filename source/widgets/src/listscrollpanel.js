@@ -131,12 +131,6 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
     },
 
 
-    setKeyField : function(key) {
-
-        this._keyField = key;
-    },
-
-
     // a callback to return the row content
     setRowRenderer: function(fn) {
 
@@ -146,7 +140,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
     getData: function(key) {
 
-        return this._dataByKey[key];
+        return this.getModel().get(key);
     },
 
 
@@ -161,7 +155,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // as our munge function completely recreates the ul and all li's in it we may as well recreate the scroller.
         // if we simply call refresh the scroller expects the ul to be the same one that was in place when we created the scroller in the first place
 
-        var rawList = this.getModel();
+        var rawList = this.getModel();      // a backbone collection
         
         if (rawList == null) {
 
@@ -184,10 +178,10 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // do we have a filter
         if (this._filter != null) {
 
-            list = rawList.filter(this._filter);
+            list = rawList.filter(this._filter);        // references to the original model, but a subset?
         }
 
-        var view = this.getView();
+        var view = this.getView();                       // a backbone view 
 
         // trash any stuff in my node (hope this cleans it out of the dom nicely)....
         if (this._widgetRoot) {
@@ -214,15 +208,21 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         var prevli = null      // previous li = used for setting last on rows prior to breaks
         
-        for (var h in list) {
+        // consider each if it is a backbone model
+        for (var h in list.models) {
 
-            row = list[h];
+            console.log(h);
 
-            this._dataByKey[row[this._keyField]] = row;       // should purely be pointers to the raw data, which is normally wrapped in a backbone object
+
+            row = list.models[h];
+
+            console.log(row);
+
+            // this._dataByKey[row[this._keyField]] = row;       // should purely be pointers to the raw data, which is normally wrapped in a backbone object
 
             // make a new li for this row
             li = document.createElement('li');
-            li.setAttribute('id', row[this._keyField]);       // set element attribute to my id
+            li.setAttribute('id', row.get('id')); // this._keyField]);       // set element attribute to my id
             
             if (h == 0) {
 
@@ -288,7 +288,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
     getRowMarkup: function(parentId, row) {
         // for now assume a model with a property 'name'
         var div = document.createElement('div');
-        var text = document.createTextNode(row.name);
+        var text = document.createTextNode('unimplemented row view');
         div.appendChild(text);
 
         return div;  

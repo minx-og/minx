@@ -38,13 +38,28 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
     },
 
     updateWidgetModel: function(model, draw) {
-          // if we are not using the fixed model - for example a collection then pass the widget the raw model object
+        // if we are not using the fixed model - for example a collection then pass the widget the raw model object
+
+        /*
+
         if(!this._modelFixed) {
             this._widget.setModel(model.toJSON);
         }
         else {
             this._widget.setModel(this._collection.toJSON());   // toJSON actiually creates a pojso - but should check it isnt a copy - is it a reference to the backbone data?
         }
+
+        */
+
+        // TODO - big refactoring
+
+        if(!this._modelFixed) {
+            this._widget.setModel(model);
+        }
+        else {
+            this._widget.setModel(this._collection);   // toJSON actiually creates a pojso - but should check it isnt a copy - is it a reference to the backbone data?
+        }
+
 
         // and render the widget
         if (draw) {
@@ -105,7 +120,8 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
 
     // bind all model events to the WidgetView
     this.bindModel = function(model) {
-        model.bind('all', view.allModelFired);          // this really does the glue between the view and the collection - is says any update event then call munge
+        // bind to refresh to do a full munge
+        model.bind('refresh', view.allModelFired);          // this really does the glue between the view and the collection - is says any update event then call munge
 
         // and make sure we draw it 
         view.updateWidgetModel(null, true);

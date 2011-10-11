@@ -11,8 +11,6 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         // call my base constructor
         Minx.FieldListPanel.Super.call(this, parent, id);
 
-        this.setKeyField('name');
-
         this.fillParent(1);
 
         // state based on the model
@@ -41,6 +39,13 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         Minx.eq.subscribe(this, this.getNode(), 'keyup');    // register for keypresses
     },
 
+
+    setModel: function(model) {
+        var qs = new Backbone.Collection(model, {keyfield: 'name'});
+
+        Minx.FieldListPanel.Super.prototype.setModel.call(this, qs);
+    },
+    
 
     setDefault: function(panel) {                               // can override field list default with an external button
         this._defaultButton = panel;
@@ -120,7 +125,11 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
     },
 
 
-    getRowMarkup: function(parentId, row, li, prevli) {
+    getRowMarkup: function(parentId, backRow, li, prevli) {
+        // now row is a backbone model
+
+        var row = backRow.toJSON();
+
         var me = this;
 
         if (typeof prevli === "undefined") {

@@ -65,7 +65,7 @@ Minx.anim = {
     trans: '-webkit-transform',
     transpeed: '-webkit-transition-duration',
     setpos: function(pan, x, y) {
-        pan.setStyle(Minx.anim.trans, 'translate3d(' + x + 'px,' + y + 'px, 0px)');
+       pan.setStyle(Minx.anim.trans, 'translate3d(' + x + 'px,' + y + 'px, 0px)');
         
         /* use this event if we add animations
         pan.getNode().addEventListener( 'webkitAnimationEnd', function( event ) {
@@ -84,7 +84,7 @@ Minx.anim = {
 */
 
 
-    },
+   },
 /* FIXPOS 
     fixpos: function(pan, x, y) {
         pan.removeStyle(Minx.anim.trans);
@@ -124,7 +124,13 @@ Minx.anim = {
         
     },
     settime: function(pan, speed) {
-        pan.setStyle(Minx.anim.transpeed, speed + 'ms');
+        if (speed == 0) {
+            pan.removeStyle(Minx.anim.transpeed);
+
+        } else {
+
+            pan.setStyle(Minx.anim.transpeed, speed + 'ms');
+        }
     }
 };
 */
@@ -393,9 +399,17 @@ Minx.Panel = my.Class({
 
     // This gets called when my geometry changed - override it to do some resizing based activity
     resized: function() {
+        if (this._resizeListener) {
+            
+            this._resizeListener();
+        }
         // pass
     },
 
+    onResized: function(fn) {
+
+        this._resizeListener = fn;
+    },
 
     // This gets called when my node gets added back to the dom
     reattached: function() {

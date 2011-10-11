@@ -378,13 +378,24 @@
   // its models in sort order, as they're added and removed.
   Backbone.Collection = function(models, options) {
     options || (options = {});
+    
+    if (options.keyfield) {
+      this._keyfld = options.keyfield;
+    }
+
+    var origSilent = options.silent;
+    options.silent = true;
+    
     if (options.comparator) {
       this.comparator = options.comparator;
       delete options.comparator;
     }
     this._boundOnModelEvent = _.bind(this._onModelEvent, this);
     this._reset();
-    if (models) this.refresh(models, {silent: true});
+    if (models) this.refresh(models, options);
+    
+    options.silent = origSilent;
+
     this.initialize(models, options);
   };
 
@@ -468,8 +479,11 @@
     refresh : function(models, options) {
       models  || (models = []);
       options || (options = {});
+      var origSilent = options.silent;
+      options.silent = true;
       this._reset();
-      this.add(models, {silent: true});
+      this.add(models, options);
+      options.silent = origSilent;
       if (!options.silent) this.trigger('refresh', this, options);
       return this;
     },
@@ -530,7 +544,13 @@
     // hash indexes for `id` and `cid` lookups.
     _add : function(model, options) {
       options || (options = {});
+
       if (!(model instanceof Backbone.Model)) {
+        var kf = options.keyfield || this._keyfld;
+        if (kf && kf !== 'id') {
+          model.id = model[kf];
+          if (model.id == undefined) throw new Error("A custom id attribute (" + kf + ")was specified but that attribute does not exist");
+        }
         model = new this.model(model, {collection: this});
       }
       var already = this.getByCid(model);
