@@ -41,6 +41,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
 
     setModel: function(model) {
+        console.log('setm');
         var qs = new Backbone.Collection(model, {keyfield: 'name'});
 
         Minx.FieldListPanel.Super.prototype.setModel.call(this, qs);

@@ -41,6 +41,10 @@ body {
     width: 0px;
 }
 
+.faded {
+    opacity: 0;
+}
+
 .panel {
     overflow: hidden;
     position: absolute;
@@ -56,8 +60,8 @@ body {
 
 
 .round-bottom {
-    -webkit-border-bottom-left-radius: 9px;
-    -webkit-border-bottom-right-radius: 9px;
+    -webkit-border-bottom-left-radius: 12px;
+    -webkit-border-bottom-right-radius: 12px;
 
     -moz-border-radius-bottomleft: 9px; 
     -moz-border-radius-bottomright: 9px; 

@@ -64,8 +64,13 @@ Minx.Geom = function(){
 Minx.anim = {
     trans: '-webkit-transform',
     transpeed: '-webkit-transition-duration',
+
+    getTranslate: function(x, y) {
+        return 'translate3d(' + x + 'px,' + y + 'px, 0px)'   
+    },
+
     setpos: function(pan, x, y) {
-       pan.setStyle(Minx.anim.trans, 'translate3d(' + x + 'px,' + y + 'px, 0px)');
+       pan.setStyle(Minx.anim.trans, this.getTranslate(x, y));
         
         /* use this event if we add animations
         pan.getNode().addEventListener( 'webkitAnimationEnd', function( event ) {
@@ -539,7 +544,9 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
     // show - does the whole shebang if needed
     // quite a biggy - triggers a layout, then a draw, to actually apply to the dom
     // set visible, apply geometry to style, and finally syle the node with it all
-    show: function() {
+    show: function(pars) {
+        pars = pars || {};
+        var fadein = pars.fade;
 
         // if we are masked show the mask 
         if (this.mask) {
@@ -548,12 +555,6 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
 
         // make sure the hide wont still be called
         clearTimeout(this._hideTimer);
-
-        // set visible - inherit the parents visibility
-        this.setStyle('visibility', 'inhertied');
-
-        //DEBUG - remove opacity for hw accell
-        this.setStyle('opacity', this._maxOpacity);
 
         // we need to force a redraw on any reattaching panels incase there is a iscroll component which needs to be completely rendered 
         // before it can get its own dimensions so if it has dynamic content then the new content needs to be available and it needs to be in the dom so each 
@@ -565,18 +566,47 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         // add it to the dom first - so iscroll can layout properly
         if (this._detached) {
 
+            if (fadein) {
+                // make sure we are initially hidden
+                this.setStyle('opacity', '0');
+                this._applyStyles();
+            }
+
             this._parent._addToDom(this);
             this._detached = false;
 
             this.reattached();                                              // fire any re-attach callbacks - perhaps could use this for any iscrol panles
         }
-                
+
+        // set visible - inherit the parents visibility
+        this.setStyle('visibility', 'inhertied');
+
+        //DEBUG - remove opacity for hw accell
+        this.setStyle('opacity', this._maxOpacity);
+
+
+        var me = this;
         // if it was detached then force a relayout of the children
         // make sure it is rendered and 
-        this.render(force);        
-
+        if (fadein) {
+            setTimeout(function() {
+                me.render(force);           // TODO - is force valid in the timeout callback
+            }, 10);
+        }
+        else{
+            me.render(force);
+        }
     },
 
+    reportLineage: function(mid) {
+        mid = mid || "";
+        if (this.getParent()) {
+            return this.getParent().reportLineage(mid + " - " + this.getId());
+        }
+        else {
+            return mid + " - " + this.getId();
+        }
+    },
 
     // render lays it out and calls draw to draw it in the dom
     render: function(force) {

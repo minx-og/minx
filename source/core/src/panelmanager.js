@@ -406,14 +406,7 @@ Minx.PanelManager = function() {
         // modal mask needed??
         var newMask = null;
         if (mask) {
-            newMask = this._addType(this._main, 'pinned');
-            newMask.fillParent();
-            newMask.addClass('mask');
-            newMask.setStyle('z-index', '45');
-            newMask._instantFirstDraw = false;
-            newMask.hide({now: true});
-
-            newMask.setAnimate(500);
+            newMask = this._addType(this._main, 'mask');
             
             // pause for dom
             // setTimeout(function() {

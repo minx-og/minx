@@ -107,24 +107,15 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                     me._scroller = null;
                 }
 
-                console.log("ISCROL - - - - - - > Making new scroller for  " + me.getId());
-                //DEBUG
-                var danow = new Date();
-                if(Mtk.xactTimer) 
-                    console.log("before Scroll - " + (danow - Mtk.xactTimer));
-
+                //console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
+                
                 // create the new scroller
                 me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
                 
                 // clear my flag
-                this._need_new_scroller = false;
+                me._need_new_scroller = false;
 
-                console.log("Scroller complete");
-
-                //DEBUG
-                var danow = new Date();
-                if(Mtk.xactTimer) 
-                    console.log("After Scroll - " + (danow - Mtk.xactTimer));
+                //console.log("Scroller complete");
                 
             }, 310);            // TODO - as long as the panel is reattached (and as we are not animating dimensions - this timer could be 10ms probably
         }
@@ -164,11 +155,11 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         if (this._firstModel && rawList.length == 0)
         {
-            console.log("first munge on empty list so doing nothing");
+            //console.log("first munge on empty list so doing nothing");
             return;
         }
 
-        console.log("----------------------> MUNGING <---------------------")
+        //console.log("----------------------> MUNGING <---------------------  " + this.reportLineage());
 
         this.setContentChanged(true);
         
@@ -210,15 +201,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         
         // consider each if it is a backbone model
         for (var h in list.models) {
-
-            console.log(h);
-
-
+            
             row = list.models[h];
-
-            console.log(row);
-
-            // this._dataByKey[row[this._keyField]] = row;       // should purely be pointers to the raw data, which is normally wrapped in a backbone object
 
             // make a new li for this row
             li = document.createElement('li');
@@ -267,15 +251,9 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             list.length < this._listLength ? list.length : this._listLength;
         }
 
-
-
-                 //DEBUG
-            var danow = new Date();
-            if(Mtk.xactTimer) 
-                console.log("munge done  - " + (danow - Mtk.xactTimer));
-
-
         this.render(true);
+
+        //console.log("Askling for new scroller cos MUNGED " + this.getId());
 
         // IMPORTANT  - dont move this before the render - why? i dont fucking know!
         this._need_new_scroller = true;
@@ -302,6 +280,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // super to call any callback
         Minx.ListScrollPanel.Super.prototype.resized.call(this);
 
+        //console.log("Askling for new scroller cos resized " + this.getId());
         // capture that we did resize so that we know to refresh the scroller after drawing parent
         this._need_new_scroller = true;
     },
@@ -314,6 +293,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // super to call any callback
         Minx.ListScrollPanel.Super.prototype.reattached.call(this);
 
+        //console.log("Askling for new scroller cos reattached " + this.getId());
         // capture that we did resize so that we know to refresh the scroller after drawing parent
         this._need_new_scroller = true;
     },
