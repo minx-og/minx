@@ -394,7 +394,19 @@ Minx.Panel = my.Class({
     },
 
 
+    // little utility to return the panel id's in this tree
+    reportLineage: function(mid) {
+        mid = mid || "";
+        if (this.getParent()) {
+            return this.getParent().reportLineage(mid + " - " + this.getId());
+        }
+        else {
+            return mid + " - " + this.getId();
+        }
+    },
 
+
+    
     // Actions
     // =======
     
@@ -402,21 +414,23 @@ Minx.Panel = my.Class({
     // -----
     // events that my derived classes might like to know bout 
 
-    // This gets called when my geometry changed - override it to do some resizing based activity
+    // This gets called when my geometry changed - override it to do some resizing based activity or set a listener 
     resized: function() {
-        if (this._resizeListener) {
-            
+        if (this._resizeListener) {   
             this._resizeListener();
         }
-        // pass
     },
 
+
+    // set up a function to listen to any resized events
     onResized: function(fn) {
 
         this._resizeListener = fn;
     },
 
+
     // This gets called when my node gets added back to the dom
+    // override 
     reattached: function() {
         // pass
     },
@@ -432,7 +446,7 @@ Minx.Panel = my.Class({
 
     
     // override this to extract something specific from the event to pass to any listeners
-    // importat to return a parameter object containing {e: event as a minimum}
+    // important to return a parameter object containing {e: event as a minimum}
     // event is the raw dom event
     eventParse: function(event) {
 
@@ -477,7 +491,7 @@ Minx.Panel = my.Class({
     },
 
 
-    //@protected - override eventParse instead
+    // @protected - override eventParse instead
     // the default callback for all subscribed events via Minx.eq
     eventFired: function(event) {
         // pass down to kids who may want to extract something specific from the event
@@ -500,15 +514,18 @@ show()  - is the main api call a client will make
       |
        ---> render()
 
+
 hide()  - show()'s counterpart sets opacity 0 and after enough time for opacity transition (fade) to occur sets visibility hidden
   |
    --->  _applyStyles()  - calls this directly as no geometry changed just want to hide 
+
 
 render() - will layout the panel and 'draw' it to the dom with current settings
   |
    ---> layout ()
   |
    ---> draw ()
+
 
 
 the three above are the most likely to be used by the client - the rest may be usefull to override
@@ -556,21 +573,22 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         // make sure the hide wont still be called
         clearTimeout(this._hideTimer);
 
-        // we need to force a redraw on any reattaching panels incase there is a iscroll component which needs to be completely rendered 
+        // we need to force a redraw on any reattaching panels incase there is an iscroll component which needs to be completely rendered 
         // before it can get its own dimensions so if it has dynamic content then the new content needs to be available and it needs to be in the dom so each 
-        // element in the iscrol list can be rendered corectly befor the iscroll does its thing
+        // element in the iscrol list can be rendered corectly so iscroll can detect correct size and do its thing
         // it is upto subclass panels to setContentChanged so we know to force a full redraw down to the iscroll containing child        
         // this changed content thing - is only really needed for panels with iscrol and which detatch from the dom
+        // so we will force a redraw if me or any kids have explicitly marked content changed
         var force = this.hasContentChanged();
 
+        if (fadein) {
+            // make sure we are initially faded out
+            this.setStyle('opacity', '0');
+            this._applyStyles();                            // update the dom with zero opacity
+        }
+        
         // add it to the dom first - so iscroll can layout properly
         if (this._detached) {
-
-            if (fadein) {
-                // make sure we are initially hidden
-                this.setStyle('opacity', '0');
-                this._applyStyles();
-            }
 
             this._parent._addToDom(this);
             this._detached = false;
@@ -581,16 +599,15 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         // set visible - inherit the parents visibility
         this.setStyle('visibility', 'inhertied');
 
-        //DEBUG - remove opacity for hw accell
+        // and set the panel back to its maximum opacity
         this.setStyle('opacity', this._maxOpacity);
 
-
         var me = this;
-        // if it was detached then force a relayout of the children
-        // make sure it is rendered and 
+
+        // timer trick to make sure the opacity 0 is rendered for the fade in
         if (fadein) {
             setTimeout(function() {
-                me.render(force);           // TODO - is force valid in the timeout callback
+                me.render(force);
             }, 10);
         }
         else{
@@ -598,15 +615,6 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         }
     },
 
-    reportLineage: function(mid) {
-        mid = mid || "";
-        if (this.getParent()) {
-            return this.getParent().reportLineage(mid + " - " + this.getId());
-        }
-        else {
-            return mid + " - " + this.getId();
-        }
-    },
 
     // render lays it out and calls draw to draw it in the dom
     render: function(force) {
@@ -896,6 +904,11 @@ ENDFIXPOS */
         if (Minx.pm.dims.phone) {
 
             panel.addClass('phone');
+        }
+
+        if (Minx.pm.dims.retina) {
+
+            panel.addClass('retina');
         }
         
         this.addClass(this.getClassName());                  // overridden to apply specific class

@@ -5,72 +5,68 @@ if (typeof Minx === "undefined") {
     Minx = {};
 }
 
-// Array Remove - By John Resig (MIT Licensed)
-// Array.prototype.remove = function(from, to) {
-//   var rest = this.slice((to || from) + 1 || this.length);
-//   this.length = from < 0 ? this.length + from : from;
-//   return this.push.apply(this, rest);
-// };
 
+// an event wrapper linking the passed in panel with the event e and the function to call
+// by setting upp this little wrapper with the trigger function - i can explicitly call the panel callback - so 'this' is correct in the panel callback
+// otherwise 'this' will be the dom element the event listener was atached to
+// instead of this little wrapper we could refer to me in all the event handlers = ball ache
+// i think this little wrapper is much the same as others implementation of 'bind' type things
 
-// an event wrapper linking the panel with the event e and the function to call
-// by setting upp this little wrapper with the trigger function - i can explicitly call the panel callback - so this is correct in the panael callback
 Minx.Event = function(panel, callback) {
 
-        this.trigger = function (e) {
-                e.stopPropagation();            // stop nearby html getting the event as well
-                
-                panel[callback](e);
-        }
+    this.trigger = function (e) {
+        
+            e.stopPropagation();            // stop nearby html getting the event as well
+            
+            panel[callback](e);
+    }
 }
 
+
 // the event 'queue' - not even a queue but could be if we wanted to manage all events
-// for now this creates a simple wrapper function so that when the handler is called on the panel - 'this' is in scope
+// for now this creates a simple wrapper function object so that when the handler is called on the panel - 'this' is in scope
 // it also adds the event to the list of events for the individual panel - so each panel could manage its own event list
 Minx.Events = function(){
-        // any global list?
+    // consider - is there any need for a global minx list of all subscribing panels?
 
-        //panel a reference - ev the event we want, callback = the name of the 
-        this.subscribe = function(panel, node, ev, callback, capture) {
-            if (typeof callback == "undefined") {
-                callback = 'eventFired';
-            }
+    // panel a reference to a panel - ev the event we want, callback = string name of the function to call on the panel
+    // is this my 'bind' equivalent?
+    this.subscribe = function(panel, node, ev, callback, capture) {
 
-            if (typeof capture == "undefined") {
-                capture = false;
-            }
-            
-            // wrapper to call the event on the panel
-            var mEv = new Minx.Event(panel, callback);
+        if (typeof callback === "undefined") callback = 'eventFired';
+        if (typeof capture == "undefined") capture = false;
+        
+        // wrapper to call the event on the panel
+        var mEv = new Minx.Event(panel, callback);
 
-            // the default node is the panels node
-            if(node == null) {
-                node = panel.getNode();
-            }
-
-            // let the panel know it has ths event 
-            if (typeof panel.addEvent !== "undefined") {
-                panel.addEvent({node: node, ev: ev, mEv: mEv});
-            }
-
-            // then add it to the dom - passing in closure (of panel and callback)
-            node.addEventListener(ev, mEv.trigger, capture);
-
-            return mEv;
+        // the default node is the panels node
+        if(node == null) {
+            node = panel.getNode();
         }
 
-        this.unsubscribe = function(panel, node, ev, mEv) {
-            // the default node is the panels node
-            if(node == null) {
-                node = panel.getNode();
-            }
-            
-            node.removeEventListener(ev, mEv.trigger);
-
-            if (typeof panel.removeEvent !== "undefined") {
-                panel.removeEvent({node: node, ev: ev, mEv: mEv});
-            }
+        // let the panel know it has ths event - panels maintain a list of events they are subscribed to - this is not used at the moment however
+        if (typeof panel.addEvent !== "undefined") {
+           panel.addEvent({node: node, ev: ev, mEv: mEv});
         }
+
+        // then add it to the dom - passing in closure (of panel and callback)
+        node.addEventListener(ev, mEv.trigger, capture);
+
+        return mEv;
+    }
+
+    this.unsubscribe = function(panel, node, ev, mEv) {
+        // the default node is the panels node
+        if(node == null) {
+            node = panel.getNode();
+        }
+        
+        node.removeEventListener(ev, mEv.trigger);
+
+        if (typeof panel.removeEvent !== "undefined") {
+            panel.removeEvent({node: node, ev: ev, mEv: mEv});
+        }
+    }
 };
 
 
@@ -79,6 +75,20 @@ Minx.Events = function(){
 
 // new event queue
 Minx.eq = new Minx.Events();
+
+// debounce behaviour - avoide loads of actions wiht multiple clicks
+Minx.Debounce = {};
+Minx.Debounce.actionTimers = {};
+Minx.Debounce.action = function(key, action, lag) {
+    if((typeof lag) === 'undefined') lag = 300;
+
+    if (this.actionTimers[key]) {
+        clearTimeout(this.actionTimers[key]);
+    }
+    this.actionTimers[key] = setTimeout(function() {
+        action();
+    }, lag);
+};
 
 
 // maintains a sigle hash of all panels
@@ -177,6 +187,15 @@ Minx.PanelManager = function() {
         this.dims.android      = this.agent().android; 
         this.dims.webos        = this.agent().webos;
         this.dims.blackberry   = this.agent().blackberry; 
+
+        this.dims.pr = 1;
+        if (window.devicePixelRatio) {
+            this.dims.pr = window.devicePixelRatio;
+        }
+
+        if ((this.dims.ipod || this.dims.iphone) && this.dims.pr >=2) {
+            this.dims.retina = true;
+        }
 
         //DEV - simulate touch
         if (this.localiPhoneTest) {
@@ -292,6 +311,9 @@ Minx.PanelManager = function() {
 
             main.getNode().innerHTML = '<div id="back-top"></div>';
 
+            console.log("Got dims w = " + this.dims.w + " h = " + this.dims.h);
+            console.log(this.dims);
+            
             main.setSize(this.dims.w, this.dims.h);         
             main.render();
 

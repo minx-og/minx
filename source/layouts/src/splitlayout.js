@@ -60,6 +60,7 @@ Minx.Layout.SplitLayout = my.Class({
         this._stuff.addClass('stuff');
         this._stuff.addTitle();
         this._stuff.setAnimate(0);
+        this._stuff.hide();
 
 
         if(!touch) {
@@ -80,6 +81,7 @@ Minx.Layout.SplitLayout = my.Class({
 
         this._navPopButton.hide();
 
+        this.hide(true);
 
         // orientation
         this._isPort = 'doit';
@@ -195,8 +197,8 @@ Minx.Layout.SplitLayout = my.Class({
 
     hide: function(now) {
         this._hidden = true;
-        this._navPanel.hide(now);
-        this._stuff.hide(now);
+        this._navPanel.hide({now: now});
+        this._stuff.hide({now: now});
     },
 
 
@@ -285,7 +287,13 @@ Minx.Layout.SplitLayout = my.Class({
             me._stuff.getContentPanel().show();
 */            
             
-            me._stuff.show();    
+            if(me._hidden) {
+                me._stuff.render();        // IMPORTANT not to show as this can unhide it
+            }
+            else {
+                me._stuff.show();
+            }
+             
         }, 300);
 
         me._navPanel.setSize(me._navLandWidth, nh);
@@ -357,7 +365,12 @@ Minx.Layout.SplitLayout = my.Class({
             // this._stuff.getContentPanel().show();
             
 
-            this._stuff.show();
+            if(this._hidden) {
+                me._stuff.render();        // IMPORTANT not to show as this can unhide it
+            }
+            else {
+                me._stuff.show();
+            }
             
             
 

@@ -34,6 +34,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         // default renderer
         this._rowRenderer = this.getRowMarkup;
+        this._emptyRenderer = this.getEmptyMarkup;
 
         this._listMax = 0;              // wnat a maximum number in this list - set this.
 
@@ -129,6 +130,12 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
     },
 
 
+    setEmptyRenderer: function(fn) {
+
+        this._emptyRenderer = fn;
+    },
+
+
     getData: function(key) {
 
         return this.getModel().get(key);
@@ -153,23 +160,22 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             throw "munge called, but no model set";
         }
 
-        if (this._firstModel && rawList.length == 0)
-        {
-            //console.log("first munge on empty list so doing nothing");
-            return;
-        }
-
         //console.log("----------------------> MUNGING <---------------------  " + this.reportLineage());
 
         this.setContentChanged(true);
         
 
-        var list = rawList;
+        var list = rawList.models;
 
         // do we have a filter
         if (this._filter != null) {
 
             list = rawList.filter(this._filter);        // references to the original model, but a subset?
+
+            // list.filter(this._filter);
+
+            console.log("FILTERING - - - - - -");
+            console.log(list);
         }
 
         var view = this.getView();                       // a backbone view 
@@ -188,7 +194,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // fast clicks on all clicks below the ul
         new NoClickDelay(this._widgetRoot);
 
-        view.appendChild(this._widgetRoot);  
+        view.appendChild(this._widgetRoot);
+
 
         var pId = this.getId();
         // now apply stuff from our model - for now its just hard coded li's
@@ -198,35 +205,15 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         var row;        // each row
 
         var prevli = null      // previous li = used for setting last on rows prior to breaks
-        
-        // consider each if it is a backbone model
-        for (var h in list.models) {
-            
-            row = list.models[h];
 
-            // make a new li for this row
+
+        if(rawList.length === 0) {
+
             li = document.createElement('li');
-            li.setAttribute('id', row.get('id')); // this._keyField]);       // set element attribute to my id
-            
-            if (h == 0) {
-
-                li.setAttribute('class', 'first');
-            }
-            
-            if (h == list.length-1) {
-
-                li.setAttribute('class', 'last');
-                if (h == 0) {
-                    li.setAttribute('class', 'first last');
-                }
-            }
-
-            // capture clicks
-            Minx.eq.subscribe(this, li, 'click');
-
-            // call potentially a callback that will return my row content as a node
-            liNode = this._rowRenderer(pId, row, li, prevli);
-            
+            li.setAttribute('id', 'id-none'); // this._keyField]);       // set element attribute to my id
+                
+            liNode = this._emptyRenderer(pId, {}, li, prevli, this._firstModel);
+                
             if (liNode != null) {
 
                 li.appendChild(liNode);
@@ -234,15 +221,63 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
             this._widgetRoot.appendChild(li);
 
-            prevli = li;
+            // this is called when the list is first bound
+            if (this._firstModel)
+            {
+                //console.log("first munge on empty list so doing nothing");
+                return;
+            }
 
-            if (this._listMax > 0) {
+            
+        }
+        else {
+            
+            
+            // consider each if it is a backbone model
+            for (var h in list) {
+                
+                row = list[h];
 
-                if (h > this._listMax) {
+                // make a new li for this row
+                li = document.createElement('li');
+                li.setAttribute('id', row.get('id')); // this._keyField]);       // set element attribute to my id
+                
+                if (h == 0) {
 
-                    break;
+                    li.setAttribute('class', 'first');
                 }
-            } 
+                
+                if (h == list.length-1) {
+
+                    li.setAttribute('class', 'last');
+                    if (h == 0) {
+                        li.setAttribute('class', 'first last');
+                    }
+                }
+
+                // capture clicks
+                Minx.eq.subscribe(this, li, 'click');
+
+                // call potentially a callback that will return my row content as a node
+                liNode = this._rowRenderer(pId, row, li, prevli);
+                
+                if (liNode != null) {
+
+                    li.appendChild(liNode);
+                }
+
+                this._widgetRoot.appendChild(li);
+
+                prevli = li;
+
+                if (this._listMax > 0) {
+
+                    if (h > this._listMax) {
+
+                        break;
+                    }
+                } 
+            }
         }
         
         this._listLength = list.length;
@@ -268,6 +303,18 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         var div = document.createElement('div');
         var text = document.createTextNode('unimplemented row view');
         div.appendChild(text);
+
+        return div;  
+    },
+
+
+    getEmptyMarkup: function(parentId, row) {
+
+        var div = document.createElement('div');
+        var h2 = document.createElement('h2');
+        var text = document.createTextNode('No items to display');
+        h2.appendChild(text);
+        div.appendChild(h2);
 
         return div;  
     },

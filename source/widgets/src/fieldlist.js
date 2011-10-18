@@ -251,6 +251,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 div.appendChild(idiv);
             }
 
+
             if (row.type == "toggle") {
                 ipType = 'div';
             }
@@ -259,6 +260,8 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             ip.setAttribute('id', 'f-'+ this.getId() + '-' + row.name);
 
             this._fields[row.name] = ip;
+
+
 
             if (row.type == "toggle") {
                 ip.setAttribute('class', 'toggle-button-wrap');
@@ -324,6 +327,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             }
             else {
 
+                // apply one to oe attibutes for example 'value'
                 for( var lb in row ) {
                     if(lb != 'label' && lb !='options') {
                         ip.setAttribute(lb, row[lb]);
