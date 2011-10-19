@@ -511,12 +511,55 @@ Minx.PanelManager = function() {
     };
 
     // need to stip these out with preprocessor or something
-    this.log = function() {
-        for(pan in _panels) {
-            console.log(pan);
-            console.log(_panels[pan]);
+    this.log = function(id) {
+        if (id) {
+            console.log(_panels[id].reportLineage());
+            console.log(_panels[id]);
         }
+        else {
+            for(pan in _panels) {
+                console.log(pan);
+                console.log(_panels[pan]);
+            }
+        }
+        return('done');
     };
+
+    this.reveal = function(id) {
+
+        if (_panels[id]) {
+
+            $('body').addClass('debug');
+
+            for(pan in _panels) {
+
+                console.log(pan);
+
+                _panels[pan].setStyle('opacity', '0.7');
+                _panels[pan].setStyle('background', 'transparent');
+                _panels[pan].render();
+
+            }
+
+            function revealMe(panel) {
+
+                if (panel.getParent()) {
+
+                    revealMe(panel.getParent());
+                }
+                panel.show();
+            }
+            
+            revealMe(_panels[id]);
+            _panels[id].addClass('debug');
+            _panels[id].render();
+            this.log(id);
+        }
+        else {
+            console.log('no panel - ' + id);
+        }
+        return('done');
+    }
 };
 
 // singleton panel manager - instantiating 2 or more of these will get us multiples of the same element id's

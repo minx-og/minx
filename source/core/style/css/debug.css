@@ -1,0 +1,8 @@
+/* core geometry */
+body.debug {
+    background: black;
+}
+
+.debug {
+    border: 1px solid red;
+}

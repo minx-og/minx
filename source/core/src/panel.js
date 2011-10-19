@@ -588,8 +588,8 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         }
         
         // add it to the dom first - so iscroll can layout properly
-        if (this._detached) {
-
+        if (this._detached && this._id != 'root') {
+             
             this._parent._addToDom(this);
             this._detached = false;
 
@@ -686,10 +686,13 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
 
             me.setStyle('visibility', 'hidden');
 
-            // want me off the dom too, and I'm not already
-            if (detach) {
-                me.detach();
-            }
+            // time to redraw dom
+            setTimeout(function(det) {
+                // want me off the dom too, and I'm not already
+                if (detach) {
+                    me.detach();
+                }
+            }, 10);
 
         }
         else {

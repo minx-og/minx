@@ -41,7 +41,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
 
     setModel: function(model) {
-        console.log('setm');
+        
         var qs = new Backbone.Collection(model, {keyfield: 'name'});
 
         Minx.FieldListPanel.Super.prototype.setModel.call(this, qs);
@@ -105,17 +105,17 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         var fld = this._fields[id];
                 
         if ((value == 'false') || (value == false)) {
-            value = 'off';    
+            value = 'no';    
         }
 
         if ((value == 'true') || (value == true)) {
-            value = 'on';    
+            value = 'yes';    
         }
 
         fld.value = value;
 
         var tog = this._toggles[id];
-        if (value == 'on') {
+        if (value == 'yes') {
             tog.bh.setAttribute('class', 'toggle-holder on');
             tog.bc.setAttribute('class', 'toggle-back');
         }
@@ -280,7 +280,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 iii.setAttribute('class', 'toggle-label on');
                 bh.appendChild(iii);
 
-                tt = document.createTextNode("On");
+                tt = document.createTextNode("Yes");
                 iii.appendChild(tt);
 
                 var bb = document.createElement('div');
@@ -291,12 +291,12 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 iii.setAttribute('class', 'toggle-label off');
                 bh.appendChild(iii);
 
-                tt = document.createTextNode("Off");
+                tt = document.createTextNode("No");
                 iii.appendChild(tt);
 
-                this._fields[row.name].value = 'off';
+                this._fields[row.name].value = 'no';
 
-                if(row.value != 'on') {
+                if(row.value != 'yes') {
                     bh.setAttribute('class', 'toggle-holder off');
                 }
 
@@ -308,13 +308,13 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 
                 function toggleOnOrOff() {
 
-                    if (me._fields[row.name].value == 'off') {
+                    if (me._fields[row.name].value == 'no') {
 
-                        me._fields[row.name].value = 'on';
+                        me._fields[row.name].value = 'yes';
                     }
                     else {
 
-                        me._fields[row.name].value = 'off';
+                        me._fields[row.name].value = 'no';
                     }
 
                     drawOnOrOff();

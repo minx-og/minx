@@ -113,7 +113,7 @@ Minx.Layout.SplitLayout = my.Class({
         // make room for the menu button - only needed in portrait really 
         if (content) {
 
-            panel.setTitleInvisible(100);;
+            panel.setTitleInvisible(0);;
         }
         else {
 

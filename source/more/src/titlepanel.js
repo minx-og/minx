@@ -53,6 +53,7 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
         this.clearTitleStyle();
         
         this._titleBar.addClass('transparent');
+        this._titleBar.addClass('tp-title');
 
         this.removeClass('panel');            // removes borders
         this.removeClass('thin-border');

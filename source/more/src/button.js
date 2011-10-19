@@ -28,6 +28,8 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
         this.buttonEvent = null;                                 // stored event for default button
 
+        this._down = false;                              // allow toggle doesnt draw it unpressed on mouseout
+
         this.setSize(80, 34);
         this.setPos(10, 10);
         
@@ -76,12 +78,20 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
     // this is what gets called by the event 
     eventFired: function(ev) {
         // call my behaviour
-        if(ev.type == 'mousedown') this.buttonPressed(ev);
-        if(ev.type == 'mouseup') this.buttonReleased(ev);
-        if(ev.type == 'mouseout') this.buttonReleased(ev);
+        
+        if((ev.type == 'mousedown') || (ev.type == 'touchstart')) {
+            this._down = true; 
+            this.buttonPressed(ev);
+        }
+        else {                      // any other event would render this button up    
+     
 
-        if(ev.type == 'touchstart') this.buttonPressed(ev);
-        if(ev.type == 'touchend') this.buttonReleased(ev);
+            if(ev.type == 'mouseup') this.buttonReleased(ev);
+            if(ev.type == 'mouseout') this.buttonReleased(ev);
+            if(ev.type == 'touchend') this.buttonReleased(ev);
+            
+            this._down = false; 
+        }
 
         if(ev.type == 'keypress') this.keyPressed(ev);          //TODO check this isnt bound for the button - the panel has it
 
@@ -97,13 +107,23 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
     },
 
 
-    buttonReleased: function(e) {
+    showReleased: function() {
         this.removeClass('button-down');
         this.addClass('button-up');
         this.show();
-        if(e.type != 'mouseout') {
-            if(this._clickHandler) {
-                this._clickHandler(this, e);
+    },
+
+
+    buttonReleased: function(e) {
+
+        if (this._down) {
+
+            this.showReleased();
+
+            if(e.type != 'mouseout') {
+                if(this._clickHandler) {
+                    this._clickHandler(this, e);
+                }
             }
         }
     },
