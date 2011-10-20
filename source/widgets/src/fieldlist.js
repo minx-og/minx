@@ -17,6 +17,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         this._fields = {};              // these three are dependant on the model - so should be trashed on any new model or model munge
         this._titles = {};              
         this._toggles = {};
+        this._buttons = {};
 
         this._afterBreak = false;       // set if we had a break - so then must set this row a first row
 
@@ -188,6 +189,8 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             this._afterBreak = true;
         }
         else if(row.type == 'button') {
+
+            this._buttons[row.name] = li;
 
             if(row.label) {
 
@@ -382,6 +385,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         this._fields = {};              
         this._titles = {};              
         this._toggles = {};
+        this._buttons = {};
 
         Minx.FieldListPanel.Super.prototype.munge.call(this);  
     },
@@ -399,6 +403,11 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
     getField: function(fld) {
         return this._fields[fld];
+    },
+
+
+    getButton: function(but) {
+        return this._buttons[but];
     },
 
 
