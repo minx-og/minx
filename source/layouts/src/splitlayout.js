@@ -15,6 +15,7 @@ Minx.Layout.SplitLayout = my.Class({
         this._stuffSlideTimer = null;        // clearable timeout so can cancel delayed hides
 
         this._hidden = true;
+        this._menpop = true;                // true if the menpop button should be shown
 
         if( typeof lnw == 'undefined') {
             lnw = 300;             // 30% by default - in landscape mode
@@ -213,7 +214,28 @@ Minx.Layout.SplitLayout = my.Class({
     },
 */
 
-    setMainPanelContent: function(panel, how) {
+    setMainPanelContent: function(panel, how, hideMenPop) {
+        var me = this;
+        if (hideMenPop) {
+
+            this._navPopButton.setAnimate(200);
+            this._navPopButton.hide(); 
+            this._menpop = false;
+        }
+        else {
+
+            this._menpop = true;
+            
+            if(this.whichWay == 'p') {
+
+                setTimeout(function() {
+
+                    me._navPopButton.setAnimate(200);
+                    me._navPopButton.show({fade: true}); 
+                }, 200)
+            }
+        }
+
         this._stuff.setActivePanel(panel, how, true);
     },
 
@@ -441,7 +463,9 @@ Minx.Layout.SplitLayout = my.Class({
         }
 
         console.log("showing the nav Popup button");
-        me._navPopButton.show(); 
+        if (me._menpop) {
+            me._navPopButton.show({fade: true}); 
+        }
         
     },
 

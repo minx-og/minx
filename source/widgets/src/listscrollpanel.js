@@ -23,6 +23,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         this._lastSelect = null;        // whicj li was last clicked
 
+        this._rowView = null;           // a rowview class tht is triggered on individual row changes
+
         // my defauly stylee
         this.addClass('scroll-content');
         
@@ -148,6 +150,11 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
     },
 
 
+    setRowView: function(rowviewclass) {
+        this._rowView = rowviewclass;  
+    },
+
+
     // munge my model into my view called by client manually - likely to be set to an event when the data model changes
     munge: function() {
         // as our munge function completely recreates the ul and all li's in it we may as well recreate the scroller.
@@ -242,6 +249,18 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                 li = document.createElement('li');
                 li.setAttribute('id', row.get('id')); // this._keyField]);       // set element attribute to my id
                 
+
+                // have we set a seperate per row view - bound to individual row changes
+                if (this._rowView) {
+                    var view = new BackboneMinxWrap.WidgetRowView({el: li});
+                    
+                    view.setTemplate(this._rowView.plate);
+                    view.setPrettyFunc(this._rowView.pretty);
+                    view.setCustomClass(this._rowView.customclass);
+
+                    row.bind('change', view.render);
+                }
+
                 if (h == 0) {
 
                     li.setAttribute('class', 'first');

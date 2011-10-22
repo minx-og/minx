@@ -401,6 +401,14 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
     },
 
 
+    wipeFields: function() {
+        
+        for (var f in this._fields) {
+            this._fields[f].value = '';
+        }    
+    },
+
+
     getField: function(fld) {
         return this._fields[fld];
     },

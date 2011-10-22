@@ -3,6 +3,63 @@ if (typeof BackboneMinxWrap === "undefined") {
 } 
 
 
+BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
+    initialize: function() {
+
+        _.bindAll(this, "render", "setTemplate", "setPrettyFunc");
+
+        this._plate = false;
+        this._pretty = null;
+        this._customclass = "";
+    },
+
+
+    render: function(row){
+
+        var raw = row.toJSON();
+
+        this.el.removeChild( this.el.firstChild );        
+
+        console.log("render triggered  - " );
+
+
+        var div = document.createElement('div');
+        if (this._customclass !== "") {
+            div.setAttribute("class", this._customclass);
+        }
+
+        var model = {};
+        
+        model.raw = raw;
+        
+        if (this._pretty) {
+            model.pretty = this._pretty(raw);
+        }
+
+        console.log(model);
+
+        div.innerHTML = this._plate(model);
+
+        this.el.appendChild(div)
+
+        return this;
+        
+    },
+
+    setTemplate: function(plate) {
+        this._plate = plate;
+    },
+
+    setPrettyFunc: function(pretty) {
+        this._pretty = pretty;
+    },
+
+    setCustomClass: function(cclass) {
+        this._customclass = cclass;
+    }
+});
+
+
 // general backbone dataBoundPanel wrapper
 BackboneMinxWrap.WidgetView = Backbone.View.extend({ 
     
@@ -27,12 +84,8 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
     },
 
     // override render hands off to our widget which munges the model and view
-    render: function(){
+    render: function() {
 
-         //DEBUG
-            var danow = new Date();
-            if(Mtk.xactTimer) 
-                console.log("render triggered  - " + (danow - Mtk.xactTimer));
         // combine the view and model
         this._widget.munge();
     },
@@ -130,6 +183,11 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
     // naughty private fidler but tells me when any clicks on our widget TODO - make a setter
     this.onViewEvents = function(fn) {
         view._eventListener = fn;
+    }
+
+    this.getCollection = function() {
+        return view._collection;
+        
     }
 
 };
