@@ -171,7 +171,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
     munge: function() {
         // as our munge function completely recreates the ul and all li's in it we may as well recreate the scroller.
         // if we simply call refresh the scroller expects the ul to be the same one that was in place when we created the scroller in the first place
-
+        var me = this;
+        
         var rawList = this.getModel();      // a backbone collection
         
 
@@ -195,9 +196,9 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             var list = rl.models;
 
             // do we have a filter
-            if (this._filter != null) {
+            if (me._filter != null) {
 
-                list = rl.filter(this._filter);        // references to the original model, but a subset?
+                list = rl.filter(me._filter);        // references to the original model, but a subset?
 
             }    
             return list;
