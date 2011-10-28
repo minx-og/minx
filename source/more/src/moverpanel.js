@@ -5,7 +5,7 @@ MoverPanel - registered as mover-panel
 This is a pinned panel with the ability to animate its child panels with certain transitions
 
 */
-
+Minx.det = false;
 Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
     constructor: function(parent, id) {
@@ -20,6 +20,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
         this._moverAnimate = 300;       // default mover animation speed
 
         this._tit = null;
+
     },
 
 
@@ -38,7 +39,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
             }
             else {
                 // got our active panel allready so hide all others - consider removing from DOM?
-                panel.hide({now:true, detach:false});            // true = instant, false = detache
+                panel.hide({now:true, detach: false});            // true = instant, false = detache
             }
 
             panel.setAnimate(this._moverAnimate);
@@ -137,14 +138,18 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 // then show the old panel in its new position off div - which pulls the left pinned new panel in
                 me._active.show();
 
-                // remove the old one from the dom
-                me._active.hide({now:false, detach:true});
+                setTimeout(function(){
+                    // remove the old one from the dom
+                    me._active.hide({now:false, detach: Minx.det});
 
-                //and make sure it is fully pinned to momma s it resizes on next resize
-                panel.fillParent();    
+                    //and make sure it is fully pinned to momma s it resizes on next resize
+                    panel.fillParent();    
 
-                // set the new panel as active
-                me._active = panel;                
+                    // set the new panel as active
+                    me._active = panel;                
+
+                }, me._moverAnimate)
+
 
             }, 1);  //delay trick to let dom fully redraw
 
@@ -180,18 +185,22 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
                 // then show the old new panel which triggers the 'pushing'
                 panel.show();    
 
-                // hide the old one
-                me._active.hide({now:false, detach:true});
+                setTimeout(function(){
+                    // hide the old one
+                    me._active.hide({now:false, detach: Minx.det});
 
-                //and make sure it is fully pinned to momma s it resizes on next resize
-                panel.fillParent();    
+                    //and make sure it is fully pinned to momma s it resizes on next resize
+                    panel.fillParent();    
+                    
+                    // set the new panel as active
+                    me._active = panel;
 
-                // set the new panel as active
-                me._active = panel;
+                }, me._moverAnimate)
+                
 
                 
 
-            }, 1);  //delay zero trick to let dom fully redraw
+            }, 10);  //delay zero trick to let dom fully redraw
 
         }
 
@@ -211,7 +220,7 @@ Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
             panel.fillParent();    
 
             // hide the old one
-            me._active.hide({now:false, detach:true});
+            me._active.hide({now:false, detach: Minx.det});
 
             // set the new panel as active
             me._active = panel;

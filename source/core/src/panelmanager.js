@@ -197,6 +197,8 @@ Minx.PanelManager = function() {
             this.dims.retina = true;
         }
 
+        // DEV - DEBUG - this.dims.retina = true;
+
         //DEV - simulate touch
         if (this.localiPhoneTest) {
             this.localMobileTest = true;
@@ -271,6 +273,7 @@ Minx.PanelManager = function() {
             if (t < 20) {
 
                 me.dims.slow = true;
+                console.log("slow device detected")
             }
 
             cb(me.dims.slow);

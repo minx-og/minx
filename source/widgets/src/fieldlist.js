@@ -38,6 +38,8 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         }
 
         Minx.eq.subscribe(this, this.getNode(), 'keyup');    // register for keypresses
+        Minx.eq.subscribe(this, this.getNode(), 'submit');    // register for keypresses
+
     },
 
 
@@ -68,9 +70,12 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
         // if it is an enter press - then use the id of the defualt button
         // there may not be a defult button if the enclosing form has one - e.g. inputpopup
-        if (event.type == "keyup") {
+        if (event.type == "keyup" || event.type == "submit") {
 
-            if((this._defaultButton != null ) && (event.keyCode == 13)) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if((this._defaultButton != null ) && ((event.keyCode == 13) || (event.type == "submit"))) {
                 thing = {id: this._defaultButton.id, e: event};
                 this._eventHandler(thing);
             }

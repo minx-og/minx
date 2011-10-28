@@ -738,6 +738,8 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         
         // now ask my kids  to do the same if they are dirty
         this.drawKids(force);
+
+        this._contentChanged = false;
     },
 
 

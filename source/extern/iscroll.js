@@ -87,7 +87,12 @@ var m = Math,
 
 			// Events
 			onRefresh: null,
-			onBeforeScrollStart: function (e) { e.preventDefault(); },
+			onBeforeScrollStart: function (e) { 
+				if (e.target.tagName.toLowerCase() === "select" || e.target.tagName.toLowerCase() === "input"){
+					return;
+				}
+				e.preventDefault(); 
+			},
 			onScrollStart: null,
 			onBeforeScrollMove: null,
 			onScrollMove: null,

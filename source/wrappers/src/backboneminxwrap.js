@@ -20,9 +20,6 @@ BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
 
         this.el.removeChild( this.el.firstChild );        
 
-        console.log("render triggered  - " );
-
-
         var div = document.createElement('div');
         if (this._customclass !== "") {
             div.setAttribute("class", this._customclass);
@@ -35,8 +32,6 @@ BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
         if (this._pretty) {
             model.pretty = this._pretty(raw);
         }
-
-        console.log(model);
 
         div.innerHTML = this._plate(model);
 
@@ -192,3 +187,50 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
 
 };
 
+
+
+BackboneMinxWrap.MultiWrap = function(container, type) {    
+    var _listener = null;
+
+    // make my widget of the correct registered type
+    this._widget = Minx.pm.add(container, type);
+
+    this.getWidget = function() {
+        return this._widget;  
+    };
+
+    eventHandler =  function(panel, thing) {
+        // call a registered listener
+        if(_listener) {
+            _listener(panel, thing);
+        }
+    };
+
+    this._widget.onEvents(eventHandler);
+
+    
+    this.redrawWidget = function() {
+        this._widget.munge();
+    };
+
+    
+    this.addModel = function(model, silent) {
+        model.bind('refresh', this.redrawWidget);
+
+        var mod = this._widget.getModel();
+        if (!mod) {
+            mod = [];
+        }
+        mod.push(model);
+        this._widget.setModel(mod);
+
+        if(!silent) {
+            redrawWidget();
+        }
+    };
+
+    
+    this.onViewEvents = function(fn) {
+       _listener = fn;
+    };
+}

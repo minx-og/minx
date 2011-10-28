@@ -110,7 +110,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                     me._scroller = null;
                 }
 
-                //console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
+                // console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
                 
                 // create the new scroller
                 me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
@@ -140,7 +140,19 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
     getData: function(key) {
 
-        return this.getModel().get(key);
+        if (this._model instanceof Array) {
+            for (var m in this._model) {
+                var dat = this._model[m].get(key);
+                if (dat) {
+                    return dat;
+                }
+            }
+            return null;
+        }
+        else {
+            
+            return this.getModel().get(key);
+        }
     },
 
 
@@ -162,29 +174,56 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         var rawList = this.getModel();      // a backbone collection
         
+
         if (rawList == null) {
 
             throw "munge called, but no model set";
         }
 
-        //console.log("----------------------> MUNGING <---------------------  " + this.reportLineage());
-
-        this.setContentChanged(true);
-        
-
-        var list = rawList.models;
-
-        // do we have a filter
-        if (this._filter != null) {
-
-            list = rawList.filter(this._filter);        // references to the original model, but a subset?
-
-            // list.filter(this._filter);
-
-            console.log("FILTERING - - - - - -");
-            console.log(list);
+        var modelArray = false;
+        if (rawList instanceof Array) {
+            modelArray = true;
         }
 
+//        console.log("----------------------> MUNGING <---------------------  " + this.reportLineage());
+
+        this.setContentChanged(true);           // only needed if length has changed??
+        
+
+        function filter(rl) {
+
+            var list = rl.models;
+
+            // do we have a filter
+            if (this._filter != null) {
+
+                list = rl.filter(this._filter);        // references to the original model, but a subset?
+
+            }    
+            return list;
+        }
+
+        var rawLength = 0;
+        var filteredLength = 0;
+
+        lists = [];
+        if (modelArray) {
+
+            for (m in rawList) {
+                rawLength += rawList[m].length;
+                var fl = filter(rawList[m]);
+                filteredLength += fl.length;
+                lists.push(fl);
+            }
+        }
+        else {
+            rawLength = rawList.length;
+            var fl = filter(rawList);
+            filteredLength = fl.length;
+            lists.push(fl);
+        }
+
+        
         var view = this.getView();                       // a backbone view 
 
         // trash any stuff in my node (hope this cleans it out of the dom nicely)....
@@ -214,7 +253,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         var prevli = null      // previous li = used for setting last on rows prior to breaks
 
 
-        if(rawList.length === 0) {
+        if(rawLength === 0) {
 
             li = document.createElement('li');
             li.setAttribute('id', 'id-none'); // this._keyField]);       // set element attribute to my id
@@ -238,71 +277,80 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             
         }
         else {
-            
-            
-            // consider each if it is a backbone model
-            for (var h in list) {
-                
-                row = list[h];
 
-                // make a new li for this row
-                li = document.createElement('li');
-                li.setAttribute('id', row.get('id')); // this._keyField]);       // set element attribute to my id
-                
-
-                // have we set a seperate per row view - bound to individual row changes
-                if (this._rowView) {
-                    var view = new BackboneMinxWrap.WidgetRowView({el: li});
+            tc = 0;
+            
+            for (var l in lists) {
+                var list = lists[l];
+            
+                // consider each if it is a backbone model
+                for (var h in list) {
                     
-                    view.setTemplate(this._rowView.plate);
-                    view.setPrettyFunc(this._rowView.pretty);
-                    view.setCustomClass(this._rowView.customclass);
+                    row = list[h];
 
-                    row.bind('change', view.render);
-                }
+                    // make a new li for this row
+                    li = document.createElement('li');
+                    li.setAttribute('id', row.get('id')); // this._keyField]);       // set element attribute to my id
+                    
 
-                if (h == 0) {
+                    // have we set a seperate per row view - bound to individual row changes
+                    if (this._rowView) {
+                        var view = new BackboneMinxWrap.WidgetRowView({el: li});
+                        
+                        view.setTemplate(this._rowView.plate);
+                        view.setPrettyFunc(this._rowView.pretty);
+                        view.setCustomClass(this._rowView.customclass);
 
-                    li.setAttribute('class', 'first');
-                }
-                
-                if (h == list.length-1) {
-
-                    li.setAttribute('class', 'last');
-                    if (h == 0) {
-                        li.setAttribute('class', 'first last');
+                        row.bind('change', view.render);
                     }
-                }
 
-                // capture clicks
-                Minx.eq.subscribe(this, li, 'click');
+                    if (tc == 0) {
 
-                // call potentially a callback that will return my row content as a node
-                liNode = this._rowRenderer(pId, row, li, prevli);
-                
-                if (liNode != null) {
+                        li.setAttribute('class', 'first');
+                    }
+                    
+                    if (tc == filteredLength - 1) {
 
-                    li.appendChild(liNode);
-                }
+                        li.setAttribute('class', 'last');
+                        if (tc == 0) {
+                            li.setAttribute('class', 'first last');
+                        }
+                    }
 
-                this._widgetRoot.appendChild(li);
+                    // capture clicks
+                    Minx.eq.subscribe(this, li, 'click');
 
-                prevli = li;
+                    // call potentially a callback that will return my row content as a node
+                    liNode = this._rowRenderer(pId, row, li, prevli);
+                    
+                    if (liNode != null) {
 
-                if (this._listMax > 0) {
+                        li.appendChild(liNode);
+                    }
 
-                    if (h > this._listMax) {
+                    this._widgetRoot.appendChild(li);
 
+                    prevli = li;
+
+                    // if we have set a max and reached it then break
+                    if ((this._listMax > 0) && (tc > this._listMax)) {
                         break;
                     }
-                } 
+
+                    tc++;
+                }
+
+                // if we have set a max and reached it then break
+                if ((this._listMax > 0) && (tc > this._listMax)) {
+                    break;
+                }   
             }
         }
         
-        this._listLength = list.length;
+        this._listLength = filteredLength;
         
         if (this._listMax > 0) {
-            list.length < this._listLength ? list.length : this._listLength;
+            this._listLength = filteredLength < this._listMax ? filteredLength : this._listMax;
         }
 
         this.render(true);
@@ -310,6 +358,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         //console.log("Askling for new scroller cos MUNGED " + this.getId());
 
         // IMPORTANT  - dont move this before the render - why? i dont fucking know!
+
+//        console.log("NEED NEW SCROLLER from MUNGE " + this.getId());
         this._need_new_scroller = true;
 
         
@@ -348,6 +398,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         //console.log("Askling for new scroller cos resized " + this.getId());
         // capture that we did resize so that we know to refresh the scroller after drawing parent
+        //console.log("NEED NEW SCROLLER from RESIZED " + this.getId());
         this._need_new_scroller = true;
     },
 
@@ -361,6 +412,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         //console.log("Askling for new scroller cos reattached " + this.getId());
         // capture that we did resize so that we know to refresh the scroller after drawing parent
+        //console.log("NEED NEW SCROLLER from REATTACH " + this.getId());
         this._need_new_scroller = true;
     },
 
