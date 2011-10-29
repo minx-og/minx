@@ -82,6 +82,24 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
     },
 
 
+    setSelection: function(id) {
+
+        this.clearSelection();
+
+        var node = this.getNode();
+
+        var ul = $('ul', node)[0];
+
+        var qs = '#' + id;
+        var li = $(qs, ul)[0];
+
+        if (li) {
+            this._lastSelect = li;
+            $(li).addClass('selected');
+        }
+    },
+
+
     // client can set this to do stuff when scrolling starts
     onScrollStart: function(scroller, ev) {
         
@@ -172,7 +190,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // as our munge function completely recreates the ul and all li's in it we may as well recreate the scroller.
         // if we simply call refresh the scroller expects the ul to be the same one that was in place when we created the scroller in the first place
         var me = this;
-        
+
         var rawList = this.getModel();      // a backbone collection
         
 
