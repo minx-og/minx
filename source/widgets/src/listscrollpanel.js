@@ -37,6 +37,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // default renderer
         this._rowRenderer = this.getRowMarkup;
         this._emptyRenderer = this.getEmptyMarkup;
+        this._preRowRenderer = this.getPreRowMarkup;
+        
 
         this._listMax = 0;              // wnat a maximum number in this list - set this.
 
@@ -155,6 +157,11 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         this._emptyRenderer = fn;
     },
 
+    
+    setPreRowRenderer: function(fn) {
+
+        this._preRowRenderer = fn;
+    },
 
     getData: function(key) {
 
@@ -266,8 +273,10 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // now apply stuff from our model - for now its just hard coded li's
         var li;         // a li for our row
         var liNode;     // the node to attach to the li
+        var liPre;
         
         var row;        // each row
+        var prevRow = null;     // the prev row
 
         var prevli = null      // previous li = used for setting last on rows prior to breaks
 
@@ -307,10 +316,17 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                     
                     row = list[h];
 
+
                     // make a new li for this row
                     li = document.createElement('li');
                     li.setAttribute('id', row.get('id')); // this._keyField]);       // set element attribute to my id
-                    
+
+
+                    liPre = this._preRowRenderer(pId, row, li, prevli, prevRow);
+                    if (liPre) {
+                        this._widgetRoot.appendChild(liPre);
+                    }                    
+
 
                     // have we set a seperate per row view - bound to individual row changes
                     if (this._rowView) {
@@ -340,7 +356,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                     Minx.eq.subscribe(this, li, 'click');
 
                     // call potentially a callback that will return my row content as a node
-                    liNode = this._rowRenderer(pId, row, li, prevli);
+                    liNode = this._rowRenderer(pId, row, li, prevli, prevRow);
                     
                     if (liNode != null) {
 
@@ -357,6 +373,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                     }
 
                     tc++;
+                    prevRow = row;
                 }
 
                 // if we have set a max and reached it then break
@@ -405,6 +422,11 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         div.appendChild(h2);
 
         return div;  
+    },
+
+
+    getPreRowMarkup: function() {
+        return null;
     },
 
 

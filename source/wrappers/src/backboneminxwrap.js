@@ -191,6 +191,10 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
 
 BackboneMinxWrap.MultiWrap = function(container, type) {    
     var _listener = null;
+    
+    var me = this;
+
+    //_.bindAll(this, "redrawWidget");
 
     // make my widget of the correct registered type
     this._widget = Minx.pm.add(container, type);
@@ -210,19 +214,19 @@ BackboneMinxWrap.MultiWrap = function(container, type) {
 
     
     this.redrawWidget = function() {
-        this._widget.munge();
+        me._widget.munge();
     };
 
     
     this.addModel = function(model, silent) {
-        model.bind('refresh', this.redrawWidget);
+        model.bind('refresh', me.redrawWidget);
 
-        var mod = this._widget.getModel();
+        var mod = me._widget.getModel();
         if (!mod) {
             mod = [];
         }
         mod.push(model);
-        this._widget.setModel(mod);
+        me._widget.setModel(mod);
 
         if(!silent) {
             redrawWidget();
