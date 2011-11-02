@@ -13,7 +13,8 @@
 
 ul.field-list {
     padding: 20px;
-    width: auto;
+    width: 100%;
+    position: absolute;
 }
 
 ul.field-list li {

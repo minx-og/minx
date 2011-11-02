@@ -5,7 +5,7 @@ MoverPanel - registered as mover-panel
 This is a pinned panel with the ability to animate its child panels with certain transitions
 
 */
-Minx.det = false;
+Minx.det = true;
 Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
     constructor: function(parent, id) {
