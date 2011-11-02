@@ -33,20 +33,19 @@ Minx.Geom = function(){
     this.equal = function(g) {
         var t = this;           // bit like 'using' as well
         return (
-            (t.l === g.l) &&
-            (t.t === g.t) &&
-            (t.w === g.w) &&
-            (t.h === g.h)
+            (t.l == g.l) &&
+            (t.t == g.t) &&
+            (t.w == g.w) &&
+            (t.h == g.h)
         );
     };
 
     // am I as fat as g
     this.dimsEqual = function(g) {
         var t = this;           // plainly cant be arsed to c&p the word this 
-        return (
-            (t.w === g.w) &&
-            (t.h === g.h)
-        );
+
+        var equal = ((t.w == g.w) && (t.h == g.h));
+        return equal;
     };
 };
 
@@ -406,6 +405,131 @@ Minx.Panel = my.Class({
     },
 
 
+
+
+    reportDescendants: function(pa, parfirst, parsecond) {
+
+
+        if (!parfirst) {
+            parfirst = [];
+        }
+
+        parfirst.length = pa;
+
+        var descendants = 0;
+
+        var depth = 0;
+
+        var myline = "";
+
+        var md = 0;
+
+        var kk = 0;
+
+        for (var kid in this._kidies) {
+
+            
+            kk++;
+
+            //descendants = descendants + this._kidies[kid].reportDescendants();
+
+            if (kk == 1) {
+                parfirst[pa] = true;
+            }
+            else {
+                parfirst[pa] = false;
+            }
+
+            depth = this._kidies[kid].reportDescendants(pa+1, parfirst);
+            
+            if (depth > md) {
+                md = depth;
+            }
+
+            descendants = descendants + 1;
+/*
+            var space = ""
+            for (var p = 0; p <= gap; p++) {
+                space = space + "       ";
+            }
+
+            var mid = "       " + this._kidies[kid].getId();
+            var len = mid.length;
+            var mm = mid.substring(len, len - 8);
+            myline = myline + space + mm;
+*/
+        }
+
+        if (kk == 0) {
+            md = 1;
+        } 
+        else {
+            md++;
+        }
+
+
+        var space = ""
+
+            
+        for (var p = 0; p < pa-1; p++) {
+            if(p == 0) {
+                space = space + "                    ";
+            }
+            else if(parfirst[p]) {
+                space = space + "                    ";
+            }
+            else {
+                space = space + "                   │";
+            }
+        }
+
+        
+        if(parfirst[pa-1] || pa == 1) {
+        
+            space = space + "                   ┌";
+
+        }
+        else {
+
+            space = space + "                   ├";
+        }        
+        
+
+        var id = "─────────── " + this.getId();
+
+        if(this.isHidden()) {
+            id = id + " h";
+        }
+        else {
+            id = id + " s";
+        }
+
+        var rc = "   " + this.resizeCount;
+
+        var rlen = rc.length;
+        var rct = rc.substring(rlen, rlen - 3);
+
+        id = id + rct;
+
+        if (kk > 0) {
+            id = id +  " ─┘";
+
+        }
+        else {
+            id = id +  "   ";   
+        }
+        var len = id.length;
+        var bit = id.substring(len, len - 20);
+
+        //console.log( space + "----" + this.getId() + "(" + pa + ")");
+
+        console.log( space + bit /*+ "  (" + pa + ")" + "  " + parfirst*/);
+
+         return md;
+
+    },
+
+
     
     // Actions
     // =======
@@ -579,7 +703,10 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         // it is upto subclass panels to setContentChanged so we know to force a full redraw down to the iscroll containing child        
         // this changed content thing - is only really needed for panels with iscrol and which detatch from the dom
         // so we will force a redraw if me or any kids have explicitly marked content changed
+        
         var force = this.hasContentChanged();
+
+        force = false;
 
         if (fadein) {
             // make sure we are initially faded out
@@ -633,22 +760,27 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
     // check if my size changed (newDims) 
     layout: function(force) {
 
+        //LOG console.log(" checking layout " + this.getId());
+
         //check if geometary changed or we are forcing it to update the dom
         if (!this._nowG.equal(this._newG) || force) {
             
             //this._mapAllStuff();
 
             // need to test to see if actual dimensions have changed
-            var newDims = !this._nowG.dimsEqual(this._newG); 
+            var dimsEqual = this._nowG.dimsEqual(this._newG); 
 
             // if my new dimensions have changed - then ask my kids to lay themselves out - if my dims havent changed then thier positions relative to me wont have changed
-            if (newDims || force) {
+            if (!dimsEqual || force) {
 
                 for (var kid in this._kidies) {
                     
                     this._kidies[kid].layout(force);
                 }  
                 
+                //LOG console.log("Resizing Id  (force: " + force + ")   " + this.reportLineage());
+
+                this.resizeCount++;
                 this.resized();
             }            
         }
@@ -955,6 +1087,7 @@ ENDFIXPOS */
 
         this._contentChanged = false;     // inherited panels and helpers set this particularly when the pane has content dependant on external data and that data has changed (listscrol for example)
 
+        this.resizeCount = 0;
 
         // SPECIAL - have we just made the root node - dont create nodes
         if (id == "root") {

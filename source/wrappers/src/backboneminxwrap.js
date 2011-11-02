@@ -10,7 +10,7 @@ BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
 
         this._plate = false;
         this._pretty = null;
-        this._customclass = "";
+        this._customclass = null;
     },
 
 
@@ -21,9 +21,6 @@ BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
         this.el.removeChild( this.el.firstChild );        
 
         var div = document.createElement('div');
-        if (this._customclass !== "") {
-            div.setAttribute("class", this._customclass);
-        }
 
         var model = {};
         
@@ -34,6 +31,10 @@ BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
         }
 
         div.innerHTML = this._plate(model);
+
+        if (this._customclass !== null) {
+            div.setAttribute("class", this._customclass(model));
+        }
 
         this.el.appendChild(div)
 

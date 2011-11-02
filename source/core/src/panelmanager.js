@@ -528,6 +528,16 @@ Minx.PanelManager = function() {
         return('done');
     };
 
+    // need to stip these out with preprocessor or something
+    this.logResizes = function() {
+        
+        for(pan in _panels) {
+            console.log(pan + " - "  + _panels[pan].resizeCount);
+        }
+    
+        return('done');
+    };
+
     this.reveal = function(id) {
 
         if (_panels[id]) {
@@ -562,6 +572,14 @@ Minx.PanelManager = function() {
             console.log('no panel - ' + id);
         }
         return('done');
+    }
+
+    this.getPanel = function(id) {
+        return _panels[id];
+    }
+
+    this.tree = function() {
+        _panels['pn0'].reportDescendants(1);   
     }
 };
 

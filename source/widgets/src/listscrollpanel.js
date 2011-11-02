@@ -121,17 +121,21 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // so multiple forced redraws wont force multiple iscroll recreations
         // only bother drawing me if I am clearly visible on screen
         if (this._touch && this._need_new_scroller && this.isOnScreen() && (this._listLength > 2)) {
+
+            console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
+                
+            //TODO  N.B. Taken the timer out because we are not actually changing the size during animations so the scroller should be good
+            // so if this is stable take out the comments and permanently remove the timer
+
             // scroller needs t know about div size changes - give it time for animations to take effect
             // timer to give other sht a go                
-            setTimeout(function() {
+//            setTimeout(function() {
                 
                 if(me._scroller != null) {
                     me._scroller.destroy();
                     me._scroller = null;
                 }
 
-                // console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
-                
                 // create the new scroller
                 me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
                 
@@ -140,7 +144,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
                 //console.log("Scroller complete");
                 
-            }, 310);            // TODO - as long as the panel is reattached (and as we are not animating dimensions - this timer could be 10ms probably
+//            }, 310);            // TODO - as long as the panel is reattached (and as we are not animating dimensions - this timer could be 10ms probably
         }
     },
 
@@ -211,7 +215,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             modelArray = true;
         }
 
-//        console.log("----------------------> MUNGING <---------------------  " + this.reportLineage());
+        console.log("----------------------> MUNGING <---------------------  " + this.reportLineage());
 
         this.setContentChanged(true);           // only needed if length has changed??
         
@@ -389,13 +393,13 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             this._listLength = filteredLength < this._listMax ? filteredLength : this._listMax;
         }
 
-        this.render(true);
+        // this.render(true);
 
-        //console.log("Askling for new scroller cos MUNGED " + this.getId());
+        // console.log("Askling for new scroller cos MUNGED " + this.getId());
 
         // IMPORTANT  - dont move this before the render - why? i dont fucking know!
 
-//        console.log("NEED NEW SCROLLER from MUNGE " + this.getId());
+        //LOG console.log("NEED NEW SCROLLER from MUNGE " + this.getId());
         this._need_new_scroller = true;
 
         
@@ -439,7 +443,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         //console.log("Askling for new scroller cos resized " + this.getId());
         // capture that we did resize so that we know to refresh the scroller after drawing parent
-        //console.log("NEED NEW SCROLLER from RESIZED " + this.getId());
+        //LOG console.log("NEED NEW SCROLLER from RESIZED " + this.getId());
         this._need_new_scroller = true;
     },
 
@@ -453,7 +457,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
         //console.log("Askling for new scroller cos reattached " + this.getId());
         // capture that we did resize so that we know to refresh the scroller after drawing parent
-        //console.log("NEED NEW SCROLLER from REATTACH " + this.getId());
+        //LOG console.log("NEED NEW SCROLLER from REATTACH " + this.getId());
         this._need_new_scroller = true;
     },
 
