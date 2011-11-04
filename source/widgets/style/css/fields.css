@@ -1,6 +1,7 @@
 
 /*override scroll padding */
 
+
 .field-list li {
     padding: 0;
     /*centers the text vertically */
@@ -95,12 +96,12 @@ input, select {
     font-size: 18px;
     
     border: 0px;
-    width: 100%;
+    width: 88%;
     height: 100%;
 
     text-shadow: none;
 
-    display: block;
+    float: left;
  
 }
 
@@ -133,7 +134,7 @@ select {
 .mx-input {
  
     height: 100%;
-    width: 55%;
+    width: 56%;
     padding-left: 5px;
     float: left;
     position: relative;
@@ -359,3 +360,16 @@ select {
     height: 24px;
     background: url('../img/clear-field.png') no-repeat;;
 }
+
+
+.input-clear {
+    margin-top: 5px;
+    float: right;
+    max-width: 20px;
+    height: 30px;
+    background: url('../img/clear-field.png') no-repeat center 8px;
+    display: inline;
+    width: 12%;
+}
+
+

@@ -269,8 +269,6 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
             this._fields[row.name] = ip;
 
-
-
             if (row.type == "toggle") {
                 ip.setAttribute('class', 'toggle-button-wrap');
 
@@ -372,9 +370,65 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
             idiv.appendChild(ip);
 
+            
+            function doKeyPress() {
+                
+                Minx.Debounce.action('fieldkey', searchByValue, 100);
+                
+                function searchByValue() {
+
+                    if(ip.value != '') {
+                        a.setAttribute('class', 'input-clear');
+                    }
+                    else {
+                        a.setAttribute('class', 'input-clear hidden');
+                    }
+                }
+            }
+
+            function clearClick(ee) {
+                console.log('clearsblutton click');
+                ip.value = '';
+                doKeyPress();
+            }
+
+            var a;
+            
+            if (ipType == 'input') {
+
+                a = document.createElement('span');
+                a.setAttribute('id', 'f-clear-' + row.name);
+
+                /*
+                if(opt.value != '') {
+                    a.setAttribute('class', 'input-clear');
+                }
+                else {
+                    a.setAttribute('class', 'input-clear hidden');
+                }
+                */
+                //a.innerHTML = '<img src="data:image/gif;base64,R0lGODlhAQABAID%2FAMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D" alt="" />';
+
+                
+                a.addEventListener("click", clearClick, false);
+                ip.addEventListener("keyup", doKeyPress, false);
+                ip.setNewValue = function(val) {
+                    ip.value = val;
+                    doKeyPress();
+                }
+
+                if (row.value) {
+                    doKeyPress();
+                }
+
+                idiv.appendChild(a);
+
+            }
+
             div.appendChild(idiv);
 
         }
+        
 
         if( liClass != "" ) {
             li.setAttribute('class', liClass);

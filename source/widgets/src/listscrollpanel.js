@@ -122,29 +122,21 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // only bother drawing me if I am clearly visible on screen
         if (this._touch && this._need_new_scroller && this.isOnScreen() && (this._listLength > 2)) {
 
-            console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
-                
-            //TODO  N.B. Taken the timer out because we are not actually changing the size during animations so the scroller should be good
-            // so if this is stable take out the comments and permanently remove the timer
+            //LOG console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
+            
+            if(me._scroller != null) {
 
-            // scroller needs t know about div size changes - give it time for animations to take effect
-            // timer to give other sht a go                
-//            setTimeout(function() {
-                
-                if(me._scroller != null) {
-                    me._scroller.destroy();
-                    me._scroller = null;
-                }
-
+                me._scroller.refresh();
+            }
+            else {
                 // create the new scroller
                 me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
-                
-                // clear my flag
-                me._need_new_scroller = false;
+            }
+            
+            // clear my flag
+            me._need_new_scroller = false;
 
-                //console.log("Scroller complete");
-                
-//            }, 310);            // TODO - as long as the panel is reattached (and as we are not animating dimensions - this timer could be 10ms probably
+            //console.log("Scroller complete");
         }
     },
 
@@ -215,7 +207,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             modelArray = true;
         }
 
-        console.log("----------------------> MUNGING <---------------------  " + this.reportLineage());
+        //LOG console.log("----------------------> MUNGING <---------------------  " + this.reportLineage());
 
         this.setContentChanged(true);           // only needed if length has changed??
         
@@ -256,22 +248,28 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         
         var view = this.getView();                       // a backbone view 
 
-        // trash any stuff in my node (hope this cleans it out of the dom nicely)....
+        
+        // tring not to trash the root so the scroller  can nicely redrar - reducing flicker
         if (this._widgetRoot) {
 
-            view.removeChild(this._widgetRoot); 
+            //view.removeChild(this._widgetRoot); 
+            var node = this._widgetRoot
+            while(node.firstChild) {
+                node.removeChild(node.firstChild);
+            }
         }
+        else {
 
-        // for iscroller we call dom functions on our view
-        // my root node is the ul that the iscroller expects
-        this._widgetRoot = document.createElement('ul');
-        this._widgetRoot.setAttribute('class', this.getClassName());
-        
-        // fast clicks on all clicks below the ul
-        new NoClickDelay(this._widgetRoot);
+            // for iscroller we call dom functions on our view
+            // my root node is the ul that the iscroller expects
+            this._widgetRoot = document.createElement('ul');
+            this._widgetRoot.setAttribute('class', this.getClassName());
+            
+            // fast clicks on all clicks below the ul
+            new NoClickDelay(this._widgetRoot);
 
-        view.appendChild(this._widgetRoot);
-
+            view.appendChild(this._widgetRoot);
+        }
 
         var pId = this.getId();
         // now apply stuff from our model - for now its just hard coded li's
@@ -392,16 +390,14 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         if (this._listMax > 0) {
             this._listLength = filteredLength < this._listMax ? filteredLength : this._listMax;
         }
-
-        // this.render(true);
-
-        // console.log("Askling for new scroller cos MUNGED " + this.getId());
-
-        // IMPORTANT  - dont move this before the render - why? i dont fucking know!
+        
+        if(me._scroller != null) {
+            
+            me._scroller.refresh();
+        }
 
         //LOG console.log("NEED NEW SCROLLER from MUNGE " + this.getId());
         this._need_new_scroller = true;
-
         
     },
 

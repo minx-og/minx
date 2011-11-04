@@ -5,6 +5,14 @@ if (typeof Minx === "undefined") {
     Minx = {};
 }
 
+Minx.logger = {
+
+    last: new Date(),
+
+    touch: function() {
+        this.last = new Date();
+    }
+};
 
 // an event wrapper linking the passed in panel with the event e and the function to call
 // by setting upp this little wrapper with the trigger function - i can explicitly call the panel callback - so 'this' is correct in the panel callback
@@ -16,6 +24,8 @@ Minx.Event = function(panel, callback) {
 
     this.trigger = function (e) {
         
+            Minx.logger.touch();
+
             e.stopPropagation();            // stop nearby html getting the event as well
             
             panel[callback](e);
