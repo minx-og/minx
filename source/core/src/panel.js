@@ -372,7 +372,7 @@ Minx.Panel = my.Class({
             kid;                        // kiddie counter
 
         for (kid in this._kidies) {
-            if (this._kidies.hasOwnProperty(kid)) {
+            if (this._kidies.hasOwnProperty(kid)) {             // make sure it is not any prototypical property
                 count = count + 1;
             }
         }

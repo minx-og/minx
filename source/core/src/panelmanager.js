@@ -187,7 +187,7 @@ Minx.PanelManager = function() {
 
     this.calcDevice = function() {
         // check if we are in stand alone mode
-        if( ("standalone" in window.navigator) && window.navigator.standalone) {
+        if(window.navigator.standalone) {
             this.dims.sa = true;
         }
         else {
@@ -470,13 +470,15 @@ Minx.PanelManager = function() {
     // add a new panel - to a parent or root, create a managed id, add to our flat managed list of all panels
     // and return it - so client can mess with it
     this._addType = function(parent, type){
+        
         // generate a managed id
         var id = _pref + (_idCounter++);
 
         // id counter could be used to increment z-index
         
         // make and create a new panel
-        if(!(type in _types)) {
+        if(!_types.hasOwnProperty(type)) {
+            
             throw 'panelmanager._addType(): Cant create panel of type: "' + type + '. Did you forget to add the script? ';
         }else {
             var tPan = new _types[type](parent, id);
@@ -492,6 +494,8 @@ Minx.PanelManager = function() {
     // remove a panel and all children from our dom and managed lists
     // equivalent to delete 
     this.remove = function(panel) {
+        var key;                                // loop var
+
         if (panel == null) {
             return;
         }
@@ -518,8 +522,10 @@ Minx.PanelManager = function() {
                 var list = panel.removeMe();
 
                 // delete al the removed panels from our managed list
-                for(key in list) {
-                    delete _panels[list[key]];
+                for(var key in list) {
+                    if (list.hasOwnProperty(key)) {             // make sure it is not any prototypical property
+                        delete _panels[list[key]];
+                    }
                 }
 
             },300);         // TODO - get the panel animate time 
@@ -528,14 +534,18 @@ Minx.PanelManager = function() {
 
     // need to stip these out with preprocessor or something
     this.log = function(id) {
+        var pan;
+
         if (id) {
             console.log(_panels[id].reportLineage());
             console.log(_panels[id]);
         }
         else {
-            for(pan in _panels) {
-                console.log(pan);
-                console.log(_panels[pan]);
+            for (pan in _panels) {
+                if (_panels.hasOwnProperty(pan)) {
+                    console.log(pan);
+                    console.log(_panels[pan]);
+                }
             }
         }
         return('done');
@@ -543,15 +553,19 @@ Minx.PanelManager = function() {
 
     // need to stip these out with preprocessor or something
     this.logResizes = function() {
-        
+        var pan;
+
         for(pan in _panels) {
-            console.log(pan + " - "  + _panels[pan].resizeCount);
+            if (_panels.hasOwnProperty(pan)) {
+                console.log(pan + " - "  + _panels[pan].resizeCount);
+            }
         }
     
         return('done');
     };
 
     this.reveal = function(id) {
+        var pan;
 
         function revealMe(panel) {
 
@@ -567,12 +581,15 @@ Minx.PanelManager = function() {
             $('body').addClass('debug');
 
             for(pan in _panels) {
+                
+                if (_panels.hasOwnProperty(pan)) {
 
-                console.log(pan);
+                    console.log(pan);
 
-                _panels[pan].setStyle('opacity', '0.7');
-                _panels[pan].setStyle('background', 'transparent');
-                _panels[pan].render();
+                    _panels[pan].setStyle('opacity', '0.7');
+                    _panels[pan].setStyle('background', 'transparent');
+                    _panels[pan].render();
+                }
 
             }
 
