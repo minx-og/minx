@@ -1,3 +1,5 @@
+(function() { 
+"use strict";
 
 //layout namespace
 
@@ -198,3 +200,4 @@ Minx.Layout.PhoneLayout = my.Class({
     },
 });
 
+})();

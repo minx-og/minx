@@ -1,3 +1,6 @@
+(function() { 
+"use strict";
+
 /*
 InputPopup registered as input-pop-up
 =====================================
@@ -24,3 +27,5 @@ Minx.MaskPanel = my.Class(Minx.PinnedPanel, {
 
 // register
 Minx.pm.register('mask', Minx.MaskPanel);
+
+})();

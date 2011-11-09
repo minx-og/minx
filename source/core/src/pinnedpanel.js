@@ -1,3 +1,5 @@
+(function() { 
+"use strict";
 /* 
 Minx.PinnedPanel
 
@@ -393,3 +395,4 @@ Minx.PinnedPanel = my.Class(Minx.Panel, {
 });
 
 Minx.pm.register('pinned', Minx.PinnedPanel);
+})();

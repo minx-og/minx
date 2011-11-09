@@ -1,3 +1,5 @@
+(function() { 
+"use strict";
 
 //layout namespace
 
@@ -520,3 +522,5 @@ Minx.Layout.SplitLayout = my.Class({
         }
     }
 });
+
+})();

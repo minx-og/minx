@@ -1,3 +1,6 @@
+(function() { 
+"use strict";
+
 /*
 InputPopup registered as input-pop-up
 =====================================
@@ -98,3 +101,5 @@ Minx.SpinnerPopup = my.Class(Minx.Popup, {
 
 // register
 Minx.pm.register('spinner-pop-up', Minx.SpinnerPopup);
+
+})();

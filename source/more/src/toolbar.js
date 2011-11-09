@@ -1,3 +1,5 @@
+(function() { 
+"use strict";
 /*
 
 ToolBar registered as bottom-bar
@@ -122,4 +124,4 @@ Minx.ToolBar = my.Class(Minx.PinnedPanel, {
 Minx.pm.register('tool-bar', Minx.ToolBar);
 
 
-    
+})();

@@ -1,6 +1,9 @@
 if (typeof BackboneMinxWrap === "undefined") {
-    BackboneMinxWrap = {};
-} 
+    var BackboneMinxWrap = {};
+}
+
+(function() { 
+"use strict";
 
 
 BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
@@ -189,7 +192,6 @@ BackboneMinxWrap.WidgetWrap = function(container, type) {
 };
 
 
-
 BackboneMinxWrap.MultiWrap = function(container, type) {    
     var _listener = null;
     
@@ -204,7 +206,7 @@ BackboneMinxWrap.MultiWrap = function(container, type) {
         return this._widget;  
     };
 
-    eventHandler =  function(panel, thing) {
+    function eventHandler(panel, thing) {
         // call a registered listener
         if(_listener) {
             _listener(panel, thing);
@@ -238,4 +240,7 @@ BackboneMinxWrap.MultiWrap = function(container, type) {
     this.onViewEvents = function(fn) {
        _listener = fn;
     };
-}
+};
+
+
+})();

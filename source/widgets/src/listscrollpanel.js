@@ -1,3 +1,6 @@
+(function() { 
+"use strict";
+
 /*
 ListScrollPanel - registered as list-scroll-panel
 =================================================
@@ -124,16 +127,22 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
             //LOG console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
             
-            if(me._scroller != null) {
-
-                me._scroller.refresh();
-            }
-            else {
-                // create the new scroller
-                me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
-            }
+            // iscroll suggests we make sure this is inside a timer so that the dom is fully drawn
+            setTimeout(function() {
             
-            // clear my flag
+                if(me._scroller != null) { 
+                    me._scroller.destroy();
+                    me._scroller = null; 
+ //                    me._scroller.refresh();
+                }
+//                else {
+                    // create the new scroller
+                    me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
+//                }
+
+            }, 300);
+                
+                // clear my flag
             me._need_new_scroller = false;
 
             //console.log("Scroller complete");
@@ -228,10 +237,10 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         var rawLength = 0;
         var filteredLength = 0;
 
-        lists = [];
+        var lists = [];
         if (modelArray) {
 
-            for (m in rawList) {
+            for (var m in rawList) {
                 rawLength += rawList[m].length;
                 var fl = filter(rawList[m]);
                 filteredLength += fl.length;
@@ -308,7 +317,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         }
         else {
 
-            tc = 0;
+            var tc = 0;
             
             for (var l in lists) {
                 var list = lists[l];
@@ -391,10 +400,22 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
             this._listLength = filteredLength < this._listMax ? filteredLength : this._listMax;
         }
         
+        /*
         if(me._scroller != null) {
-            
-            me._scroller.refresh();
+            setTimeout(function() {
+                me._scroller.refresh();
+            }, 1000);
         }
+        */
+
+        if(me._scroller != null) {
+                    me._scroller.destroy();
+                    me._scroller = null; 
+
+                    me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
+        }
+
+        
 
         //LOG console.log("NEED NEW SCROLLER from MUNGE " + this.getId());
         this._need_new_scroller = true;
@@ -476,4 +497,4 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 Minx.pm.register('list-scroll-panel', Minx.ListScrollPanel);
 
 
-    
+})();

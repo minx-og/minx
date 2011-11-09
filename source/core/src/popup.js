@@ -1,3 +1,5 @@
+(function() { 
+"use strict";
 /*
 
 Popup - registered as pop-up
@@ -63,5 +65,4 @@ Minx.Popup = my.Class(Minx.PinnedPanel, {
 
 Minx.pm.register('pop-up', Minx.Popup);
 
-
-    
+})();

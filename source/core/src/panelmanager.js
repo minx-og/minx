@@ -1,9 +1,12 @@
+if (typeof Minx === "undefined") {
+    var Minx = {};
+}
+
+(function() {
 /* main */
+"use strict";
 
 //
-if (typeof Minx === "undefined") {
-    Minx = {};
-}
 
 Minx.logger = {
 
@@ -29,8 +32,8 @@ Minx.Event = function(panel, callback) {
             e.stopPropagation();            // stop nearby html getting the event as well
             
             panel[callback](e);
-    }
-}
+    };
+};
 
 
 // the event 'queue' - not even a queue but could be if we wanted to manage all events
@@ -306,6 +309,38 @@ Minx.PanelManager = function() {
 
         var me = this;
 
+        var changing = false;
+
+        function oChange() {
+            
+            if (!changing) {
+
+                changing = true;
+
+                me.calcDims();
+
+                console.log("ochange w=" + me.dims.w + " h="+ me.dims.h);
+
+                main.setSize(me.dims.w, me.dims.h);
+
+                main.removeClass('or-l');
+                main.removeClass('or-p');
+                main.addClass('or-' + me.dims.or);
+                
+                // this constructs main panel geometry and updates kids - redraws all kidies if thier geometry has changed
+                // but doesnt redraw the main panel
+                
+                // main.layout();
+                // main.drawKids();
+
+                //if(Minx.pm.dims.phone) {
+                    main.render();            // rendering the main section can cause flicker - but got to do it on phone to stop keyboard moving viewport
+                //}
+
+                changing = false;
+            }
+        }
+        
         // auto generate a main and set it to rezize on window resize
         if(auto) {
             main = Minx.pm.add(_root_node, 'simple');
@@ -330,45 +365,13 @@ Minx.PanelManager = function() {
             main.setSize(this.dims.w, this.dims.h);         
             main.render();
 
-            touchMove = function(event) {
+            main.getNode().ontouchmove = function(event) {
                 // Prevent scrolling on this element
                 event.preventDefault();
                 event.stopPropagation();
-            }
+            };
 
-            main.getNode().ontouchmove = touchMove;
-            
-
-            var changing = false;
-            function oChange() {
-                
-                if (!changing) {
-
-                    changing = true;
-
-                    me.calcDims();
-
-                    console.log("ochange w=" + me.dims.w + " h="+ me.dims.h);
-
-                    main.setSize(me.dims.w, me.dims.h);
-
-                    main.removeClass('or-l');
-                    main.removeClass('or-p');
-                    main.addClass('or-' + me.dims.or);
-                    
-                    // this constructs main panel geometry and updates kids - redraws all kidies if thier geometry has changed
-                    // but doesnt redraw the main panel
-                    
-                    // main.layout();
-                    // main.drawKids();
-
-                    //if(Minx.pm.dims.phone) {
-                        main.render();            // rendering the main section can cause flicker - but got to do it on phone to stop keyboard moving viewport
-                    //}
-
-                    changing = false;
-                }
-            }
+            changing = false;
 
             if(this.isTouch() && !this.localMobileTest) {
                 window.addEventListener('orientationchange', function(){
@@ -550,6 +553,15 @@ Minx.PanelManager = function() {
 
     this.reveal = function(id) {
 
+        function revealMe(panel) {
+
+            if (panel.getParent()) {
+
+                revealMe(panel.getParent());
+            }
+            panel.show();
+        }
+
         if (_panels[id]) {
 
             $('body').addClass('debug');
@@ -564,15 +576,6 @@ Minx.PanelManager = function() {
 
             }
 
-            function revealMe(panel) {
-
-                if (panel.getParent()) {
-
-                    revealMe(panel.getParent());
-                }
-                panel.show();
-            }
-            
             revealMe(_panels[id]);
             _panels[id].addClass('debug');
             _panels[id].render();
@@ -611,9 +614,10 @@ Minx.pm = new Minx.PanelManager();
           })();
 
 
+})();
+
 
 // fast click - put in its own file.....
-
 function NoClickDelay(el) { };
 /*
     this.element = el;

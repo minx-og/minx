@@ -1,3 +1,7 @@
+(function() { 
+"use strict";
+
+
 /*
 FieldList - registered as list-scroll-panel
 =================================================
@@ -134,6 +138,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
     getRowMarkup: function(parentId, backRow, li, prevli) {
         // now row is a backbone model
+        var ip;         // the big input thing per row
 
         var row = backRow.toJSON();
 
@@ -264,7 +269,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 ipType = 'div';
             }
 
-            var ip = document.createElement(ipType);
+            ip = document.createElement(ipType);
             ip.setAttribute('id', 'f-'+ this.getId() + '-' + row.name);
 
             this._fields[row.name] = ip;
@@ -286,7 +291,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 iii.setAttribute('class', 'toggle-label on');
                 bh.appendChild(iii);
 
-                tt = document.createTextNode("Yes");
+                var tt = document.createTextNode("Yes");
                 iii.appendChild(tt);
 
                 var bb = document.createElement('div');
@@ -308,24 +313,6 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
                 this._toggles[row.name] = {bh:bh, bc:bc};
 
-                function drawOnOrOff() {
-                    me.updateToggle(row.name, me._fields[row.name].value);
-                }
-                
-                function toggleOnOrOff() {
-
-                    if (me._fields[row.name].value == 'no') {
-
-                        me._fields[row.name].value = 'yes';
-                    }
-                    else {
-
-                        me._fields[row.name].value = 'no';
-                    }
-
-                    drawOnOrOff();
-                } 
-            
                 div.addEventListener("click", toggleOnOrOff, false);
                 
                 // and set it in the correct state
@@ -370,28 +357,6 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
             idiv.appendChild(ip);
 
-            
-            function doKeyPress() {
-                
-                Minx.Debounce.action('fieldkey', searchByValue, 100);
-                
-                function searchByValue() {
-
-                    if(ip.value != '') {
-                        a.setAttribute('class', 'input-clear');
-                    }
-                    else {
-                        a.setAttribute('class', 'input-clear hidden');
-                    }
-                }
-            }
-
-            function clearClick(ee) {
-                console.log('clearsblutton click');
-                ip.value = '';
-                doKeyPress();
-            }
-
             var a;
             
             if (ipType == 'input') {
@@ -428,8 +393,48 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             div.appendChild(idiv);
 
         }
-        
 
+        function doKeyPress() {
+                
+                Minx.Debounce.action('fieldkey', searchByValue, 100);
+                
+                function searchByValue() {
+
+                    if(ip.value != '') {
+                        a.setAttribute('class', 'input-clear');
+                    }
+                    else {
+                        a.setAttribute('class', 'input-clear hidden');
+                    }
+                }
+            }
+
+            function clearClick(ee) {
+                console.log('clearsblutton click');
+                ip.value = '';
+                doKeyPress();
+            }
+
+        
+        function drawOnOrOff() {
+            me.updateToggle(row.name, me._fields[row.name].value);
+        }
+        
+        
+        function toggleOnOrOff() {
+
+            if (me._fields[row.name].value == 'no') {
+
+                me._fields[row.name].value = 'yes';
+            }
+            else {
+
+                me._fields[row.name].value = 'no';
+            }
+
+            drawOnOrOff();
+        }
+        
         if( liClass != "" ) {
             li.setAttribute('class', liClass);
         }
@@ -452,7 +457,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 
     getAnswers: function() {
         var answers = {};
-        for(fld in this._fields) {
+        for (var fld in this._fields) {
             answers[fld] = this._fields[fld].value;
         }
 
@@ -494,5 +499,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
 // register for the panelmanager factory
 Minx.pm.register('field-list-panel', Minx.FieldListPanel);
 
+
+})();
 
     

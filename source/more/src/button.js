@@ -1,3 +1,5 @@
+(function() { 
+"use strict";
 /* 
 
 Button registered as button
@@ -268,5 +270,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
 
 Minx.pm.register('button', Minx.Button);
 
+
+})();
 
     

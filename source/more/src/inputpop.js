@@ -1,3 +1,5 @@
+(function() { 
+"use strict";
 /*
 InputPopup registered as input-pop-up
 =====================================
@@ -80,4 +82,4 @@ Minx.InputPopup = my.Class(Minx.Popup, {
 Minx.pm.register('input-pop-up', Minx.InputPopup);
 
 
-    
+})();

@@ -1,3 +1,6 @@
+(function() { 
+"use strict";
+
 /* 
 Minx.Panel 
 ==========
@@ -42,10 +45,9 @@ Minx.Geom = function(){
 
     // am I as fat as g
     this.dimsEqual = function(g) {
-        var t = this;           // plainly cant be arsed to c&p the word this 
 
-        var equal = ((t.w == g.w) && (t.h == g.h));
-        return equal;
+        var t = this;           // plainly cant be arsed to c&p the word this 
+        return ((t.w == g.w) && (t.h == g.h));
     };
 };
 
@@ -65,8 +67,9 @@ Minx.anim = {
     transpeed: '-webkit-transition-duration',
 
     getTranslate: function(x, y) {
-        return 'translate3d(' + x + 'px,' + y + 'px, 0px)'   
+        return 'translate3d(' + x + 'px,' + y + 'px, 0px)';
     },
+
 
     setpos: function(pan, x, y) {
        pan.setStyle(Minx.anim.trans, this.getTranslate(x, y));
@@ -183,11 +186,13 @@ Minx.Panel = my.Class({
     // specific size - but pinning overrides these values if we are an instance of a pinned panel
     setSize: function(width, height) {
 
-        if (width >= 0)
+        if (width >= 0) {
             this._newG.w = width;
+        }
         
-        if (height >= 0)
+        if (height >= 0) {
             this._newG.h = height;
+        }
     },
 
 
@@ -202,7 +207,7 @@ Minx.Panel = my.Class({
     // add a css class - 'class' a reserved word on gecko
     addClass: function(cl) {
         // check that we dont allready have this class
-        if(!(cl in this._classes)) {
+        if (this._classes[cl] === undefined) {
 
             this._classes[cl] = true;
             this._dirty = true;
@@ -214,7 +219,7 @@ Minx.Panel = my.Class({
     // cl = string css class to add to the list of classes for this panel
     removeClass: function(cl) {
         // make sure we have it before we dirtyfy things
-        if(cl in this._classes) {
+        if (this._classes[cl] !== undefined) {
 
             delete this._classes[cl]; 
             this._dirty = true;
@@ -226,7 +231,7 @@ Minx.Panel = my.Class({
     // if the this._style list changes then we are dirty - so need a redraw
     setStyle: function(key, val) {
         // check we dont have this style or if we do that it is for a different value
-        if(!(key in this._style) || (this._style[key] !== val)) {
+        if (this._style[key] === undefined || (this._style[key] !== val)) {
 
             this._style[key] = val;  
             this._dirty = true;
@@ -238,7 +243,7 @@ Minx.Panel = my.Class({
     // key - stlye name e.g. 'left', 'border' etc.
     removeStyle: function(key) {
         // make sure we do have this key before marking dirty
-        if(key in this._style) {
+        if (this._style[key] !== undefined) {
 
             delete this._style[key];
             this._dirty = true;
@@ -324,16 +329,17 @@ Minx.Panel = my.Class({
 
         var hidden = false;
 
-        if('visibility' in this._style) {
+        if (this._style.visibility !== undefined) {
 
-            if(this._style['visibility'] === 'hidden') {
+            if (this._style.visibility === 'hidden') {
+
                 hidden = true;
             }
         }
 
-        if('opacity' in this._style) {
+        if (this._style.opacity !== undefined) {
 
-            if(this._style['opacity'] == '0') {
+            if (this._style.opacity == '0') {
 
                 hidden = true;
             }
@@ -343,6 +349,7 @@ Minx.Panel = my.Class({
     },
 
     isOnScreen: function() {
+
         // recurse up my chain to work out if im on screen (or at least rendrered on dom)
         if(this.isHidden()) {
 
@@ -361,11 +368,13 @@ Minx.Panel = my.Class({
     // utility to count any kiddies in the kiddie hash - a more optimal way??
     kiddieCount: function() {
 
-        var count = 0;
+        var count = 0,
+            kid;                        // kiddie counter
 
-        for(var kid in this._kidies) {
-
-            count++;
+        for (kid in this._kidies) {
+            if (this._kidies.hasOwnProperty(kid)) {
+                count = count + 1;
+            }
         }
 
         return count;
@@ -374,17 +383,21 @@ Minx.Panel = my.Class({
 
     hasContentChanged: function() {
 
-        var hasit = this._contentChanged;
+        var kid,                        // for looper
+            hasit = this._contentChanged;
 
         if (!hasit) {          // if ours hasnt then recurse to check all kids
             
-            for (var kid in this._kidies) {
-                    
-                hasit = this._kidies[kid].hasContentChanged();
+            for (kid in this._kidies) {
+                
+                if (this._kidies.hasOwnProperty(kid)) {
 
-                if (hasit) {
+                    hasit = this._kidies[kid].hasContentChanged();
 
-                    break;          // stop if we find one
+                    if (hasit) {
+
+                        break;          // stop if we find one
+                    }
                 }
             }
         }
@@ -395,6 +408,7 @@ Minx.Panel = my.Class({
 
     // little utility to return the panel id's in this tree
     reportLineage: function(mid) {
+
         mid = mid || "";
         if (this.getParent()) {
             return this.getParent().reportLineage(mid + " - " + this.getId());
@@ -409,6 +423,12 @@ Minx.Panel = my.Class({
 
     reportDescendants: function(pa, parfirst, parsecond) {
 
+        var descendants = 0,
+            depth = 0,
+            myline = "",
+            md = 0,
+            kk = 0,
+            kid;
 
         if (!parfirst) {
             parfirst = [];
@@ -416,48 +436,41 @@ Minx.Panel = my.Class({
 
         parfirst.length = pa;
 
-        var descendants = 0;
 
-        var depth = 0;
+        for (kid in this._kidies) {
 
-        var myline = "";
-
-        var md = 0;
-
-        var kk = 0;
-
-        for (var kid in this._kidies) {
-
+            if (this._kidies.hasOwnProperty(kid)) {
             
-            kk++;
+                kk++;
 
-            //descendants = descendants + this._kidies[kid].reportDescendants();
+                //descendants = descendants + this._kidies[kid].reportDescendants();
 
-            if (kk == 1) {
-                parfirst[pa] = true;
+                if (kk == 1) {
+                    parfirst[pa] = true;
+                }
+                else {
+                    parfirst[pa] = false;
+                }
+
+                depth = this._kidies[kid].reportDescendants(pa+1, parfirst);
+                
+                if (depth > md) {
+                    md = depth;
+                }
+
+                descendants = descendants + 1;
+    /*
+                var space = ""
+                for (var p = 0; p <= gap; p++) {
+                    space = space + "       ";
+                }
+
+                var mid = "       " + this._kidies[kid].getId();
+                var len = mid.length;
+                var mm = mid.substring(len, len - 8);
+                myline = myline + space + mm;
+    */
             }
-            else {
-                parfirst[pa] = false;
-            }
-
-            depth = this._kidies[kid].reportDescendants(pa+1, parfirst);
-            
-            if (depth > md) {
-                md = depth;
-            }
-
-            descendants = descendants + 1;
-/*
-            var space = ""
-            for (var p = 0; p <= gap; p++) {
-                space = space + "       ";
-            }
-
-            var mid = "       " + this._kidies[kid].getId();
-            var len = mid.length;
-            var mm = mid.substring(len, len - 8);
-            myline = myline + space + mm;
-*/
         }
 
         if (kk == 0) {
@@ -1000,7 +1013,7 @@ ENDFIXPOS */
             var cText = "";
             var hasClass = false;
             
-            for (cl in this._classes) {
+            for (var cl in this._classes) {
             
                 cText += cl + " ";
                 hasClass = true;
@@ -1017,7 +1030,7 @@ ENDFIXPOS */
             // compose the style string from the hash of style attributes
             var sText = ""
 
-            for (key in this._style) {
+            for (var key in this._style) {
 
                 sText += key + ": " + this._style[key] + "; ";
             }
@@ -1203,7 +1216,7 @@ ENDFIXPOS */
 
         for (var kid in this._kidies) {
 
-            keys = this._removeKid(this._kidies[kid]);
+            var keys = this._removeKid(this._kidies[kid]);
             list = list.concat(keys);
         } 
 
@@ -1293,3 +1306,4 @@ ENDFIXPOS */
 
 Minx.pm.register('simple', Minx.Panel);
 
+})();

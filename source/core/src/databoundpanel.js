@@ -1,3 +1,5 @@
+(function() {
+"use strict";
 /*
 DataBoundPanel - registered as data-bound-panel
 ===============================================
@@ -80,5 +82,5 @@ Minx.DataBoundPanel = my.Class(Minx.PinnedPanel, {
 // register for the panelmanager factory
 Minx.pm.register('data-bound-panel', Minx.DataBoundPanel);
 
-
+})();
     

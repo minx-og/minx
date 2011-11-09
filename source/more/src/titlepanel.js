@@ -1,3 +1,6 @@
+(function() { 
+"use strict";
+
 /*
 TitlePanel - registered as title-panel
 ======================================
@@ -104,4 +107,4 @@ Minx.TitlePanel = my.Class(Minx.PinnedPanel, {
 Minx.pm.register('title-panel', Minx.TitlePanel);
 
 
-    
+})();
