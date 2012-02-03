@@ -5,11 +5,14 @@
     margin:0;
     font-size: 12pt;
 
+    /* override webkit style */
     -webkit-appearance: none;
     -webkit-text-size-adjust: none;
-    -webkit-user-select: none;
+    -webkit-user-select: none; 
 
+    -moz-box-sizing:    border-box;
     -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
 
     -webkit-tap-highlight-color: transparent;
 
@@ -19,9 +22,14 @@ h3, h4 {
     font-weight: normal;
 }
 
-/* remove default safari style */
+
 input, textarea {
+  
+  /* remove default safari style */
   outline-style:none;
+  
+  /*override mozilla shit*/
+  -moz-box-shadow: none;
 }
 
 body {
@@ -139,6 +147,10 @@ body {
     -webkit-transition: -webkit-transform, top,left, opacity;
 
     -webkit-transition-timing-function: linear;
+
+    -moz-transition-property: -moz-transform, transform, z-index, opacity;
+    -o-transition: transform, z-index, opacity;
+    transition: transfrom, z-index, opacity;
 
 
 /*

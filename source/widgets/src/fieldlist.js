@@ -35,6 +35,7 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
         
         // does this replace the base function ??
         this.onScrollStart = function(scroller, ev) {
+            console.log("scrollStart")
             if (me._focussed) {
                 me._focussed.blur();
                 me._focussed = null;
@@ -355,13 +356,9 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
             var idiv = document.createElement('div');
             idiv.setAttribute('class', 'mx-input');
 
-            idiv.appendChild(ip);
-
-            var a;
-            
             if (ipType == 'input') {
 
-                a = document.createElement('span');
+                a = document.createElement('div');
                 a.setAttribute('id', 'f-clear-' + row.name);
 
                 /*
@@ -387,6 +384,22 @@ Minx.FieldListPanel = my.Class(Minx.ListScrollPanel, {
                 }
 
                 idiv.appendChild(a);
+
+                
+                var nd = document.createElement('div');
+                nd.setAttribute('class', 'input-wrap');
+                nd.appendChild(ip);
+                idiv.appendChild(nd);                
+            }
+            else {
+
+                idiv.appendChild(ip);
+            }
+
+            var a;
+            
+            if (ipType == 'input') {
+
 
             }
 

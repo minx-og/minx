@@ -14,6 +14,7 @@
  * 
  */
 
+
 (function(){
 var m = Math,
 	vendor = (/webkit/i).test(navigator.appVersion) ? 'webkit' :
@@ -56,7 +57,7 @@ var m = Math,
 		that.wrapper = typeof el == 'object' ? el : doc.getElementById(el);
 		that.wrapper.style.overflow = 'hidden';
 		that.scroller = that.wrapper.children[0];
-
+		
 		// Default options
 		that.options = {
 			hScroll: true,
@@ -88,10 +89,18 @@ var m = Math,
 			// Events
 			onRefresh: null,
 			onBeforeScrollStart: function (e) { 
-				if (e.target.tagName.toLowerCase() === "select" || e.target.tagName.toLowerCase() === "input"){
-					return;
+				
+				var target = e.target;
+				
+				while (target.nodeType != 1) target = target.parentNode;
+
+				var tn = e.target.tagName.toLowerCase()
+
+				if (tn != 'select' && tn != 'input' && tn != 'textarea'){
+					e.preventDefault();
+					e.stopPropagation();
+					console.log("prevent default");
 				}
-				e.preventDefault(); 
 			},
 			onScrollStart: null,
 			onBeforeScrollMove: null,

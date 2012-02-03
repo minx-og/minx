@@ -37,12 +37,25 @@ ul.field-list li {
 ul.field-list li.first {
     -webkit-border-top-left-radius: 7px;
     -webkit-border-top-right-radius: 7px;   
+
+    -moz-border-radius-topleft: 7px;
+    -moz-border-radius-topright: 7px;
+
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+
     border-top: 1px solid #ccc;
 }
 
 ul.field-list li.last {
     -webkit-border-bottom-left-radius: 7px;
     -webkit-border-bottom-right-radius: 7px;   
+
+    -moz-border-radius-bottomleft: 7px;
+    -moz-border-radius-bottomright: 7px;
+
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
  
 }
 
@@ -96,7 +109,7 @@ input, select {
     font-size: 18px;
     
     border: 0px;
-    width: 88%;
+    width: 100%;
     height: 100%;
 
     text-shadow: none;
@@ -152,10 +165,16 @@ select {
 
 .first .mx-label {
     -webkit-border-top-left-radius: 7px;
+    -moz-border-radius-topleft: 7px;
+    border-top-left-radius: 7px;
+    
+    
 }
 
 .last .mx-label {
     -webkit-border-bottom-left-radius: 7px;
+    -moz-border-radius-bottomleft: 7px;
+    border-bottom-left-radius: 7px;
 }
 
 
@@ -170,6 +189,7 @@ select {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+
     -webkit-box-shadow: 0 2px 3px #888 inset, 0 1px 1px #fff;
     -moz-box-shadow: 0 2px 3px #888 inset, 0 1px 1px #fff;
     box-shadow: 0 2px 3px #888 inset, 0 1px 1px #fff;
@@ -196,12 +216,12 @@ select {
     left: 0px;
 
     -webkit-border-top-left-radius: 5px;
-    -moz-border-radius-topleft: 5px;
-    border-top-left-radius: 5px;
-
-
     -webkit-border-bottom-left-radius: 5px;
+
+    -moz-border-radius-topleft: 5px;
     -moz-border-radius-bottomleft: 5px;
+    
+    border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 
     /*background-image: -webkit-gradient(linear, 0% 0%, 100% 0%, from(#008afd), color-stop(.5, #008afd), color-stop(.51,rgba(0, 0, 0, 0.05)), to(rgba(0, 0, 0, 0.05))); */
@@ -233,13 +253,21 @@ select {
     -webkit-transition-timing-function: linear;
     -webkit-transition-duration: .1s; 
     -webkit-transform: translate3d(0px, 0px, 0px);
+    
+    -moz-transform: translate(0px, 0px);
+    -moz-transition-duration: .1s;
 }
 
 .toggle-holder.off{
     -webkit-transition-timing-function: linear;
     -webkit-transition-duration: .1s; 
     -webkit-transform: translate3d(-50px, 0px, 0px);
+
+    -moz-transform: translate(-50px, 0px);
+    -moz-transition-duration: .1s;
 }
+
+         
 
 
 .toggle-label {
@@ -332,6 +360,9 @@ select {
     height: 28px;
     padding-left: 3px;
     -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+
 
     -webkit-box-shadow: inset rgba(0, 0, 0, 0.1) 0 0.1em 0, inset rgba(0, 0, 0, 0.3) 0 -0.1em 0, inset rgba(0, 0, 0, 0.1) 0.1em 0 0, inset rgba(0, 0, 0, 0.1) -0.1em 0 0, inset rgba(0, 0, 0, 0.5) 0 0.15em 0.4em
 
@@ -340,7 +371,11 @@ select {
 
 .search-wrap input{
     background: url('../img/search-glass.png') no-repeat;
+    
     -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    
     padding-left: 28px;
 }
 
@@ -350,6 +385,8 @@ select {
 
 .filter {
     -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
 }
 
 
@@ -358,18 +395,25 @@ select {
     float: right;
     width: 24px;
     height: 24px;
-    background: url('../img/clear-field.png') no-repeat;;
+    background: url('../img/2xclear_field.png') no-repeat;
+    background-size: 20px 20px;
 }
 
 
 .input-clear {
-    margin-top: 5px;
+    margin-top: 6px;
     float: right;
-    max-width: 20px;
     height: 30px;
-    background: url('../img/clear-field.png') no-repeat center 8px;
-    display: inline;
-    width: 12%;
+    background: url('../img/2xclear_field.png') no-repeat center 8px;
+    background-size: 20px 20px;
+    width: 20px;
+}
+
+
+.input-wrap {
+    float: none;
+    height: 100%;
+    margin-right: 20px;
 }
 
 

@@ -27,6 +27,7 @@ Minx.Event = function(panel, callback) {
 
     this.trigger = function (e) {
         
+            // take a note of this event to keep an eye on inactivity
             Minx.logger.touch();
 
             e.stopPropagation();            // stop nearby html getting the event as well
@@ -210,7 +211,7 @@ Minx.PanelManager = function() {
             this.dims.retina = true;
         }
 
-        // DEV - DEBUG - this.dims.retina = true;
+        // DEV - D-EBUG - this.dims.retina = true;
 
         //DEV - simulate touch
         if (this.localiPhoneTest) {
@@ -395,6 +396,7 @@ Minx.PanelManager = function() {
         return this._main;
     };
 
+
     this.agent = function(){
         return {
             iphone : /iphone/i.test(navigator.userAgent),
@@ -410,7 +412,9 @@ Minx.PanelManager = function() {
 
 
     this.isTouch = function() {
+        
         return this.dims.touch;
+
     }
 
 
@@ -632,6 +636,9 @@ Minx.pm = new Minx.PanelManager();
 
 
 })();
+
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
 
 // fast click - put in its own file.....

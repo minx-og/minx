@@ -57,10 +57,12 @@ Minx.Geom = function(){
 // _setXY ==> setpos
 // _setTime ==> settime
 
-// these atre set up once at load time so no constant agent checking - there is no code to do the agent checking yet...
+// these are set up once at load time so no constant agent checking
+// the agent checking is done with zepto in panel_webmod plus our mod for gecko browsers...
+// no detection for IE yet
+// so if compiling for the web - include panel_webmod after panel
 
-
-// Webkit accelerated animations
+// Webkit accelerated animations are the default for mobile clients
 
 Minx.anim = {
     trans: '-webkit-transform',
@@ -72,27 +74,30 @@ Minx.anim = {
 
 
     setpos: function(pan, x, y) {
-       pan.setStyle(Minx.anim.trans, this.getTranslate(x, y));
+//        if (pan._animate  > 0) {
+            pan.setStyle(Minx.anim.trans, this.getTranslate(x, y));
         
-        /* use this event if we add animations
-        pan.getNode().addEventListener( 'webkitAnimationEnd', function( event ) {
-            console.log("anim finished " + event);
-        } );
-        */
+                    /* use this event if we add animations
+            pan.getNode().addEventListener( 'webkitAnimationEnd', function( event ) {
+                console.log("anim finished " + event);
+            } );
+            */
 
-/* FIXPOS 
-        pan.getNode().addEventListener( 'webkitTransitionEnd', function( event ) {
-            
-            pan.getNode().removeEventListener( 'webkitTransitionEnd', this);   // this is this function i hope
+            // Experimentally setting the pixed positions after the transitions have finished so phones detect the field positions properly
+        //     pan.getNode().addEventListener( 'webkitTransitionEnd', function( event ) {
+                
+        //         pan.getNode().removeEventListener( 'webkitTransitionEnd', this);   // this is this function i hope
 
-            Minx.anim.fixpos(pan, x, y);
+        //         Minx.anim.fixpos(pan, x, y);
 
-        } );
-*/
-
-
-   },
-/* FIXPOS 
+        //     } );
+        // }
+        // else {
+        //     Minx.anim.fixpos(pan, x, y);            
+        // }
+    },
+    //uncomment this if using the end transition event listenercall above  
+/*    
     fixpos: function(pan, x, y) {
         pan.removeStyle(Minx.anim.trans);
         pan.removeStyle(Minx.anim.transpeed);
@@ -103,9 +108,7 @@ Minx.anim = {
         // now blast this update now
         pan._blastStyles();
     },
-
 */
-
     settime: function(pan, speed) {
 
         if (speed == 0) {
@@ -117,52 +120,11 @@ Minx.anim = {
         }
     }
 };
-
-
-
-// FireFox accelerated animations
-/*
-Minx.anim = {
-    trans: '-moz-transform',
-    transpeed: '-moz-transition-duration',
-    setpos: function(pan, x, y) {
-        pan.setStyle(Minx.anim.trans, 'translate(' + x + 'px,' + y + 'px)');   // TODO - investigate hwaccell for mozilla
-
-        
-    },
-    settime: function(pan, speed) {
-        if (speed == 0) {
-            pan.removeStyle(Minx.anim.transpeed);
-
-        } else {
-
-            pan.setStyle(Minx.anim.transpeed, speed + 'ms');
-        }
-    }
-};
-*/
-
-
-// None accelerated animations - left and right
-// timings of transitions are specified in the CSS
-
-/*
-Minx.anim = {
-    setpos: function(pan, x, y) {
-        pan.setStyle('left', x + 'px');
-        pan.setStyle('top',  y + 'px');
-    },
-    settime: function(pan, speed) {
-    }
-};
-
-*/
 
 // the seat of all power - THE PANEL
 // keeps a list of all child panels
 // builds up new geometry to decide ifa change is needed
 // holds a reference to its dom node
-
 
 Minx.Panel = my.Class({
     
@@ -719,7 +681,7 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         
         var force = this.hasContentChanged();
 
-        force = false;
+        force = false;                                      //TODO - is this debugging ???
 
         if (fadein) {
             // make sure we are initially faded out
@@ -832,30 +794,39 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
             me.setStyle('visibility', 'hidden');
 
             // time to redraw dom
-            setTimeout(function(det) {
-                // want me off the dom too, and I'm not already
-                if (detach) {
+            if (detach) {
+                setTimeout(function(det) {
+                    // want me off the dom too, and I'm not already
                     me.detach();
-                }
-            }, 10);
-
+                    
+                }, 10);
+            }
         }
         else {
             // must hide as well but only after enough time for the opacity animation - got a reference on this timer to cancel if show called before transition finished
             // otherwise we could have the situation where we hide and show within _animate time and this timer still fires the hide!
-            this._hideTimer = setTimeout(function(det) {
 
-                me.setStyle('visibility', 'hidden');    
-                // tell the browser
-                me._applyStyles();
+            // fuckinell have to put detach if clause outside the timeout for IE!!
+            if (detach) {
+                this._hideTimer = setTimeout(function() {
 
-                // want to detach fully and is not allready detached
-                if (det[0]) {
+                    me.setStyle('visibility', 'hidden');    
+                    // tell the browser
+                    me._applyStyles();
 
                     me.detach();
-                }
 
-            }, this._animate, [detach]);        // fade after whatever the animation time is
+                }, this._animate);        // fade after whatever the animation time is
+            }
+            else {
+                this._hideTimer = setTimeout(function() {
+
+                    me.setStyle('visibility', 'hidden');    
+                    // tell the browser
+                    me._applyStyles();
+
+                }, this._animate);        // fade after whatever the animation time is
+            }
         }
 
         // tell the browser about first change
@@ -978,9 +949,12 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
          
         var dim = pan.getDims();
 
-        if ((dim.l != x) || (dim.t != y)) {
+        // always add the x and y positions - else the safari scroll bars dont show!!
+        Minx.anim.setpos(pan, x, y);
 
-              Minx.anim.setpos(pan, x, y);
+        // if ((dim.l != x) || (dim.t != y)) {
+
+        //       Minx.anim.setpos(pan, x, y);
 
 /* FIXPOS 
             // call the specific browser functions
@@ -992,7 +966,7 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
             }
 ENDFIXPOS */
 
-         }
+        // }
     },
 
 

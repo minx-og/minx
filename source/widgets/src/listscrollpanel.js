@@ -125,7 +125,8 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
         // only bother drawing me if I am clearly visible on screen
         if (this._touch && this._need_new_scroller && this.isOnScreen() && (this._listLength > 2)) {
 
-            //LOG console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
+            //LOG 
+            console.log("ISCROL - - - - - - > Making new scroller for  " + me.reportLineage());
             
             // iscroll suggests we make sure this is inside a timer so that the dom is fully drawn
             setTimeout(function() {
@@ -137,7 +138,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                 }
 //                else {
                     // create the new scroller
-                    me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
+                    me._scroller = new iScroll(me.getNode(), {onBeforeScrollMove: me.onScrollStart});
 //                }
 
             }, 300);
@@ -412,7 +413,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
                     me._scroller.destroy();
                     me._scroller = null; 
 
-                    me._scroller = new iScroll(me.getNode(), {onScrollStart: me.onScrollStart});
+                    me._scroller = new iScroll(me.getNode(), {onBeforeScrollMove: me.onScrollStart});
         }
 
         
