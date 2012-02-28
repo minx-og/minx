@@ -776,6 +776,16 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
     },
 
 
+    abduct: function(target, showNow) {
+
+        target.detach();
+        target._parent = this;
+        if (showNow) {
+            target.show();
+        }
+    },
+
+
     hide: function(pars) {
 
         var instant = (pars && pars.now) ? pars.now : false;

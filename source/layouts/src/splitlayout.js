@@ -113,10 +113,13 @@ Minx.Layout.SplitLayout = my.Class({
         var panel = opts.panel;
         var level = opts.level;
         var content = opts.forcontent || false;
+
+        // store this level in the passed in panel OOBREAK
+        panel.layout_level = level;
         // make room for the menu button - only needed in portrait really 
         if (content) {
 
-            panel.setTitleInvisible(0);;
+            panel.setTitleInvisible(0);
         }
         else {
 
@@ -218,6 +221,14 @@ Minx.Layout.SplitLayout = my.Class({
 
     setMainPanelContent: function(panel, how, hideMenPop) {
         var me = this;
+
+        // if param to hide the menu opup button is undefined then if our panel has been given a level > 1 then do hide the popup
+        if (typeof(hideMenPop) === "undefined") {
+            if (panel.layout_level > 2) {
+                hideMenPop = true;
+            }
+        }
+
         if (hideMenPop) {
 
             this._navPopButton.setAnimate(200);
@@ -228,6 +239,9 @@ Minx.Layout.SplitLayout = my.Class({
 
             this._menpop = true;
             
+            // get the new panel to abduct the menu button - so its clickable
+            panel.abduct(this._navPopButton, false);  // false = dont show it yet
+
             if(this.whichWay == 'p') {
 
                 setTimeout(function() {
@@ -246,8 +260,6 @@ Minx.Layout.SplitLayout = my.Class({
         
         this._navPanel.setActivePanel(panel, how, true);
     },
-
-
 
 
     // called when a navigation action has occured

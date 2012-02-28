@@ -17,6 +17,7 @@ BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
     },
 
 
+    // render called on all triggers - i.e. none silent row updates
     render: function(row){
 
         var raw = row.toJSON();
@@ -35,7 +36,7 @@ BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
 
         div.innerHTML = this._plate(model);
 
-        if (this._customclass !== null) {
+        if (this._customclass) {
             div.setAttribute("class", this._customclass(model));
         }
 
@@ -45,14 +46,20 @@ BackboneMinxWrap.WidgetRowView = Backbone.View.extend({
         
     },
 
+    // the template html to use
+    // the model (after prettyfting) is passed to this
     setTemplate: function(plate) {
         this._plate = plate;
     },
 
+    // the embelishing prettyfying funcion
+    // the raw object is passed to this functyion
     setPrettyFunc: function(pretty) {
         this._pretty = pretty;
     },
 
+    // any custom class to programaticaly add to the div inside the li
+    // model is passed into the function set here
     setCustomClass: function(cclass) {
         this._customclass = cclass;
     }
@@ -91,17 +98,6 @@ BackboneMinxWrap.WidgetView = Backbone.View.extend({
 
     updateWidgetModel: function(model, draw) {
         // if we are not using the fixed model - for example a collection then pass the widget the raw model object
-
-        /*
-
-        if(!this._modelFixed) {
-            this._widget.setModel(model.toJSON);
-        }
-        else {
-            this._widget.setModel(this._collection.toJSON());   // toJSON actiually creates a pojso - but should check it isnt a copy - is it a reference to the backbone data?
-        }
-
-        */
 
         // TODO - big refactoring
 

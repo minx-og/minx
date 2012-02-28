@@ -193,6 +193,7 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
     },
 
 
+    // if we have set a per row view handler then any update to the row will trigger a redraw of the row, so dont have to redraw the whole list
     setRowView: function(rowviewclass) {
         this._rowView = rowviewclass;  
     },
@@ -449,6 +450,11 @@ Minx.ListScrollPanel = my.Class(Minx.DataBoundPanel, {
 
     getPreRowMarkup: function() {
         return null;
+    },
+
+
+    getDisplayedLength: function() {
+        return this._listLength;
     },
 
 
