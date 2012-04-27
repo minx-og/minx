@@ -74,41 +74,44 @@ Minx.anim = {
 
 
     setpos: function(pan, x, y) {
-//        if (pan._animate  > 0) {
-            pan.setStyle(Minx.anim.trans, this.getTranslate(x, y));
+
+       //if (pan._animate  > 0) {
+           pan.setStyle(Minx.anim.trans, this.getTranslate(x, y));
         
-                    /* use this event if we add animations
+            // use this event if we add animations aware events
+            /*
             pan.getNode().addEventListener( 'webkitAnimationEnd', function( event ) {
                 console.log("anim finished " + event);
             } );
-            */
+            
 
-            // Experimentally setting the pixed positions after the transitions have finished so phones detect the field positions properly
-        //     pan.getNode().addEventListener( 'webkitTransitionEnd', function( event ) {
+            Experimentally setting the fixed positions after the transitions have finished so phones detect the field positions properly
+            pan.getNode().addEventListener( 'webkitTransitionEnd', function( event ) {
                 
-        //         pan.getNode().removeEventListener( 'webkitTransitionEnd', this);   // this is this function i hope
+                pan.getNode().removeEventListener( 'webkitTransitionEnd', this);   // this is this function i hope
 
-        //         Minx.anim.fixpos(pan, x, y);
+                Minx.anim.fixpos(pan, x, y);
 
-        //     } );
+            } );
+            */
         // }
         // else {
         //     Minx.anim.fixpos(pan, x, y);            
         // }
     },
     //uncomment this if using the end transition event listenercall above  
-/*    
+    
     fixpos: function(pan, x, y) {
         pan.removeStyle(Minx.anim.trans);
         pan.removeStyle(Minx.anim.transpeed);
 
-        pan.setStyle('left', x + 'px');
-        pan.setStyle('top' , y + 'px');
+        // pan.setStyle('left', x + 'px');
+        // pan.setStyle('top' , y + 'px');
         
         // now blast this update now
         pan._blastStyles();
     },
-*/
+
     settime: function(pan, speed) {
 
         if (speed == 0) {
@@ -795,7 +798,7 @@ _applyStyles()   - maps all the panel properties into classes and styles and the
         var me = this;
         // even if instant set opacity to zero so we can fade up on show
 
-        //DEBUG - look into rumour that removing opacity improves hw accell
+        //TODO - look into rumour that removing opacity improves hw accell
         this.setStyle('opacity', '0');
 
         // instant hide - no fading?
@@ -1020,7 +1023,7 @@ ENDFIXPOS */
             }
 
             // this does the dead and changes the style in the dom thereby triggering the browser to redraw the node
-            // DEBUG console.log("Blasting Styles: " + this.getId() +"   class: [" + cText + "]   style: [" + sText + "]");
+            // D-EBUG console.log("Blasting Styles: " + this.getId() +"   class: [" + cText + "]   style: [" + sText + "]");
             this._node.style.cssText = sText;
         }
 

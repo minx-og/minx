@@ -37,7 +37,7 @@ Minx.Button = my.Class(Minx.PinnedPanel, {
         
         this.addClass('button-up');
 
-        if (Minx.pm.isTouch() && !Minx.pm.localMobileTest) {    // DEBUG flag - remove?
+        if (Minx.pm.isTouch() && !Minx.pm.localMobileTest) {    // check that de-bug flag - remove?
             Minx.eq.subscribe(this, null, 'touchstart');
             Minx.eq.subscribe(this, null, 'touchend');
             Minx.eq.subscribe(this, null, 'click');             // need click so we can swallow it to stop other stuff

@@ -7,7 +7,7 @@ MoverPanel - registered as mover-panel
 This is a pinned panel with the ability to animate its child panels with certain transitions
 
 */
-Minx.det = true;                                        // not removing them played havoc with safari's auto positioning - it would thinkthe content was wider and move the inner content all over
+Minx.det = true;                                        // IMPORTANT not removing them played havoc with safari's auto positioning - it would thinkthe content was wider and move the inner content all over
 Minx.MoverPanel = my.Class(Minx.PinnedPanel, {
 
     constructor: function(parent, id) {
